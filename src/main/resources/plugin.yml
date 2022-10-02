@@ -1,0 +1,7 @@
+name: SimpleNicks
+version: '${project.version}'
+main: adhdmc.simplenicks.SimpleNicks
+api-version: 1.19
+commands:
+  nick:
+
