@@ -2,7 +2,7 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import net.kyori.adventure.text.Component;
+import adhdmc.simplenicks.config.ConfigValidator.Message;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,25 +20,25 @@ public class Reset extends SubCommand {
 
         // Player Check
         if (!(sender instanceof Player)) {
-            sender.sendMessage(miniMessage.deserialize("<gray>PLACEHOLDER: NOT A PLAYER")); // Invalid Usage (Not a Player)
+            sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage())); // Invalid Usage (Not a Player)
             return;
         }
 
         // Arguments Check
         if (args.length > 1) {
-            sender.sendMessage(miniMessage.deserialize("<gray>PLACEHOLDER: TOO MANY ARGUMENTS")); // Too Many Arguments
+            sender.sendMessage(miniMessage.deserialize(Message.TOO_MANY_ARGUMENTS.getMessage())); // Too Many Arguments
             return;
         }
         // TODO: Pull permissions from a common place.
         if (args.length == 1 && !sender.hasPermission("simplenicks.admin")) {
-            sender.sendMessage(miniMessage.deserialize("<gray>PLACEHOLDER: NO PERMISSION")); // No Permission
+            sender.sendMessage(miniMessage.deserialize(Message.NO_PERMISSION.getMessage())); // No Permission
             return;
         }
 
         // Valid Player Check
         Player player = (args.length == 0) ? (Player) sender : SimpleNicks.getInstance().getServer().getPlayer(args[0]);
         if (player == null) {
-            sender.sendMessage(miniMessage.deserialize("<gray>PLACEHOLDER: PLAYER IS INVALID / NOT ONLINE")); // Invalid Player
+            sender.sendMessage(miniMessage.deserialize(Message.INVALID_PLAYER.getMessage())); // Invalid Player
             return;
         }
 

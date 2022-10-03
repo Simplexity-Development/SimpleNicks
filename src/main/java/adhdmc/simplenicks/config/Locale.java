@@ -31,7 +31,7 @@ public class Locale {
         }
     }
 
-    public YamlConfiguration getlocaleConfig() {
+    public YamlConfiguration getLocaleConfig() {
         if (this.localeConfig == null) {
             reloadConfig();
         }
@@ -39,12 +39,12 @@ public class Locale {
     }
 
     public void saveConfig() {
-        getlocaleConfig();
+        getLocaleConfig();
         if (this.localeConfig == null || this.localeFile == null) {
             return;
         }
         try {
-            this.getlocaleConfig().save(this.localeFile);
+            this.getLocaleConfig().save(this.localeFile);
         } catch (IOException e) {
             instance.getLogger().severe("[saveConfig()] Could not save config to " + this.localeFile);
             e.printStackTrace();

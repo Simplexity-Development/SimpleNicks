@@ -46,7 +46,7 @@ public final class SimpleNicks extends JavaPlugin {
         instance = this;
         registerSubCommands();
         locale = new Locale(this);
-        locale.getlocaleConfig();
+        locale.getLocaleConfig();
         Defaults.localeDefaults();
         Defaults.setFormatPerms();
         locale.saveConfig();

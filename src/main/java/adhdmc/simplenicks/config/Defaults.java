@@ -16,7 +16,7 @@ public class Defaults {
     private static final HashMap<String, TagResolver> nickFormatPerms = new HashMap<>();
     private static final HashMap<Permission, String> allPerms = new HashMap<>();
     public static void localeDefaults(){
-        FileConfiguration locale = SimpleNicks.getLocale().getlocaleConfig();
+        FileConfiguration locale = SimpleNicks.getLocale().getLocaleConfig();
         locale.addDefault("invalid-command", "<red>Invalid command, please check that you have spelled everything correctly");
         locale.addDefault("no-permission", "<red>You do not have permission to run this command");
         locale.addDefault("console-cannot-run", "Error: This command can only be run by a player");
