@@ -12,7 +12,7 @@ public class Help extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-
+        sender.sendMessage("<gray>PLACEHOLDER: HELP COMMAND");
     }
 
     @Override

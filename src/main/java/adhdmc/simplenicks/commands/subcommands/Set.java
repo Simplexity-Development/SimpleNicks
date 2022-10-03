@@ -12,6 +12,7 @@ import java.util.List;
 public class Set extends SubCommand {
 
     private static final int MAX_NICKNAME_LENGTH = 30; // TODO: Change this temporary constant into a config option.
+    public static final String NICKNAME_REGEX = "[A-Za-z0-9_]+"; // TODO: Change this temporary constant into a config option.
 
     public Set() {
         super("set", "sets a nickname", "/nick set");
@@ -45,7 +46,7 @@ public class Set extends SubCommand {
         // Nickname Validity Check
         String nicknameStripped = miniMessage.stripTags(args[0]);
         // TODO: Allow regex to be modifiable by config.
-        if (!nicknameStripped.matches("[A-Za-z0-9_]+")) {
+        if (!nicknameStripped.matches(NICKNAME_REGEX)) {
             sender.sendMessage(miniMessage.deserialize("<gray>PLACEHOLDER: NICKNAME MUST BE ALPHANUMERIC")); // Non-Alphanumeric Nickname
             return;
         }
