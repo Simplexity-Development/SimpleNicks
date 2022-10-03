@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Defaults {
 
-    private static final HashMap<Permission, TagResolver> nickFormatPerms = new HashMap<>();
+    private static final HashMap<String, TagResolver> nickFormatPerms = new HashMap<>();
     private static final HashMap<Permission, String> allPerms = new HashMap<>();
     public static void localeDefaults(){
         FileConfiguration locale = SimpleNicks.getLocale().getlocaleConfig();
@@ -29,48 +29,22 @@ public class Defaults {
         locale.addDefault("nick-reset-other", "<white><u><username>'s nickname reset");
     }
 
-    public enum Permission {
-        //Nickname Perms
-        NICK_COLOR, NICK_GRADIENT, NICK_RAINBOW,
-        NICK_FORMAT, NICK_UNDERLINE, NICK_ITALIC, NICK_STRIKETHROUGH, NICK_BOLD, NICK_OBFUSCATED,
-        //Command Perms
-        NICK_COMMAND, NICK_COMMAND_OTHERS, NICK_COMMAND_RESET, NICK_COMMAND_RESET_OTHERS, NICK_RELOAD
-    }
 
-    public static void setPluginPerms(){
-        allPerms.put(Permission.NICK_COLOR, "justnick.nick.color");
-        allPerms.put(Permission.NICK_GRADIENT, "justnick.nick.gradient");
-        allPerms.put(Permission.NICK_RAINBOW, "justnick.nick.rainbow");
-        allPerms.put(Permission.NICK_FORMAT, "justnick.nick.format");
-        allPerms.put(Permission.NICK_UNDERLINE, "justnick.nick.format.underline");
-        allPerms.put(Permission.NICK_ITALIC, "justnick.nick.format.italic");
-        allPerms.put(Permission.NICK_STRIKETHROUGH, "justnick.nick.format.strikethrough");
-        allPerms.put(Permission.NICK_BOLD, "justnick.nick.format.bold");
-        allPerms.put(Permission.NICK_OBFUSCATED, "justnick.nick.format.obfuscated");
-        allPerms.put(Permission.NICK_COMMAND, "justnick.nick");
-        allPerms.put(Permission.NICK_COMMAND_OTHERS, "justnick.nickothers");
-        allPerms.put(Permission.NICK_COMMAND_RESET, "justnick.nick.reset");
-        allPerms.put(Permission.NICK_COMMAND_RESET_OTHERS, "justnick.nickothers.reset");
-        allPerms.put(Permission.NICK_RELOAD, "justnick.reload");
-    }
 
     public static void setFormatPerms(){
-        nickFormatPerms.put(Permission.NICK_COLOR, StandardTags.color());
-        nickFormatPerms.put(Permission.NICK_GRADIENT, StandardTags.gradient());
-        nickFormatPerms.put(Permission.NICK_RAINBOW, StandardTags.rainbow());
-        nickFormatPerms.put(Permission.NICK_FORMAT, StandardTags.decorations());
-        nickFormatPerms.put(Permission.NICK_UNDERLINE, StandardTags.decorations(TextDecoration.UNDERLINED));
-        nickFormatPerms.put(Permission.NICK_ITALIC, StandardTags.decorations(TextDecoration.ITALIC));
-        nickFormatPerms.put(Permission.NICK_STRIKETHROUGH, StandardTags.decorations(TextDecoration.STRIKETHROUGH));
-        nickFormatPerms.put(Permission.NICK_BOLD, StandardTags.decorations(TextDecoration.BOLD));
-        nickFormatPerms.put(Permission.NICK_OBFUSCATED, StandardTags.decorations(TextDecoration.OBFUSCATED));
+        nickFormatPerms.put(SimpleNickPermission.NICK_COLOR.getPermission(), StandardTags.color());
+        nickFormatPerms.put(SimpleNickPermission.NICK_GRADIENT.getPermission(), StandardTags.gradient());
+        nickFormatPerms.put(SimpleNickPermission.NICK_RAINBOW.getPermission(), StandardTags.rainbow());
+        nickFormatPerms.put(SimpleNickPermission.NICK_FORMAT.getPermission(), StandardTags.decorations());
+        nickFormatPerms.put(SimpleNickPermission.NICK_UNDERLINE.getPermission(), StandardTags.decorations(TextDecoration.UNDERLINED));
+        nickFormatPerms.put(SimpleNickPermission.NICK_ITALIC.getPermission(), StandardTags.decorations(TextDecoration.ITALIC));
+        nickFormatPerms.put(SimpleNickPermission.NICK_STRIKETHROUGH.getPermission(), StandardTags.decorations(TextDecoration.STRIKETHROUGH));
+        nickFormatPerms.put(SimpleNickPermission.NICK_BOLD.getPermission(), StandardTags.decorations(TextDecoration.BOLD));
+        nickFormatPerms.put(SimpleNickPermission.NICK_OBFUSCATED.getPermission(), StandardTags.decorations(TextDecoration.OBFUSCATED));
     }
 
-    public static Map<Permission, TagResolver> getNickPerms(){
+    public static Map<String, TagResolver> getNickPerms(){
         return Collections.unmodifiableMap(nickFormatPerms);
     }
 
-    public static Map<Permission, String> getAllPerms(){
-        return Collections.unmodifiableMap(allPerms);
-    }
 }

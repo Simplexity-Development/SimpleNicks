@@ -5,12 +5,13 @@ import adhdmc.simplenicks.commands.subcommands.Reload;
 import adhdmc.simplenicks.commands.subcommands.Set;
 import adhdmc.simplenicks.config.ConfigValidator;
 import adhdmc.simplenicks.config.Defaults;
+import adhdmc.simplenicks.config.Permission;
+import adhdmc.simplenicks.config.SimpleNickPermission;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
@@ -22,7 +23,6 @@ public class CommandHandler implements CommandExecutor {
     private static final Map<ConfigValidator.Message, String> messages = ConfigValidator.getMessages();
     private static final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
     private static final Map<String, SubCommand> subcommandList = SimpleNicks.getSubCommands();
-    private static final Map<Defaults.Permission, String> permMap = Defaults.getAllPerms();
 
 
     private static final Plugin instance = SimpleNicks.getInstance();
@@ -41,11 +41,11 @@ public class CommandHandler implements CommandExecutor {
             return true;
             }
         if(checkForPlayerName(input) &&
-          (!(sender.hasPermission(permMap.get(Defaults.Permission.NICK_COMMAND_OTHERS)))
-          || sender.hasPermission(permMap.get(Defaults.Permission.NICK_COMMAND_RESET_OTHERS)))) {
+          (!(sender.hasPermission(SimpleNickPermission.NICK_COMMAND_OTHERS.getPermission())))
+          || sender.hasPermission(SimpleNickPermission.NICK_COMMAND_RESET_OTHERS.getPermission())) {
             sender.sendMessage(miniMessage.deserialize(messages.get(ConfigValidator.Message.NO_PERMISSION)));
             return true;
-        } else if (action.equals("set") && sender.hasPermission(permMap.get(Defaults.Permission.NICK_COMMAND_OTHERS))){
+        } else if (action.equals("set") && sender.hasPermission(SimpleNickPermission.NICK_COMMAND_OTHERS.getPermission()))){
             subcommandList.get(action).execute(input, );
 
         }

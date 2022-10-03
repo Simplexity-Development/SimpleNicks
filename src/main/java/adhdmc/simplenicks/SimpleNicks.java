@@ -48,7 +48,6 @@ public final class SimpleNicks extends JavaPlugin {
         locale.getlocaleConfig();
         Defaults.localeDefaults();
         Defaults.setFormatPerms();
-        Defaults.setPluginPerms();
         locale.saveConfig();
         ConfigValidator.loadLocaleMessages();
         this.getCommand("nick").setExecutor(new CommandHandler());
