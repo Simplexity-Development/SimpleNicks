@@ -3,6 +3,7 @@ package adhdmc.simplenicks;
 import adhdmc.simplenicks.commands.CommandHandler;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.commands.subcommands.Help;
+import adhdmc.simplenicks.commands.subcommands.Set;
 import adhdmc.simplenicks.config.ConfigValidator;
 import adhdmc.simplenicks.config.Defaults;
 import adhdmc.simplenicks.config.Locale;
@@ -72,5 +73,6 @@ public final class SimpleNicks extends JavaPlugin {
     private void registerSubCommands(){
         subCommands.put("reset", new Reset());
         subCommands.put("help", new Help());
+        subCommands.put("set", new Set());
     }
 }
