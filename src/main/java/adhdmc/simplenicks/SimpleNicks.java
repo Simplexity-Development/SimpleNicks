@@ -4,8 +4,7 @@ import adhdmc.simplenicks.commands.CommandHandler;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.commands.subcommands.Help;
 import adhdmc.simplenicks.commands.subcommands.Set;
-import adhdmc.simplenicks.config.ConfigValidator;
-import adhdmc.simplenicks.config.Defaults;
+import adhdmc.simplenicks.config.ConfigDefaults;
 import adhdmc.simplenicks.config.Locale;
 import adhdmc.simplenicks.commands.subcommands.Reset;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -32,14 +31,6 @@ public final class SimpleNicks extends JavaPlugin {
     private static Plugin instance;
     private static Locale locale;
     private static final HashMap<String, SubCommand> subCommands = new HashMap<>();
-    public enum Permission{
-        //plugin stuff
-        RELOAD,
-        //nick perms
-        NICK_SELF, NICK_OTHER, NICK_RESET_SELF, NICK_RESET_OTHER
-    }
-
-    private static final HashMap<Permission, String> permissionsMap = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -47,10 +38,10 @@ public final class SimpleNicks extends JavaPlugin {
         registerSubCommands();
         locale = new Locale(this);
         locale.getLocaleConfig();
-        Defaults.localeDefaults();
-        Defaults.setFormatPerms();
+        ConfigDefaults.localeDefaults();
+        ConfigDefaults.setFormatPerms();
         locale.saveConfig();
-        ConfigValidator.loadLocaleMessages();
+        ConfigDefaults.loadLocaleMessages();
         this.getCommand("nick").setExecutor(new CommandHandler());
     }
 
