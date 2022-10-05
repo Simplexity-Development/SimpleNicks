@@ -43,6 +43,7 @@ public final class SimpleNicks extends JavaPlugin {
         locale.saveConfig();
         ConfigDefaults.loadLocaleMessages();
         this.getCommand("nick").setExecutor(new CommandHandler());
+        instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
     }
 
     public static MiniMessage getMiniMessage(){

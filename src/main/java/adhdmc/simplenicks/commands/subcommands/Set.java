@@ -6,12 +6,16 @@ import adhdmc.simplenicks.config.ConfigDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
 public class Set extends SubCommand {
+
+    public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
     public static final int MAX_NICKNAME_LENGTH = 30; // TODO: Change this temporary constant into a config option.
     public static final String NICKNAME_REGEX = "[A-Za-z0-9_]+"; // TODO: Change this temporary constant into a config option.
@@ -71,7 +75,11 @@ public class Set extends SubCommand {
 
         // Set Nickname
         // TODO: Save to Player
+        //temporary saving option
+        String nickToSave = args[0];
         Component nickname = miniMessage.deserialize(args[0]);
+        player.getPersistentDataContainer().set(nickNameSave, PersistentDataType.STRING, nickToSave);
+        //---
         player.displayName(nickname);
         player.sendMessage(miniMessage.deserialize(ConfigDefaults.Message.NICK_CHANGED_SELF.getMessage(), Placeholder.component("nickname", nickname)));
     }
