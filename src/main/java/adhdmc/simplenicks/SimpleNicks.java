@@ -2,11 +2,8 @@ package adhdmc.simplenicks;
 
 import adhdmc.simplenicks.commands.CommandHandler;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.commands.subcommands.Help;
-import adhdmc.simplenicks.commands.subcommands.Set;
-import adhdmc.simplenicks.config.ConfigDefaults;
+import adhdmc.simplenicks.commands.subcommands.*;
 import adhdmc.simplenicks.config.Locale;
-import adhdmc.simplenicks.commands.subcommands.Reset;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,35 +33,31 @@ public final class SimpleNicks extends JavaPlugin {
     public void onEnable() {
         instance = this;
         registerSubCommands();
-        locale = new Locale(this);
-        locale.getLocaleConfig();
-        ConfigDefaults.localeDefaults();
-        ConfigDefaults.setFormatPerms();
-        locale.saveConfig();
-        ConfigDefaults.loadLocaleMessages();
+        locale = Locale.getInstance();
         this.getCommand("nick").setExecutor(new CommandHandler());
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
     }
 
-    public static MiniMessage getMiniMessage(){
+    public static MiniMessage getMiniMessage() {
         return miniMessage;
     }
 
-    public static Plugin getInstance(){
+    public static Plugin getInstance() {
         return instance;
     }
 
-    public static Map<String, SubCommand> getSubCommands(){
+    public static Map<String, SubCommand> getSubCommands() {
         return Collections.unmodifiableMap(subCommands);
     }
 
-    public static Locale getLocale(){
+    public static Locale getLocale() {
         return locale;
     }
 
-    private void registerSubCommands(){
+    private void registerSubCommands() {
         subCommands.put("reset", new Reset());
         subCommands.put("help", new Help());
         subCommands.put("set", new Set());
+        subCommands.put("reload", new Reload());
     }
 }
