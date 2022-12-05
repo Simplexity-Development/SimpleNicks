@@ -19,22 +19,24 @@ public class Locale {
 
     public enum Message {
         //errors
-        INVALID_COMMAND("<red>Invalid Command."),
-        NO_ARGUMENTS("<red>No arguments provided."),
-        TOO_MANY_ARGUMENTS("<red>Too many arguments provided."),
-        NO_PERMISSION("<red>You do not have permission to run this command"),
-        CONSOLE_CANNOT_RUN("<red>This command cannot be run on the Console."),
-        INVALID_PLAYER("<red>Invalid player specified"),
-        INVALID_NICK_REGEX("<red>Not a valid nickname, must follow regex: " + Set.NICKNAME_REGEX),
-        INVALID_NICK_TOO_LONG("<red>Nickname is too long, must be <=" + Set.MAX_NICKNAME_LENGTH),
+        INVALID_COMMAND("<prefix><red>Invalid Command."),
+        NO_ARGUMENTS("<prefix><red>No arguments provided."),
+        TOO_MANY_ARGUMENTS("<prefix><red>Too many arguments provided."),
+        CANNOT_NICK_USERNAME("<prefix><red>You cannot name yourself <name>, as that is the username of another player on this server. Pick another name"),
+        NO_PERMISSION("<prefix><red>You do not have permission to run this command"),
+        CONSOLE_CANNOT_RUN("<prefix><red>This command cannot be run on the Console."),
+        INVALID_PLAYER("<prefix><red>Invalid player specified"),
+        INVALID_NICK_REGEX("<prefix><red>Not a valid nickname, must follow regex: " + Set.NICKNAME_REGEX),
+        INVALID_NICK_TOO_LONG("<prefix><red>Nickname is too long, must be <=" + Set.MAX_NICKNAME_LENGTH),
         //plugin messages
         PREFIX("<aqua>SimpleNicks <white>» "),
-        NICK_CHANGED_SELF("<green>Changed your own nickname to <nickname>!"),
-        NICK_CHANGED_OTHER("<green>Changed <username>'s nickname to <nickname>"),
-        NICK_RESET_SELF("<green>Reset your own nickname!"),
-        NICK_RESET_OTHER("<green>Reset <username>'s nickname."),
+        NICK_CHANGED_SELF("<prefix><green>Changed your own nickname to <nickname>!"),
+        NICK_CHANGED_OTHER("<prefix><green>Changed <username>'s nickname to <nickname>"),
+        NICK_RESET_SELF("<prefix><green>Reset your own nickname!"),
+        NICK_RESET_OTHER("<prefix><green>Reset <username>'s nickname."),
         //other
-        VERSION("yes");
+        VERSION("<prefix>yes"),
+        CONFIG_RELOADED("<prefix><gold>SimpleNicks config and locale reloaded");
 
         String message;
 
@@ -119,19 +121,21 @@ public class Locale {
 
     public void setLocaleDefaults() {
         FileConfiguration locale = getLocaleConfig();
-        locale.addDefault("invalid-command", "<red>Invalid command.");
-        locale.addDefault("no-arguments", "<red>No arguments provided.");
-        locale.addDefault("too-many-arguments", "<red>Too many arguments provided.");
-        locale.addDefault("no-permission", "<red>You do not have permission to run this command");
-        locale.addDefault("console-cannot-run", "<red>This command cannot be run on the Console.");
-        locale.addDefault("invalid-player", "<red>Invalid player specified");
-        locale.addDefault("invalid-nick-regex", "<red>Not a valid nickname, must follow regex: ");
-        locale.addDefault("invalid-nick-too-long", "<red>Nickname is too long, must be <=");
+        locale.addDefault("invalid-command", "<prefix><red>Invalid command.");
+        locale.addDefault("no-arguments", "<prefix><red>No arguments provided.");
+        locale.addDefault("too-many-arguments", "<prefix><red>Too many arguments provided.");
+        locale.addDefault("cant-nick-username", "<prefix><red>You cannot name yourself <name>, as that is the username of another player on this server. Pick another name");
+        locale.addDefault("no-permission", "<prefix><red>You do not have permission to run this command");
+        locale.addDefault("console-cannot-run", "<prefix><red>This command cannot be run on the Console.");
+        locale.addDefault("invalid-player", "<prefix><red>Invalid player specified");
+        locale.addDefault("invalid-nick-regex", "<prefix><red>Not a valid nickname, must follow regex: ");
+        locale.addDefault("invalid-nick-too-long", "<prefix><red>Nickname is too long, must be <=");
         locale.addDefault("prefix", "<aqua>SimpleNicks <white>» ");
-        locale.addDefault("nick-changed-self", "<green>Changed your own nickname to <nickname>!");
-        locale.addDefault("nick-changed-other", "<green>Changed <username>'s nickname to <nickname>");
-        locale.addDefault("nick-reset-self", "<green>Reset your own nickname!");
-        locale.addDefault("nick-reset-other", "<green>Reset <username>'s nickname.");
+        locale.addDefault("config-reload", "<prefix><gold>SimpleNicks config and locale reloaded");
+        locale.addDefault("nick-changed-self", "<prefix><green>Changed your own nickname to <nickname>!");
+        locale.addDefault("nick-changed-other", "<prefix><green>Changed <username>'s nickname to <nickname>");
+        locale.addDefault("nick-reset-self", "<prefix><green>Reset your own nickname!");
+        locale.addDefault("nick-reset-other", "<prefix><green>Reset <username>'s nickname.");
     }
 }
 

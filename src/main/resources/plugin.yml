@@ -8,3 +8,41 @@ commands:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."
     aliases: [simplenicks, simplenick, snick]
     usage: "Usage: /nick [set|reset|help|reload] <name> [player]"
+    permission: simplenick.nick
+permissions:
+  simplenick.admin:
+    description: allows user to set and reset other players' nicknames
+    default: op
+  simplenick.reload:
+    description: allows a user to reload the locale and config of this plugin
+    default: op
+  simplenick.usernamebypass:
+    description: allows user to nickname themselves another person's username
+    default: false
+  simplenick.nick:
+    description: allows usage of the /nick command
+    default: op
+  simplenick.nick.reset:
+    description: allows a user to reset their own nickname
+    default: op
+  simplenick.nick.color:
+    description: allows color codes to be used in a nickname
+    default: op
+  simplenick.nick.gradient:
+    description: allows gradients to be used in a nickname
+    default: op
+  simplenick.nick.rainbow:
+    description: allows the rainbow tag to be used in a nickname
+    default: op
+  simplenicks.nick.format.italic:
+    description: allows the italic formatting tag to be used in a nickname
+    default: op
+  simplenicks.nick.format.strikethrough:
+    description: allows the strikethrough formatting tag to be used in a nickname
+    default: op
+  simplenicks.nick.format.bold:
+    description: allows the bold format tag to be used in a nickname
+    default: op
+  simplenicks.nick.format.obfuscated:
+    description: allows the obfuscated format tag to be used in a nickname
+    default: op

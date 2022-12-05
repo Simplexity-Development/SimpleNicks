@@ -9,7 +9,6 @@ public enum SimpleNickPermission {
     NICK_COLOR("simplenick.nick.color", StandardTags.color()),
     NICK_GRADIENT("simplenick.nick.gradient", StandardTags.gradient()),
     NICK_RAINBOW("simplenick.nick.rainbow", StandardTags.rainbow()),
-    NICK_FORMAT("simplenick.nick.format"),
     NICK_UNDERLINE("simplenick.nick.format.underline", StandardTags.decorations(TextDecoration.UNDERLINED)),
     NICK_ITALIC("simplenick.nick.format.italic", StandardTags.decorations(TextDecoration.ITALIC)),
     NICK_STRIKETHROUGH("simplenick.nick.format.strikethrough", StandardTags.decorations(TextDecoration.STRIKETHROUGH)),
@@ -19,7 +18,8 @@ public enum SimpleNickPermission {
     NICK_COMMAND("simplenick.nick"),
     NICK_ADMIN("simplenick.admin"),
     NICK_RESET("simplenick.nick.reset"),
-    NICK_RELOAD("simplenick.reload");
+    NICK_RELOAD("simplenick.reload"),
+    NICK_USERNAME_BYPASS("simplenick.usernamebypass");
 
     private final String permission;
     private final TagResolver resolver;

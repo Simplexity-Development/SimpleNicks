@@ -2,6 +2,7 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
+import adhdmc.simplenicks.config.Locale;
 import adhdmc.simplenicks.config.Locale.Message;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.Component;
@@ -10,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
@@ -46,7 +48,6 @@ public class Set extends SubCommand {
             sender.sendMessage(miniMessage.deserialize(Message.TOO_MANY_ARGUMENTS.getMessage())); // Too Many Arguments
             return;
         }
-        // TODO: Pull permissions from a common place.
         if (args.length == 2 && !sender.hasPermission(SimpleNickPermission.NICK_ADMIN.getPermission())) {
             sender.sendMessage(miniMessage.deserialize(Message.NO_PERMISSION.getMessage())); // No Permission
             return;
@@ -61,30 +62,34 @@ public class Set extends SubCommand {
         // TODO: Allow regex to be modifiable by config.
         // TODO: Check if the person has permissions to use the tags, perms & their connected tags are in ConfigDefaults - RhythmicSys
         if (!nicknameStripped.matches(NICKNAME_REGEX)) {
-            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_REGEX.getMessage())); // Non-Alphanumeric Nickname
+            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_REGEX.getMessage(), Placeholder.parsed("prefix", Locale.Message.PREFIX.getMessage()))); // Non-Alphanumeric Nickname
             return;
         }
         if (nicknameStripped.length() > MAX_NICKNAME_LENGTH) {
-            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_TOO_LONG.getMessage())); // Nickname Too Long
+            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_TOO_LONG.getMessage(), Placeholder.parsed("prefix", Locale.Message.PREFIX.getMessage()))); // Nickname Too Long
             return;
         }
-
         // Valid Player Check
         Player player = (args.length == 1) ? (Player) sender : SimpleNicks.getInstance().getServer().getPlayer(args[1]);
         if (player == null) {
-            sender.sendMessage(miniMessage.deserialize(Message.INVALID_PLAYER.getMessage())); // Invalid Player
+            sender.sendMessage(miniMessage.deserialize(Message.INVALID_PLAYER.getMessage(), Placeholder.parsed("prefix", Locale.Message.PREFIX.getMessage()))); // Invalid Player
+            return;
+        }
+        // Check against cached usernames
+        if (!player.hasPermission(SimpleNickPermission.NICK_USERNAME_BYPASS.getPermission()) && (SimpleNicks.getInstance().getServer().getOfflinePlayerIfCached(nicknameStripped) != null) && !(nicknameStripped.equals(player.getName()))){
+            sender.sendMessage(miniMessage.deserialize(Message.CANNOT_NICK_USERNAME.getMessage(), Placeholder.parsed("name", nicknameStripped), Placeholder.parsed("prefix", Locale.Message.PREFIX.getMessage())));
             return;
         }
 
         // Set Nickname
-        // TODO: Save to Player
+        // Saves to PDC
         //temporary saving option
         String nickToSave = args[0];
         Component nickname = miniMessage.deserialize(args[0]);
         player.getPersistentDataContainer().set(nickNameSave, PersistentDataType.STRING, nickToSave);
         //---
         player.displayName(nickname);
-        player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_SELF.getMessage(), Placeholder.component("nickname", nickname)));
+        player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_SELF.getMessage(), Placeholder.component("nickname", nickname), Placeholder.parsed("prefix", Locale.Message.PREFIX.getMessage())));
     }
 
     @Override
@@ -103,6 +108,7 @@ public class Set extends SubCommand {
             addValidTabOption(sender, args[0], "<gradient:dark_purple:blue>" + name, SimpleNickPermission.NICK_GRADIENT, tabComplete);
             addValidTabOption(sender, args[0], "<#FFC0CB>" + name, SimpleNickPermission.NICK_COLOR, tabComplete);
             addValidTabOption(sender, args[0], "<blue>" + name, SimpleNickPermission.NICK_COLOR, tabComplete);
+            addValidTabOption(sender, args[0], "<rainbow>" + name, SimpleNickPermission.NICK_RAINBOW, tabComplete);
         }
         return tabComplete;
     }
