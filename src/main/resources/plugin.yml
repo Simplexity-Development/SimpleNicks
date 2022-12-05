@@ -19,7 +19,7 @@ permissions:
   simplenick.usernamebypass:
     description: allows user to nickname themselves another person's username
     default: false
-  simplenick.nick:
+  simplenick.nick.set:
     description: allows usage of the /nick command
     default: op
   simplenick.nick.reset:

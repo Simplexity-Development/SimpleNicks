@@ -15,7 +15,7 @@ public enum SimpleNickPermission {
     NICK_BOLD("simplenick.nick.format.bold", StandardTags.decorations(TextDecoration.BOLD)),
     NICK_OBFUSCATED("simplenick.nick.format.obfuscated", StandardTags.decorations(TextDecoration.OBFUSCATED)),
     //Command Perms
-    NICK_COMMAND("simplenick.nick"),
+    NICK_COMMAND("simplenick.nick.set"),
     NICK_ADMIN("simplenick.admin"),
     NICK_RESET("simplenick.nick.reset"),
     NICK_RELOAD("simplenick.reload"),

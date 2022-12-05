@@ -21,29 +21,47 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 - Sets the nickname of the player back to the original username, unformatted.
 - Allows users with permission `simplenick.admin` to reset the nickname of another player using the optional [player] argument.
 
-`/nick reload` (TODO)
+`/nick reload` 
 
 - Reloads the configuration and locale.
 
-`/nick help`
+`/nick help` (TODO)
 
 - Provides help text.
 
-## Permissions
+### Admin Permissions
 
 `simplenick.admin`
 
 - Allows the player to change other player's nicknames.
 
-`simplenicks.nick.<tag>` (TODO)
+`simplenick.usernamebypass`
 
-- Allows for the use of those Mini-Message tags.
-- Valid Tags are: `color`, `gradient`, `rainbow`, `underline`, `italic`, `strikethrough`, `bold`, `obsfucated`.
-- All Formatting Tags work using `simplenick.nick.format`.
+- Allows the player to use the username of another player on the server, as their own nickname
 
-`simplenicks.reload` (TODO)
+`simplenicks.reload`
 
 - Allows the player to reload the plugin configuration and locale.
+
+### Player Permissions
+
+`simplenicks.nick.set`
+
+- Allows the player to set their own nickname
+
+`simplenicks.nick.reset`
+
+- Allows the player to reset their own nickname
+
+`simplenicks.nick.<tag>`
+
+- Allows for the use of those Mini-Message tags.
+- Valid Tags are: `color`, `gradient`, and `rainbow`. 
+
+`simplenick.nick.format.<tag>`
+
+- Allows for the use of those formatting tags.
+- Valid Tags are: `underline`, `italic`, `strikethrough`, `bold`, and `obsfucated`.
 
 ## TODO
 
