@@ -6,7 +6,7 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 
 > **Warning**
 > 
-> This plugin is currently under development and is not for production use unless retrieved from [releases](https://github.com/ADHDMC/SimpleNicks/releases).
+> This plugin is currently under development and is in [beta testing](https://github.com/ADHDMC/SimpleNicks/releases).
 
 ## Commands
 
