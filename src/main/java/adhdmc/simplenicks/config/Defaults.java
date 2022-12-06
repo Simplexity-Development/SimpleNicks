@@ -2,6 +2,10 @@ package adhdmc.simplenicks.config;
 
 import adhdmc.simplenicks.SimpleNicks;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.yaml.snakeyaml.comments.CommentType;
+
+import java.util.Collections;
+import java.util.List;
 
 public class Defaults {
     public static void setLocaleDefaults() {

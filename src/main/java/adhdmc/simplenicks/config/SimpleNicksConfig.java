@@ -16,8 +16,8 @@ public class SimpleNicksConfig {
     private final String configName = "config.yml";
     private YamlConfiguration simpleNickConfig = null;
     private File configFile = null;
-    private static int MAX_NICKNAME_LENGTH = 30;
-    private static String NICKNAME_REGEX = "[A-Za-z0-9_]+";
+    private static int MAX_NICKNAME_LENGTH;
+    private static String NICKNAME_REGEX;
 
     private SimpleNicksConfig() {
         this.pluginInstance = (SimpleNicks) SimpleNicks.getInstance();
@@ -28,6 +28,7 @@ public class SimpleNicksConfig {
             instance = new SimpleNicksConfig();
             instance.getSimpleNickConfig();
             Defaults.setConfigDefaults();
+            instance.reloadConfigValues();
             instance.saveConfig();
         }
         return instance;
@@ -69,7 +70,7 @@ public class SimpleNicksConfig {
         }
     }
 
-    public static void reloadConfigValues(){
+    public void reloadConfigValues(){
         setMaxNicknameLength(0);
         setNicknameRegex("");
         int configuredLength = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");
