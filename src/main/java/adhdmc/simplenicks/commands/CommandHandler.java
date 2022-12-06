@@ -1,12 +1,10 @@
 package adhdmc.simplenicks.commands;
 
 import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.config.Locale.Message;
+import adhdmc.simplenicks.util.Message;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.*;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 

@@ -1,0 +1,7 @@
+#SimpleNicks config
+#Maximum nickname length (not including color or formatting tags)
+max-nickname-length: 30
+
+#Regex for what is considered a valid nickname character (Not including color or formatting tags)
+#Changing this to include non-alphanumeric characters may produce undesired or unexpected results
+nickname-regex: "[A-Za-z0-9_]+"
