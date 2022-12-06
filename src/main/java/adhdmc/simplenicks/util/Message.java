@@ -1,7 +1,5 @@
 package adhdmc.simplenicks.util;
 
-import adhdmc.simplenicks.config.ConfigUtils;
-
 public enum Message {
     //errors
     INVALID_COMMAND("<prefix><red>Invalid Command."),
@@ -11,8 +9,8 @@ public enum Message {
     NO_PERMISSION("<prefix><red>You do not have permission to run this command"),
     CONSOLE_CANNOT_RUN("<prefix><red>This command cannot be run on the Console."),
     INVALID_PLAYER("<prefix><red>Invalid player specified"),
-    INVALID_NICK_REGEX("<prefix><red>Not a valid nickname, must follow regex: " + ConfigUtils.getNicknameRegex()),
-    INVALID_NICK_TOO_LONG("<prefix><red>Nickname is too long, must be <=" + ConfigUtils.getMaxNicknameLength()),
+    INVALID_NICK_REGEX("<prefix><red>Not a valid nickname, must follow regex: <regex>"),
+    INVALID_NICK_TOO_LONG("<prefix><red>Nickname is too long, must be <= <value>"),
     INVALID_TAGS("<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again"),
     //plugin messages
     PREFIX("<aqua>SimpleNicks <white>» "),

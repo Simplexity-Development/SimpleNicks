@@ -3,10 +3,9 @@ package adhdmc.simplenicks;
 import adhdmc.simplenicks.commands.CommandHandler;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.commands.subcommands.*;
-import adhdmc.simplenicks.config.ConfigUtils;
+import adhdmc.simplenicks.config.SimpleNicksConfig;
 import adhdmc.simplenicks.config.Locale;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +29,7 @@ public final class SimpleNicks extends JavaPlugin {
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
     private static Plugin instance;
     private static Locale locale;
+    private static SimpleNicksConfig simpleNicksConfig;
     private static final HashMap<String, SubCommand> subCommands = new HashMap<>();
 
     @Override
@@ -37,7 +37,7 @@ public final class SimpleNicks extends JavaPlugin {
         instance = this;
         registerSubCommands();
         locale = Locale.getInstance();
-        ConfigUtils.loadConfigValues();
+        simpleNicksConfig = SimpleNicksConfig.getInstance();
         this.getCommand("nick").setExecutor(new CommandHandler());
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
     }

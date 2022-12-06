@@ -13,8 +13,8 @@ public class Defaults {
         locale.addDefault("no-permission", "<prefix><red>You do not have permission to run this command");
         locale.addDefault("console-cannot-run", "<prefix><red>This command cannot be run on the Console.");
         locale.addDefault("invalid-player", "<prefix><red>Invalid player specified");
-        locale.addDefault("invalid-nick-regex", "<prefix><red>Not a valid nickname, must follow regex: ");
-        locale.addDefault("invalid-nick-too-long", "<prefix><red>Nickname is too long, must be <=");
+        locale.addDefault("invalid-nick-regex", "<prefix><red>Not a valid nickname, must follow regex: <regex>");
+        locale.addDefault("invalid-nick-too-long", "<prefix><red>Nickname is too long, must be <= <value>");
         locale.addDefault("invalid-tags", "<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again");
         locale.addDefault("prefix", "<aqua>SimpleNicks <white>» ");
         locale.addDefault("help-base", "<prefix><green>--------");
@@ -29,7 +29,7 @@ public class Defaults {
     }
 
     public static void setConfigDefaults() {
-        FileConfiguration config = SimpleNicks.getInstance().getConfig();
+        FileConfiguration config = SimpleNicksConfig.getInstance().getSimpleNickConfig();
         config.addDefault("max-nickname-length", 30);
         config.addDefault("nickname-regex","[A-Za-z0-9_]+");
     }

@@ -2,7 +2,7 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.config.ConfigUtils;
+import adhdmc.simplenicks.config.SimpleNicksConfig;
 import adhdmc.simplenicks.util.Message;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.Component;
@@ -21,8 +21,8 @@ public class Set extends SubCommand {
 
     public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
-    private final int MAX_NICKNAME_LENGTH = ConfigUtils.getMaxNicknameLength();// TODO: Change this temporary constant into a config option.
-    private final String NICKNAME_REGEX = ConfigUtils.getNicknameRegex(); // TODO: Change this temporary constant into a config option.
+    private final int MAX_NICKNAME_LENGTH = SimpleNicksConfig.getMaxNicknameLength();// TODO: Change this temporary constant into a config option.
+    private final String NICKNAME_REGEX = SimpleNicksConfig.getNicknameRegex(); // TODO: Change this temporary constant into a config option.
 
     public Set() {
         super("set", "sets a nickname", "/nick set", SimpleNickPermission.NICK_COMMAND);
@@ -61,11 +61,15 @@ public class Set extends SubCommand {
         // TODO: Allow regex to be modifiable by config.
         // TODO: Check if the person has permissions to use the tags, perms & their connected tags are in ConfigDefaults - RhythmicSys
         if (!nicknameStripped.matches(NICKNAME_REGEX)) {
-            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_REGEX.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Non-Alphanumeric Nickname
+            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_REGEX.getMessage(),
+                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
+                    Placeholder.parsed("regex", NICKNAME_REGEX))); // Non-Alphanumeric Nickname
             return;
         }
         if (nicknameStripped.length() > MAX_NICKNAME_LENGTH) {
-            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_TOO_LONG.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Nickname Too Long
+            sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_TOO_LONG.getMessage(),
+                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
+                    Placeholder.parsed("value", String.valueOf(MAX_NICKNAME_LENGTH)))); // Nickname Too Long
             return;
         }
         // Valid Player Check
