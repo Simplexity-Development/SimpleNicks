@@ -8,7 +8,7 @@ commands:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."
     aliases: [simplenicks, simplenick, snick]
     usage: "Usage: /nick [set|reset|help|reload] <name> [player]"
-    permission: simplenick.nick
+    permission: simplenick.nick.set
 permissions:
   simplenick.admin:
     description: allows user to set and reset other players' nicknames

@@ -8,6 +8,7 @@ import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -85,7 +86,20 @@ public class Set extends SubCommand {
         // Saves to PDC
         //temporary saving option
         String nickToSave = args[0];
-        Component nickname = miniMessage.deserialize(args[0]);
+        //TODO: config option for admin settings to be restricted to their own permissions
+        Component nickname = null;
+        if (sender.hasPermission(SimpleNickPermission.NICK_ADMIN.getPermission())) {
+            nickname = miniMessage.deserialize(args[0]);
+        } else {
+            Component fullyParsed = miniMessage.deserialize(args[0]);
+            Component permissionParsed = parseMessageContent(player, args[0]);
+            if (fullyParsed.equals(permissionParsed)){
+                nickname = permissionParsed;
+            } else {
+                sender.sendMessage(miniMessage.deserialize(Message.INVALID_TAGS.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+                return;
+            }
+        }
         player.getPersistentDataContainer().set(nickNameSave, PersistentDataType.STRING, nickToSave);
         //---
         player.displayName(nickname);
@@ -118,4 +132,17 @@ public class Set extends SubCommand {
             if (option.startsWith(arg)) list.add(option);
         }
     }
+    //Stolen from https://github.com/YouHaveTrouble/JustChat/blob/master/src/main/java/me/youhavetrouble/justchat/JustChatListener.java#L78
+    private Component parseMessageContent(Player player, String rawMessage) {
+        TagResolver.Builder tagResolver = TagResolver.builder();
+
+        for(SimpleNickPermission perm : SimpleNickPermission.values()) {
+            if (player.hasPermission(perm.getPermission()) && perm.getTagResolver() != null) {
+                tagResolver.resolver(perm.getTagResolver());
+            }
+        }
+        MiniMessage nameParser = MiniMessage.builder().tags(tagResolver.build()).build();
+        return nameParser.deserialize(rawMessage);
+    }
+
 }

@@ -28,6 +28,7 @@ public class Locale {
         INVALID_PLAYER("<prefix><red>Invalid player specified"),
         INVALID_NICK_REGEX("<prefix><red>Not a valid nickname, must follow regex: " + Set.NICKNAME_REGEX),
         INVALID_NICK_TOO_LONG("<prefix><red>Nickname is too long, must be <=" + Set.MAX_NICKNAME_LENGTH),
+        INVALID_TAGS("<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again"),
         //plugin messages
         PREFIX("<aqua>SimpleNicks <white>» "),
         NICK_CHANGED_SELF("<prefix><green>Changed your own nickname to <nickname>!"),
@@ -36,6 +37,10 @@ public class Locale {
         NICK_RESET_OTHER("<prefix><green>Reset <username>'s nickname."),
         //other
         VERSION("<prefix>yes"),
+        HELP_BASE("<prefix><green>--------"),
+        HELP_SET("<aqua>· <yellow>Setting a nickname: \n   <gray>/nick set <nickname>"),
+        HELP_RESET("<aqua>· <yellow>removing a nickname: \n   <gray>/nick reset"),
+        HELP_MINIMESSAGE("<aqua>· <yellow>Formatting: \n   <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"),
         CONFIG_RELOADED("<prefix><gold>SimpleNicks config and locale reloaded");
 
         String message;
@@ -130,7 +135,12 @@ public class Locale {
         locale.addDefault("invalid-player", "<prefix><red>Invalid player specified");
         locale.addDefault("invalid-nick-regex", "<prefix><red>Not a valid nickname, must follow regex: ");
         locale.addDefault("invalid-nick-too-long", "<prefix><red>Nickname is too long, must be <=");
+        locale.addDefault("invalid-tags", "<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again");
         locale.addDefault("prefix", "<aqua>SimpleNicks <white>» ");
+        locale.addDefault("help-base", "<prefix><green>--------");
+        locale.addDefault("help-set","<aqua>· <yellow>Setting a nickname: \n   <gray>/nick set <nickname>");
+        locale.addDefault("help-reset","<aqua>· <yellow>removing a nickname: \n   <gray>/nick reset");
+        locale.addDefault("help-minimessage", "<aqua>· <yellow>Formatting: \n   <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>");
         locale.addDefault("config-reload", "<prefix><gold>SimpleNicks config and locale reloaded");
         locale.addDefault("nick-changed-self", "<prefix><green>Changed your own nickname to <nickname>!");
         locale.addDefault("nick-changed-other", "<prefix><green>Changed <username>'s nickname to <nickname>");
