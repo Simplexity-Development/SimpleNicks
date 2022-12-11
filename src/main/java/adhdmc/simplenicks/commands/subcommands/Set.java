@@ -2,7 +2,6 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.config.SimpleNicksConfig;
 import adhdmc.simplenicks.util.Message;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.Component;
@@ -21,8 +20,8 @@ public class Set extends SubCommand {
 
     public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
-    private final int MAX_NICKNAME_LENGTH = SimpleNicksConfig.getMaxNicknameLength();// TODO: Change this temporary constant into a config option.
-    private final String NICKNAME_REGEX = SimpleNicksConfig.getNicknameRegex(); // TODO: Change this temporary constant into a config option.
+    private int MAX_NICKNAME_LENGTH = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");// TODO: Change this temporary constant into a config option.
+    private String NICKNAME_REGEX = SimpleNicks.getInstance().getConfig().getString("nickname-regex"); // TODO: Change this temporary constant into a config option.
 
     public Set() {
         super("set", "sets a nickname", "/nick set", SimpleNickPermission.NICK_COMMAND);
@@ -58,6 +57,8 @@ public class Set extends SubCommand {
 
         // Nickname Validity Check
         String nicknameStripped = miniMessage.stripTags(args[0]);
+        SimpleNicks.getSimpleNicksLogger().info("Nickname Stripped: " + nicknameStripped);
+        SimpleNicks.getSimpleNicksLogger().info("Current max nick length: " + MAX_NICKNAME_LENGTH);
         // TODO: Allow regex to be modifiable by config.
         // TODO: Check if the person has permissions to use the tags, perms & their connected tags are in ConfigDefaults - RhythmicSys
         if (!nicknameStripped.matches(NICKNAME_REGEX)) {

@@ -3,7 +3,6 @@ package adhdmc.simplenicks.commands.subcommands;
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.config.Locale;
-import adhdmc.simplenicks.config.SimpleNicksConfig;
 import adhdmc.simplenicks.util.Message;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -26,8 +25,7 @@ public class Reload extends SubCommand {
         }
         Locale.getInstance().reloadConfig();
         Locale.getInstance().loadLocaleMessages();
-        SimpleNicksConfig.getInstance().reloadConfig();
-        SimpleNicksConfig.getInstance().reloadConfigValues();
+        SimpleNicks.getInstance().reloadConfig();
         sender.sendMessage(miniMessage.deserialize(Message.CONFIG_RELOADED.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
     }
 
