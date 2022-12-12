@@ -32,7 +32,7 @@ public class Reset extends SubCommand {
             return;
         }
         // Admin Check
-        if (args.length == 1 && !sender.hasPermission(SimpleNickPermission.NICK_ADMIN.getPermission())) {
+        if (args.length == 1 && !sender.hasPermission(SimpleNickPermission.NICK_RESET_OTHERS.getPermission())) {
             sender.sendMessage(miniMessage.deserialize(Message.NO_PERMISSION.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // No Permission
             return;
         }

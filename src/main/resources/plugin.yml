@@ -13,12 +13,27 @@ permissions:
   simplenick.admin:
     description: allows user to set and reset other players' nicknames
     default: op
+  simplenick.admin.reset:
+    default: op
+    description: Allows the user to clear another player's nickname
+  simplenick.admin.restrictive:
+    default: op
+    description: Allows the user to set another player's nickname, but uses the formatting permissions of the other player
+  simplenick.admin.basic:
+    default: op
+    description: Allows the user to set another player's nickname, using the formatting permissions assigned to the player with the 'admin.basic' permission
+  simplenick.admin.full:
+    default: false
+    description: Allows the user to set another player's nickname, does not check the formatting permissions delegated to either player
   simplenick.reload:
     description: allows a user to reload the locale and config of this plugin
     default: op
   simplenick.usernamebypass:
     description: allows user to nickname themselves another person's username
     default: false
+  simplenick.nick:
+    description: base of all formatting permissions
+    default: op
   simplenick.nick.set:
     description: allows usage of the /nick command
     default: op
@@ -34,15 +49,18 @@ permissions:
   simplenick.nick.rainbow:
     description: allows the rainbow tag to be used in a nickname
     default: op
-  simplenicks.nick.format.italic:
+  simplenick.nick.format.reset:
+    description: allows the reset formatting tag to be used in a nickname
+    default: op
+  simplenick.nick.format.italic:
     description: allows the italic formatting tag to be used in a nickname
     default: op
-  simplenicks.nick.format.strikethrough:
+  simplenick.nick.format.strikethrough:
     description: allows the strikethrough formatting tag to be used in a nickname
     default: op
-  simplenicks.nick.format.bold:
+  simplenick.nick.format.bold:
     description: allows the bold format tag to be used in a nickname
     default: op
-  simplenicks.nick.format.obfuscated:
+  simplenick.nick.format.obfuscated:
     description: allows the obfuscated format tag to be used in a nickname
     default: op

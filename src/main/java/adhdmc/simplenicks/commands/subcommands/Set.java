@@ -20,8 +20,6 @@ public class Set extends SubCommand {
 
     public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
-    private int MAX_NICKNAME_LENGTH = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");// TODO: Change this temporary constant into a config option.
-    private String NICKNAME_REGEX = SimpleNicks.getInstance().getConfig().getString("nickname-regex"); // TODO: Change this temporary constant into a config option.
 
     public Set() {
         super("set", "sets a nickname", "/nick set", SimpleNickPermission.NICK_COMMAND);
@@ -30,9 +28,16 @@ public class Set extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         MiniMessage miniMessage = SimpleNicks.getMiniMessage();
+        int MAX_NICKNAME_LENGTH = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");
+        String NICKNAME_REGEX = SimpleNicks.getInstance().getConfig().getString("nickname-regex");
+        if (NICKNAME_REGEX == null || NICKNAME_REGEX.isEmpty()) {
+            SimpleNicks.getSimpleNicksLogger().severe(Message.BAD_REGEX.getMessage());
+            NICKNAME_REGEX = "[A-Za-z0-9_]+";
+        }
+
 
         // Player Check
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player sendingPlayer)) {
             sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage())); // Invalid Usage (Not a Player)
             return;
         }
@@ -57,10 +62,6 @@ public class Set extends SubCommand {
 
         // Nickname Validity Check
         String nicknameStripped = miniMessage.stripTags(args[0]);
-        SimpleNicks.getSimpleNicksLogger().info("Nickname Stripped: " + nicknameStripped);
-        SimpleNicks.getSimpleNicksLogger().info("Current max nick length: " + MAX_NICKNAME_LENGTH);
-        // TODO: Allow regex to be modifiable by config.
-        // TODO: Check if the person has permissions to use the tags, perms & their connected tags are in ConfigDefaults - RhythmicSys
         if (!nicknameStripped.matches(NICKNAME_REGEX)) {
             sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_REGEX.getMessage(),
                     Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
@@ -89,10 +90,15 @@ public class Set extends SubCommand {
         // Saves to PDC
         //temporary saving option
         String nickToSave = args[0];
-        //TODO: config option for admin settings to be restricted to their own permissions
-        Component nickname;
+        Component nickname = null;
         if (sender.hasPermission(SimpleNickPermission.NICK_ADMIN.getPermission())) {
-            nickname = miniMessage.deserialize(args[0]);
+            if (sendingPlayer.hasPermission(SimpleNickPermission.NICK_OTHERS_FULL.getPermission())){
+                nickname = miniMessage.deserialize(args[0]);
+            } else if (sendingPlayer.hasPermission(SimpleNickPermission.NICK_OTHERS_BASIC.getPermission())) {
+                nickname = parseMessageContent(sendingPlayer, args[0]);
+            } else if (sendingPlayer.hasPermission(SimpleNickPermission.NICK_OTHERS_RESTRICTIVE.getPermission())) {
+                nickname = parseMessageContent(player, args[0]);
+            }
         } else {
             Component fullyParsed = miniMessage.deserialize(args[0]);
             Component permissionParsed = parseMessageContent(player, args[0]);
@@ -103,10 +109,29 @@ public class Set extends SubCommand {
                 return;
             }
         }
+        //idk it says this might be null, I hope it's not but just in case lol
+        if (nickname == null) {
+            sender.sendMessage(miniMessage.deserialize(Message.NICK_NULL.getMessage()));
+            return;
+        }
         player.getPersistentDataContainer().set(nickNameSave, PersistentDataType.STRING, nickToSave);
-        //---
+        //set their nickname
         player.displayName(nickname);
-        player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_SELF.getMessage(), Placeholder.component("nickname", nickname), Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+        //Send feedback if an admin is setting someone's name, both to the admin and player
+        if (sendingPlayer != player) {
+            sendingPlayer.sendMessage(miniMessage.deserialize(Message.NICK_CHANGE_OTHER.getMessage(),
+                    Placeholder.parsed("player", player.getName()),
+                    Placeholder.component("nickname", nickname),
+                    Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+            player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_BY_OTHER.getMessage(),
+                    Placeholder.component("player", sendingPlayer.displayName()),
+                    Placeholder.component("nickname", nickname)));
+        } else {
+            //If a player sets their own name
+        player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_SELF.getMessage(),
+                Placeholder.component("nickname", nickname),
+                Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+        }
     }
 
     @Override

@@ -104,9 +104,12 @@ public class Locale {
         locale.addDefault("help-minimessage", "<aqua>· <yellow>Formatting: \n   <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>");
         locale.addDefault("config-reload", "<prefix><gold>SimpleNicks config and locale reloaded");
         locale.addDefault("nick-changed-self", "<prefix><green>Changed your own nickname to <nickname>!");
-        locale.addDefault("nick-changed-other", "<prefix><green>Changed <username>'s nickname to <nickname>");
+        locale.addDefault("nick-change-other", "<prefix><green>Changed <username>'s nickname to <nickname>");
+        locale.addDefault("nick-changed-by-other", "<prefix><green><sender> changed your nickname to<reset><nickname><green>!");
         locale.addDefault("nick-reset-self", "<prefix><green>Reset your own nickname!");
         locale.addDefault("nick-reset-other", "<prefix><green>Reset <username>'s nickname.");
+        locale.addDefault("no-regex", "nickname-regex is null or malformed in file 'config.yml'. Please fix this");
+        locale.addDefault("nick-is-null", "<red>Something went wrong and the nickname is null, please check your formatting");
     }
 }
 

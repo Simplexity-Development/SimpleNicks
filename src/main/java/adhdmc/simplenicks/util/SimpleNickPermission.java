@@ -9,6 +9,7 @@ public enum SimpleNickPermission {
     NICK_COLOR("simplenick.nick.color", StandardTags.color()),
     NICK_GRADIENT("simplenick.nick.gradient", StandardTags.gradient()),
     NICK_RAINBOW("simplenick.nick.rainbow", StandardTags.rainbow()),
+    NICK_FORMAT_RESET("simplenick.nick.format.reset", StandardTags.reset()),
     NICK_UNDERLINE("simplenick.nick.format.underline", StandardTags.decorations(TextDecoration.UNDERLINED)),
     NICK_ITALIC("simplenick.nick.format.italic", StandardTags.decorations(TextDecoration.ITALIC)),
     NICK_STRIKETHROUGH("simplenick.nick.format.strikethrough", StandardTags.decorations(TextDecoration.STRIKETHROUGH)),
@@ -17,6 +18,10 @@ public enum SimpleNickPermission {
     //Command Perms
     NICK_COMMAND("simplenick.nick.set", null),
     NICK_ADMIN("simplenick.admin", null),
+    NICK_OTHERS_RESTRICTIVE("simplenick.admin.restrictive", null),
+    NICK_OTHERS_BASIC("simplenick.admin.basic", null),
+    NICK_OTHERS_FULL("simplenick.admin.full", null),
+    NICK_RESET_OTHERS("simplenick.admin.reset", null),
     NICK_RESET("simplenick.nick.reset", null),
     NICK_RELOAD("simplenick.reload", null),
     NICK_USERNAME_BYPASS("simplenick.usernamebypass", null);
