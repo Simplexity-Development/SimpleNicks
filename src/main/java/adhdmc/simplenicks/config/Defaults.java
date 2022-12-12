@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Defaults {
 
-
     public static void setConfigDefaults() {
         FileConfiguration config = SimpleNicks.getInstance().getConfig();
         config.addDefault("max-nickname-length", 30);

@@ -25,23 +25,44 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 
 - Reloads the configuration and locale.
 
-`/nick help` (TODO)
+`/nick help` 
 
 - Provides help text.
 
 ### Admin Permissions
 
-`simplenick.admin`
-
-- Allows the player to change other player's nicknames.
-
 `simplenick.usernamebypass`
 
 - Allows the player to use the username of another player on the server, as their own nickname
 
-`simplenicks.reload`
+`simplenick.reload`
 
 - Allows the player to reload the plugin configuration and locale.
+
+`simplenick.admin.reset`
+
+- Allows the player to reset another player's nickname
+
+`simplenick.admin.restrictive`
+
+- Allows the player to set another player's nickname, within the other player's formatting permissions
+- Does not override the other player's formatting permissions
+- Does override the other player's nickname permissions 
+  - (if the other player cannot nickname themselves, they can still be admin nick'd with this permission)
+
+`simplenick.admin.basic`
+
+- Allows the player to set another player's nickname, within their own formatting permissions
+- Overrides the other player's formatting permissions
+- Only allows permissions that the admin has
+
+`simplenick.admin.full`
+
+- Allows the player to set another player's nickname, regardless of both of their formatting permissions.
+> NOTE:
+> <br>This permission allows for all minimessage formatting types, not just the ones that are set in permissions here
+> <br>These types of formatting can include things like click action, hover text, and similar. 
+> <br>These formats can do really cool stuff, but be careful who you give it to lol
 
 ### Player Permissions
 
@@ -61,11 +82,12 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 `simplenick.nick.format.<tag>`
 
 - Allows for the use of those formatting tags.
-- Valid Tags are: `underline`, `italic`, `strikethrough`, `bold`, and `obsfucated`.
+- Valid Tags are: `reset`, `underline`, `italic`, `strikethrough`, `bold`, and `obsfucated`.
 
 ## TODO
 
 - Provide Config Option for TabList Changing and implement logic for TabList Update.
 - Create a `/nick whois` or similar command to determine "who is the player(s) with this nickname".
-- Add the option to change the regex check for display names (with a "potentially unsafe" warning).
-- Add the option to change the character limit on the fully parsed name.
+- Make the code less of a mess
+- Allow for nicknames to be set by non-players
+- Make a placeholderAPI extension

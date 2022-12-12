@@ -58,8 +58,6 @@ public final class SimpleNicks extends JavaPlugin {
         return instance.getLogger();
     }
 
-
-
     private void registerSubCommands() {
         subCommands.put("reset", new Reset());
         subCommands.put("help", new Help());

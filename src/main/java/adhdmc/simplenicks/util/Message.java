@@ -13,14 +13,15 @@ public enum Message {
     INVALID_NICK_TOO_LONG("<prefix><red>Nickname is too long, must be <= <value>"),
     INVALID_TAGS("<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again"),
     BAD_REGEX("'nickname-regex' is null or malformed in file 'config.yml'. Please fix this"),
-    NICK_NULL("<red>Something went wrong and the nickname is null, please check your formatting"),
+    NICK_NULL("<prefix><red>Something went wrong and the nickname is null, please check your formatting"),
     //plugin messages
     PREFIX("<aqua>SimpleNicks <white>» "),
     NICK_CHANGED_SELF("<prefix><green>Changed your own nickname to <nickname>!"),
-    NICK_CHANGE_OTHER("<prefix><green>Changed <player>'s nickname to <nickname>"),
-    NICK_CHANGED_BY_OTHER("<prefix><green><sender> changed your nickname to<reset><nickname><green>!"),
+    NICK_CHANGE_OTHER("<prefix><green>Changed <username>'s nickname to <nickname>"),
+    NICK_CHANGED_BY_OTHER("<prefix><green><username> changed your nickname to <reset><nickname><green>!"),
     NICK_RESET_SELF("<prefix><green>Reset your own nickname!"),
     NICK_RESET_OTHER("<prefix><green>Reset <username>'s nickname."),
+    NICK_RESET_BY_OTHER("<prefix><gray>Your nickname was reset by <username>"),
     //other
     VERSION("<prefix>yes"),
     HELP_BASE("<prefix><green>--------"),

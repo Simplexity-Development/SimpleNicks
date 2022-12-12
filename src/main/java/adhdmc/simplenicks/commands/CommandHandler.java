@@ -14,13 +14,11 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         MiniMessage miniMessage = SimpleNicks.getMiniMessage();
-
         // Arguments Check
         if (args.length == 0) {
             sender.sendMessage(miniMessage.deserialize(Message.INVALID_COMMAND.getMessage())); // Invalid Arguments
             return true;
         }
-
         // Execute Command
         SubCommand subCommand = SimpleNicks.getSubCommands().getOrDefault(args[0].toLowerCase(Locale.ENGLISH), null);
         if (subCommand == null) {
@@ -30,7 +28,6 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
         return true;
     }
-
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

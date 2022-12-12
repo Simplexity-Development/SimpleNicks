@@ -5,5 +5,5 @@
 max-nickname-length: 30
 
 # The regex of valid final nickname characters.
-# Be warned that putting non-alphanumeric characters may result in issues with other plugins
+# Be warned that putting non-alphanumeric characters may result in issues with other plugins and other unintended side effects
 nickname-regex: "[A-Za-z0-9_]+"
