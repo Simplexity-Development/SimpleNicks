@@ -60,4 +60,8 @@ public final class SimpleNicks extends JavaPlugin {
         subCommands.put("set", new Set());
         subCommands.put("reload", new Reload());
     }
+
+    public static void log(String message) {
+        instance.getLogger().info(message);
+    }
 }
