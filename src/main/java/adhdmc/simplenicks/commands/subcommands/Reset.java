@@ -3,12 +3,12 @@ package adhdmc.simplenicks.commands.subcommands;
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.util.Message;
+import adhdmc.simplenicks.util.NickHandler;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -53,9 +53,7 @@ public class Reset extends SubCommand {
         }
         // Set Nickname
         // Saved to player
-        String playerPDCString = player.getPersistentDataContainer().get(Set.nickNameSave, PersistentDataType.STRING);
-        if (playerPDCString != null)
-            player.getPersistentDataContainer().remove(Set.nickNameSave); //held name for temp saving option
+        NickHandler.getInstance().resetNickname(player);
         player.displayName(miniMessage.deserialize(player.getName()));
         if (player != sender) {
             sender.sendMessage(miniMessage.deserialize(Message.NICK_RESET_OTHER.getMessage(),

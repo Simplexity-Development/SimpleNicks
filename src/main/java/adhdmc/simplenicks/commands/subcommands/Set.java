@@ -2,25 +2,23 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
+import adhdmc.simplenicks.config.Config;
 import adhdmc.simplenicks.util.Message;
+import adhdmc.simplenicks.util.NickHandler;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Set extends SubCommand {
     MiniMessage miniMessage = SimpleNicks.getMiniMessage();
-    public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
 
     public Set() {
@@ -29,12 +27,8 @@ public class Set extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        int MAX_NICKNAME_LENGTH = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");
-        String NICKNAME_REGEX = SimpleNicks.getInstance().getConfig().getString("nickname-regex");
-        if (NICKNAME_REGEX == null || NICKNAME_REGEX.isEmpty()) {
-            SimpleNicks.getSimpleNicksLogger().severe(Message.BAD_REGEX.getMessage());
-            NICKNAME_REGEX = "[A-Za-z0-9_]+";
-        }
+        int length = Config.getInstance().getMaxLength();
+        Pattern regex = Config.getInstance().getRegex();
         // Player Check
         if (!(sender instanceof Player sendingPlayer)) {
             sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage())); // Invalid Usage (Not a Player)
@@ -66,16 +60,16 @@ public class Set extends SubCommand {
         }
         // Nickname Validity Check
         String nicknameStripped = miniMessage.stripTags(args[0]);
-        if (!nicknameStripped.matches(NICKNAME_REGEX)) {
+        if (!regex.matcher(nicknameStripped).matches()) {
             sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_REGEX.getMessage(),
                     Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
-                    Placeholder.parsed("regex", NICKNAME_REGEX))); // Non-Alphanumeric Nickname
+                    Placeholder.parsed("regex", regex.pattern()))); // Non-Alphanumeric Nickname
             return;
         }
-        if (nicknameStripped.length() > MAX_NICKNAME_LENGTH) {
+        if (nicknameStripped.length() > length) {
             sender.sendMessage(miniMessage.deserialize(Message.INVALID_NICK_TOO_LONG.getMessage(),
                     Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
-                    Placeholder.parsed("value", String.valueOf(MAX_NICKNAME_LENGTH)))); // Nickname Too Long
+                    Placeholder.parsed("value", String.valueOf(length)))); // Nickname Too Long
             return;
         }
         // Valid Player Check
@@ -92,10 +86,7 @@ public class Set extends SubCommand {
                     Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
             return;
         }
-        // Set Nickname
-        // Saves to PDC
-        //temporary saving option until we can get SQLite
-        String nickToSave = args[0];
+        // TODO: [Check Requirement] Is this required? Can it be reformatted?
         Component nickname = null;
         //The checks process to go through if someone is nicknaming another player
         if (args.length == 2) {
@@ -135,9 +126,9 @@ public class Set extends SubCommand {
                     Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
             return;
         }
-        player.getPersistentDataContainer().set(nickNameSave, PersistentDataType.STRING, nickToSave);
-        //set their nickname
-        player.displayName(nickname);
+        // TODO: End [Check Requirement]
+        // Set Nickname
+        NickHandler.getInstance().setNickname(player, args[0]);
         //Send feedback if an admin is setting someone's name, both to the admin and player
         if (sendingPlayer != player) {
             sendingPlayer.sendMessage(miniMessage.deserialize(Message.NICK_CHANGE_OTHER.getMessage(),
@@ -150,9 +141,9 @@ public class Set extends SubCommand {
                     Placeholder.component("nickname", nickname)));
         } else {
             //If a player sets their own name
-        player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_SELF.getMessage(),
-                Placeholder.component("nickname", nickname),
-                Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+            player.sendMessage(miniMessage.deserialize(Message.NICK_CHANGED_SELF.getMessage(),
+                    Placeholder.component("nickname", nickname),
+                    Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
         }
     }
 
