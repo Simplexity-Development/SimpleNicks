@@ -1,7 +1,7 @@
 package adhdmc.simplenicks.config;
 
 import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.util.Message;
+import adhdmc.simplenicks.util.SNMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.regex.Pattern;
@@ -34,7 +34,7 @@ public class Config {
             regex = Pattern.compile(regexSetting);
         }
         catch (AssertionError | PatternSyntaxException e) {
-            SimpleNicks.getSimpleNicksLogger().severe(Message.BAD_REGEX.getMessage());
+            SimpleNicks.getSimpleNicksLogger().severe(SNMessage.BAD_REGEX.getMessage());
         }
         // Check validity of saving-type.
         try {

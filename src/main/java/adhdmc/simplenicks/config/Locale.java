@@ -1,7 +1,7 @@
 package adhdmc.simplenicks.config;
 
 import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.util.Message;
+import adhdmc.simplenicks.util.SNMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -72,8 +72,8 @@ public class Locale {
 
     public void loadLocaleMessages() {
         FileConfiguration locale = getLocaleConfig();
-        for (Message m : Message.values()) {
-            if (m == Message.VERSION) {
+        for (SNMessage m : SNMessage.values()) {
+            if (m == SNMessage.VERSION) {
                 continue;
             }
             String localeOption = m.toString().toLowerCase(java.util.Locale.ENGLISH).replace('_', '-');

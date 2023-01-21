@@ -6,7 +6,7 @@
 
     <groupId>adhdmc</groupId>
     <artifactId>SimpleNicks</artifactId>
-    <version>0.0.4-dev</version>
+    <version>0.0.4</version>
     <packaging>jar</packaging>
 
     <name>SimpleNicks</name>

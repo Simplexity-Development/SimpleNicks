@@ -1,6 +1,6 @@
 package adhdmc.simplenicks.commands;
 
-import adhdmc.simplenicks.util.SimpleNickPermission;
+import adhdmc.simplenicks.util.SNPerm;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -10,9 +10,9 @@ public abstract class SubCommand {
     private final String name;
     private final String description;
     private final String syntax;
-    private final SimpleNickPermission permission;
+    private final SNPerm permission;
 
-    public SubCommand(String name, String description, String syntax, SimpleNickPermission permission) {
+    public SubCommand(String name, String description, String syntax, SNPerm permission) {
         this.name = name;
         this.description = description;
         this.syntax = syntax;
@@ -31,7 +31,7 @@ public abstract class SubCommand {
         return syntax;
     }
 
-    public SimpleNickPermission getSimpleNickPermission() {
+    public SNPerm getSimpleNickPermission() {
         return permission;
     }
 

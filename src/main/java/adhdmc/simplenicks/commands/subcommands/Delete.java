@@ -2,9 +2,9 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.util.Message;
+import adhdmc.simplenicks.util.SNMessage;
 import adhdmc.simplenicks.util.NickHandler;
-import adhdmc.simplenicks.util.SimpleNickPermission;
+import adhdmc.simplenicks.util.SNPerm;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
@@ -16,21 +16,21 @@ import java.util.List;
 public class Delete extends SubCommand {
     MiniMessage miniMessage = SimpleNicks.getMiniMessage();
     public Delete() {
-        super("delete", "Deletes a given nickname.", "/nick delete <nickname>", SimpleNickPermission.NICK_DELETE);
+        super("delete", "Deletes a given nickname.", "/nick delete <nickname>", SNPerm.NICK_DELETE);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         // Player Check
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Invalid Usage (Not a Player)
+            sender.sendMessage(miniMessage.deserialize(SNMessage.CONSOLE_CANNOT_RUN.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Invalid Usage (Not a Player)
             return;
         }
         String nickname = NickHandler.getInstance().getNickname(player);
         if (!NickHandler.getInstance().deleteNickname(player, nickname)) {
-            player.sendMessage(miniMessage.deserialize(Message.NICK_DELETE_FAILURE.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+            player.sendMessage(miniMessage.deserialize(SNMessage.NICK_DELETE_FAILURE.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
         }
-        // TODO: Add command feedback for successful execution of this command.
+        player.sendMessage(miniMessage.deserialize(SNMessage.NICK_DELETE_SUCCESS.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()), Placeholder.parsed("nickname", nickname)));
     }
 
     @Override
