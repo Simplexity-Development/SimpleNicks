@@ -4,7 +4,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 
-public enum SimpleNickPermission {
+public enum SNPerm {
     //Nickname Perms
     NICK_COLOR("simplenick.nick.color", StandardTags.color()),
     NICK_GRADIENT("simplenick.nick.gradient", StandardTags.gradient()),
@@ -22,18 +22,20 @@ public enum SimpleNickPermission {
     NICK_OTHERS_FULL("simplenick.admin.full", null),
     NICK_RESET_OTHERS("simplenick.admin.reset", null),
     NICK_RESET("simplenick.nick.reset", null),
+    NICK_SAVE("simplenick.save", null),
+    NICK_DELETE("simplenick.delete", null),
     NICK_RELOAD("simplenick.reload", null),
     NICK_USERNAME_BYPASS("simplenick.usernamebypass", null);
 
     private final String permission;
     private final TagResolver resolver;
 
-    SimpleNickPermission(String permission, TagResolver resolver) {
+    SNPerm(String permission, TagResolver resolver) {
         this.permission = permission;
         this.resolver = resolver;
     }
 
-    SimpleNickPermission(String permission) {
+    SNPerm(String permission) {
         this.permission = permission;
         this.resolver = null;
     }

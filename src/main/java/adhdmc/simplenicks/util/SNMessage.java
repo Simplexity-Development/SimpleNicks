@@ -1,6 +1,8 @@
 package adhdmc.simplenicks.util;
 
-public enum Message {
+import adhdmc.simplenicks.SimpleNicks;
+
+public enum SNMessage {
     //errors
     INVALID_COMMAND("<prefix><red>Invalid Command."),
     NO_ARGUMENTS("<prefix><red>No arguments provided."),
@@ -22,8 +24,13 @@ public enum Message {
     NICK_RESET_SELF("<prefix><green>Reset your own nickname!"),
     NICK_RESET_OTHER("<prefix><green>Reset <username>'s nickname."),
     NICK_RESET_BY_OTHER("<prefix><gray>Your nickname was reset by <username>"),
+    NICK_SAVE_SUCCESS("<prefix><green>Success! <nickname> saved for future use"),
+    NICK_SAVE_FAILURE("<prefix><gray>Failed to save current username."),
+    NICK_SAVE_FAILURE_TOO_MANY("<prefix><gray>You have too many saved usernames, please remove some with /nick delete <nickname>"),
+    NICK_DELETE_SUCCESS("<prefix><nickname><gray> successfully removed from your saved names"),
+    NICK_DELETE_FAILURE("<prefix><gray>Failed to delete given username."),
     //other
-    VERSION("<prefix>yes"),
+    VERSION("<prefix> Version: " + SimpleNicks.getInstance().getDescription().getVersion()),
     HELP_BASE("<prefix><green>--------"),
     HELP_SET("<aqua>· <yellow>Setting a nickname: \n   <gray>/nick set <nickname>"),
     HELP_RESET("<aqua>· <yellow>removing a nickname: \n   <gray>/nick reset"),
@@ -32,7 +39,7 @@ public enum Message {
 
     String message;
 
-    Message(String message) {
+    SNMessage(String message) {
         this.message = message;
     }
 

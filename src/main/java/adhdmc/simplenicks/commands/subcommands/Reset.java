@@ -2,19 +2,19 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.util.Message;
-import adhdmc.simplenicks.util.SimpleNickPermission;
+import adhdmc.simplenicks.util.SNMessage;
+import adhdmc.simplenicks.util.NickHandler;
+import adhdmc.simplenicks.util.SNPerm;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
 public class Reset extends SubCommand {
     public Reset() {
-        super("reset", "Resets a nickname", "/nick reset", SimpleNickPermission.NICK_RESET);
+        super("reset", "Resets a nickname", "/nick reset", SNPerm.NICK_RESET);
     }
 
     @Override
@@ -23,50 +23,48 @@ public class Reset extends SubCommand {
 
         // Player Check
         if (!(sender instanceof Player)) {
-            sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Invalid Usage (Not a Player)
+            sender.sendMessage(miniMessage.deserialize(SNMessage.CONSOLE_CANNOT_RUN.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Invalid Usage (Not a Player)
             return;
         }
         // Arguments Check
         if (args.length > 1) {
-            sender.sendMessage(miniMessage.deserialize(Message.TOO_MANY_ARGUMENTS.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Too Many Arguments
+            sender.sendMessage(miniMessage.deserialize(SNMessage.TOO_MANY_ARGUMENTS.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Too Many Arguments
             return;
         }
         // Admin Check
-        if (args.length == 1 && !sender.hasPermission(SimpleNickPermission.NICK_RESET_OTHERS.getPermission())) {
-            sender.sendMessage(miniMessage.deserialize(Message.NO_PERMISSION.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // No Permission
+        if (args.length == 1 && !sender.hasPermission(SNPerm.NICK_RESET_OTHERS.getPermission())) {
+            sender.sendMessage(miniMessage.deserialize(SNMessage.NO_PERMISSION.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // No Permission
             return;
         }
         // Valid Player Check
         Player player = (args.length == 0) ? (Player) sender : SimpleNicks.getInstance().getServer().getPlayer(args[0]);
         if (player == null) {
-            sender.sendMessage(miniMessage.deserialize(Message.INVALID_PLAYER.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Invalid Player
+            sender.sendMessage(miniMessage.deserialize(SNMessage.INVALID_PLAYER.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Invalid Player
             return;
         }
-        if (sender == player && !sender.hasPermission(SimpleNickPermission.NICK_RESET.getPermission())) {
-            sender.sendMessage(miniMessage.deserialize(Message.TOO_MANY_ARGUMENTS.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // No Permission
+        if (sender == player && !sender.hasPermission(SNPerm.NICK_RESET.getPermission())) {
+            sender.sendMessage(miniMessage.deserialize(SNMessage.TOO_MANY_ARGUMENTS.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // No Permission
             return;
         }
         // Set Nickname
         // Saved to player
-        String playerPDCString = player.getPersistentDataContainer().get(Set.nickNameSave, PersistentDataType.STRING);
-        if (playerPDCString != null)
-            player.getPersistentDataContainer().remove(Set.nickNameSave); //held name for temp saving option
+        NickHandler.getInstance().resetNickname(player);
         player.displayName(miniMessage.deserialize(player.getName()));
         if (player != sender) {
-            sender.sendMessage(miniMessage.deserialize(Message.NICK_RESET_OTHER.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
+            sender.sendMessage(miniMessage.deserialize(SNMessage.NICK_RESET_OTHER.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()),
                     Placeholder.parsed("username", player.getName())));
-            player.sendMessage(miniMessage.deserialize(Message.NICK_RESET_BY_OTHER.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage()),
+            player.sendMessage(miniMessage.deserialize(SNMessage.NICK_RESET_BY_OTHER.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()),
                     Placeholder.component("username", ((Player) sender).displayName())));
         } else {
-            player.sendMessage(miniMessage.deserialize(Message.NICK_RESET_SELF.getMessage(),
-                    Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
+            player.sendMessage(miniMessage.deserialize(SNMessage.NICK_RESET_SELF.getMessage(),
+                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
         }
     }
 

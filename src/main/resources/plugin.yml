@@ -7,7 +7,7 @@ commands:
   nick:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."
     aliases: [simplenicks, simplenick, snick]
-    usage: "Usage: /nick [set|reset|help|reload] <name> [player]"
+    usage: "Usage: /nick [save|delete|set|reset|help|reload] <name> [player]"
     permission: simplenick.nick.set
 permissions:
   simplenick.admin:
@@ -31,6 +31,12 @@ permissions:
   simplenick.usernamebypass:
     description: allows user to nickname themselves another person's username
     default: false
+  simplenick.save:
+    description: save your current nickname for future use, only works on 'FILE' save type
+    default: op
+  simplenick.delete:
+    description: delete one of your previously saved nicknames
+    default: op
   simplenick.nick:
     description: base of all formatting permissions
     default: op

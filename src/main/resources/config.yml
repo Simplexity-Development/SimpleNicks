@@ -1,9 +1,16 @@
-#
+# Saving and Loading Method
+# PDC: Persistent Data Container (Nicknames are inaccessible when the player is offline).
+# FILE: information is saved to a YML File (nickname_data.yml).
+saving-type: file
+
 # The max amount of characters a nickname should be, not including formatting
-#(so a name like <red>Billy<yellow>Bob would only count 'BillyBob' - and would be 8 characters)
-#Setting this number to any number below "3" could cause unintended side effects
+# (so a name like <red>Billy<yellow>Bob would only count 'BillyBob' - and would be 8 characters)
+# Setting this number to any number below "3" could cause unintended side effects
 max-nickname-length: 30
 
 # The regex of valid final nickname characters.
 # Be warned that putting non-alphanumeric characters may result in issues with other plugins and other unintended side effects
 nickname-regex: "[A-Za-z0-9_]+"
+
+# How many nicknames can be saved?
+max-saves: 5
