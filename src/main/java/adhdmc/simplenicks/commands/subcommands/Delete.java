@@ -29,6 +29,7 @@ public class Delete extends SubCommand {
         String nickname = NickHandler.getInstance().getNickname(player);
         if (!NickHandler.getInstance().deleteNickname(player, nickname)) {
             player.sendMessage(miniMessage.deserialize(SNMessage.NICK_DELETE_FAILURE.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+            return;
         }
         player.sendMessage(miniMessage.deserialize(SNMessage.NICK_DELETE_SUCCESS.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()), Placeholder.parsed("nickname", nickname)));
     }

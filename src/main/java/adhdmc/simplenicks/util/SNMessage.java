@@ -24,10 +24,10 @@ public enum SNMessage {
     NICK_RESET_SELF("<prefix><green>Reset your own nickname!"),
     NICK_RESET_OTHER("<prefix><green>Reset <username>'s nickname."),
     NICK_RESET_BY_OTHER("<prefix><gray>Your nickname was reset by <username>"),
-    NICK_SAVE_SUCCESS("<prefix><green>Success! <nickname> saved for future use"),
+    NICK_SAVE_SUCCESS("<prefix><green>Success! The nickname <nickname><reset><green> has been saved for future use"),
     NICK_SAVE_FAILURE("<prefix><gray>Failed to save current username."),
     NICK_SAVE_FAILURE_TOO_MANY("<prefix><gray>You have too many saved usernames, please remove some with /nick delete <nickname>"),
-    NICK_DELETE_SUCCESS("<prefix><nickname><gray> successfully removed from your saved names"),
+    NICK_DELETE_SUCCESS("<prefix><gray>The nickname <nickname><reset><gray> has been successfully removed from your saved names"),
     NICK_DELETE_FAILURE("<prefix><gray>Failed to delete given username."),
     //other
     VERSION("<prefix> Version: " + SimpleNicks.getInstance().getDescription().getVersion()),

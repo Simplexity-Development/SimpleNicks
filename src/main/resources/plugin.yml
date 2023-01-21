@@ -3,6 +3,8 @@ version: '${project.version}'
 main: adhdmc.simplenicks.SimpleNicks
 authors: ['Rhythmic', 'Peashooter101']
 api-version: 1.19
+softdepend:
+  - PlaceholderAPI
 commands:
   nick:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."

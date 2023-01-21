@@ -7,6 +7,7 @@ import adhdmc.simplenicks.config.Config;
 import adhdmc.simplenicks.config.Locale;
 import adhdmc.simplenicks.listener.LoginListener;
 import adhdmc.simplenicks.util.NickHandler;
+import adhdmc.simplenicks.util.SNExpansion;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,6 +40,9 @@ public final class SimpleNicks extends JavaPlugin {
         this.saveDefaultConfig();
         Config.getInstance().setConfigDefaults();
         this.getCommand("nick").setExecutor(new CommandHandler());
+        if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new SNExpansion().register();
+        }
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         configReload();
     }

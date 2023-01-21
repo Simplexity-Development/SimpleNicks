@@ -34,6 +34,7 @@ public class Save extends SubCommand {
         String nickname = NickHandler.getInstance().getNickname(player);
         if (!NickHandler.getInstance().saveNickname(player, nickname)) {
             player.sendMessage(miniMessage.deserialize(SNMessage.NICK_SAVE_FAILURE.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+            return;
         }
         player.sendMessage(miniMessage.deserialize(SNMessage.NICK_SAVE_SUCCESS.getMessage(),  Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()), Placeholder.parsed("nickname", nickname)));
     }
