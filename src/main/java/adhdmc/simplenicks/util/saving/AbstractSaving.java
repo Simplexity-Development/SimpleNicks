@@ -2,10 +2,15 @@ package adhdmc.simplenicks.util.saving;
 
 import org.bukkit.OfflinePlayer;
 
-public interface AbstractSaving {
+import java.util.List;
 
-    String getNickname(OfflinePlayer p);
-    boolean setNickname(OfflinePlayer p, String nickname);
-    boolean resetNickname(OfflinePlayer p);
+public abstract class AbstractSaving {
 
+    public abstract void init();
+    public abstract String getNickname(OfflinePlayer p);
+    public abstract boolean setNickname(OfflinePlayer p, String nickname);
+    public abstract boolean saveNickname(OfflinePlayer p, String nickname);
+    public abstract boolean deleteNickname(OfflinePlayer p, String nickname);
+    public abstract boolean resetNickname(OfflinePlayer p);
+    public abstract List<String> getSavedNicknames(OfflinePlayer p);
 }

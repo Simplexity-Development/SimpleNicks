@@ -13,8 +13,9 @@ public class Config {
     private static Config instance;
 
     private Pattern regex = Pattern.compile("[A-Za-z0-9_]+");
-    private SAVING_TYPE savingType = SAVING_TYPE.PDC;
+    private SAVING_TYPE savingType = SAVING_TYPE.FILE;
     private int maxLength = 25;
+    private int maxSaves = 5;
 
     private Config() {}
 
@@ -44,16 +45,19 @@ public class Config {
             // TODO: Provide error for invalid saving type.
         }
         maxLength = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");
+        maxSaves = SimpleNicks.getInstance().getConfig().getInt("max-saves");
     }
 
     public void setConfigDefaults() {
         FileConfiguration config = SimpleNicks.getInstance().getConfig();
         config.addDefault("saving-type","pdc");
-        config.addDefault("max-nickname-length", 30);
+        config.addDefault("max-nickname-length", 25);
+        config.addDefault("max-saves", 5);
         config.addDefault("nickname-regex","[A-Za-z0-9_]+");
     }
 
     public Pattern getRegex() { return regex; }
     public SAVING_TYPE getSavingType() { return savingType; }
     public int getMaxLength() { return maxLength; }
+    public int getMaxSaves() { return maxSaves; }
 }

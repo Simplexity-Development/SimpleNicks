@@ -5,6 +5,7 @@ import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.config.Config;
 import adhdmc.simplenicks.config.Locale;
 import adhdmc.simplenicks.util.Message;
+import adhdmc.simplenicks.util.NickHandler;
 import adhdmc.simplenicks.util.SimpleNickPermission;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -24,9 +25,7 @@ public class Reload extends SubCommand {
             sender.sendMessage(miniMessage.deserialize(Message.NO_PERMISSION.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
             return;
         }
-        Locale.getInstance().reloadConfig();
-        Locale.getInstance().loadLocaleMessages();
-        Config.getInstance().reloadConfig();
+        SimpleNicks.configReload();
         sender.sendMessage(miniMessage.deserialize(Message.CONFIG_RELOADED.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage())));
     }
 

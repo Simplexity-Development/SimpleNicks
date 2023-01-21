@@ -31,7 +31,7 @@ public class Set extends SubCommand {
         Pattern regex = Config.getInstance().getRegex();
         // Player Check
         if (!(sender instanceof Player sendingPlayer)) {
-            sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage())); // Invalid Usage (Not a Player)
+            sender.sendMessage(miniMessage.deserialize(Message.CONSOLE_CANNOT_RUN.getMessage(), Placeholder.parsed("prefix", Message.PREFIX.getMessage()))); // Invalid Usage (Not a Player)
             return;
         }
         // Arguments Check
@@ -149,31 +149,14 @@ public class Set extends SubCommand {
 
     @Override
     public List<String> getSubcommandArguments(CommandSender sender, String[] args) {
-        ArrayList<String> tabComplete = new ArrayList<>();
+        if (!(sender instanceof Player player)) return new ArrayList<>();
         if (args.length == 2 && (sender.hasPermission(SimpleNickPermission.NICK_OTHERS_FULL.getPermission()) ||
                 sender.hasPermission(SimpleNickPermission.NICK_OTHERS_BASIC.getPermission()) ||
                 sender.hasPermission(SimpleNickPermission.NICK_OTHERS_RESTRICTIVE.getPermission()))) {
             return null;
         }
-        if (args.length == 1) {
-            String name = sender.getName();
-            addValidTabOption(sender, args[0], "<b>" + name, SimpleNickPermission.NICK_BOLD, tabComplete);
-            addValidTabOption(sender, args[0], "<i>" + name, SimpleNickPermission.NICK_ITALIC, tabComplete);
-            addValidTabOption(sender, args[0], "<u>" + name, SimpleNickPermission.NICK_UNDERLINE, tabComplete);
-            addValidTabOption(sender, args[0], "<obf>" + name, SimpleNickPermission.NICK_OBFUSCATED, tabComplete);
-            addValidTabOption(sender, args[0], "<st>" + name, SimpleNickPermission.NICK_STRIKETHROUGH, tabComplete);
-            addValidTabOption(sender, args[0], "<gradient:dark_purple:blue>" + name, SimpleNickPermission.NICK_GRADIENT, tabComplete);
-            addValidTabOption(sender, args[0], "<#FFC0CB>" + name, SimpleNickPermission.NICK_COLOR, tabComplete);
-            addValidTabOption(sender, args[0], "<blue>" + name, SimpleNickPermission.NICK_COLOR, tabComplete);
-            addValidTabOption(sender, args[0], "<rainbow>" + name, SimpleNickPermission.NICK_RAINBOW, tabComplete);
-        }
-        return tabComplete;
-    }
-
-    private void addValidTabOption(CommandSender sender, String arg, String option, SimpleNickPermission perm, ArrayList<String> list) {
-        if (sender.hasPermission(perm.getPermission())) {
-            if (option.startsWith(arg)) list.add(option);
-        }
+        if (args.length == 1) return NickHandler.getInstance().getSavedNicknames(player);
+        return new ArrayList<>();
     }
     //Stolen from https://github.com/YouHaveTrouble/JustChat/blob/master/src/main/java/me/youhavetrouble/justchat/JustChatListener.java#L78
     private Component parseMessageContent(Player player, String rawMessage) {

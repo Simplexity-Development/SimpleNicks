@@ -22,6 +22,9 @@ public enum Message {
     NICK_RESET_SELF("<prefix><green>Reset your own nickname!"),
     NICK_RESET_OTHER("<prefix><green>Reset <username>'s nickname."),
     NICK_RESET_BY_OTHER("<prefix><gray>Your nickname was reset by <username>"),
+    NICK_SAVE_FAILURE("<prefix><gray>Failed to save current username."),
+    NICK_SAVE_FAILURE_TOO_MANY("<prefix><gray>You have too many saved usernames, please remove some with /nick delete <nickname>"),
+    NICK_DELETE_FAILURE("<prefix><gray>Failed to delete given username."),
     //other
     VERSION("<prefix>yes"),
     HELP_BASE("<prefix><green>--------"),

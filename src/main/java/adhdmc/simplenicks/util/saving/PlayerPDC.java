@@ -7,8 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-public class PlayerPDC implements AbstractSaving {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PlayerPDC extends AbstractSaving {
     public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
+
+    @Override
+    public void init() { }
 
     @Override
     public String getNickname(OfflinePlayer p) {
@@ -28,11 +34,26 @@ public class PlayerPDC implements AbstractSaving {
     }
 
     @Override
+    public boolean saveNickname(OfflinePlayer p, String nickname) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteNickname(OfflinePlayer p, String nickname) {
+        return false;
+    }
+
+    @Override
     public boolean resetNickname(OfflinePlayer p) {
         Player player = p.getPlayer();
         if (player == null) return false;
         PersistentDataContainer pdc = p.getPlayer().getPersistentDataContainer();
         pdc.remove(nickNameSave);
         return true;
+    }
+
+    @Override
+    public List<String> getSavedNicknames(OfflinePlayer p) {
+        return new ArrayList<>();
     }
 }

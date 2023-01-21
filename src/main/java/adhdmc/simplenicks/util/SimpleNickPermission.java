@@ -22,6 +22,8 @@ public enum SimpleNickPermission {
     NICK_OTHERS_FULL("simplenick.admin.full", null),
     NICK_RESET_OTHERS("simplenick.admin.reset", null),
     NICK_RESET("simplenick.nick.reset", null),
+    NICK_SAVE("simplenick.save", null),
+    NICK_DELETE("simplenick.delete", null),
     NICK_RELOAD("simplenick.reload", null),
     NICK_USERNAME_BYPASS("simplenick.usernamebypass", null);
 

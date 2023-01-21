@@ -3,10 +3,12 @@ package adhdmc.simplenicks.util;
 import adhdmc.simplenicks.config.Config;
 import adhdmc.simplenicks.util.saving.AbstractSaving;
 import adhdmc.simplenicks.util.saving.PlayerPDC;
-import net.kyori.adventure.text.Component;
+import adhdmc.simplenicks.util.saving.YMLFile;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class NickHandler {
 
@@ -48,8 +50,12 @@ public class NickHandler {
     public void loadSavingType() {
         switch (Config.getInstance().getSavingType()) {
             case PDC -> saveHandler = new PlayerPDC();
-            // TODO: Implement FILE
-            default -> saveHandler = new PlayerPDC();
+            case FILE -> saveHandler = new YMLFile();
         }
+        saveHandler.init();
     }
+
+    public boolean saveNickname(OfflinePlayer p, String nickname) { return saveHandler.saveNickname(p, nickname); }
+    public boolean deleteNickname(OfflinePlayer p, String nickname) { return saveHandler.deleteNickname(p, nickname); }
+    public List<String> getSavedNicknames(OfflinePlayer p) { return saveHandler.getSavedNicknames(p); }
 }
