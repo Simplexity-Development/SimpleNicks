@@ -50,7 +50,7 @@ public class Config {
 
     public void setConfigDefaults() {
         FileConfiguration config = SimpleNicks.getInstance().getConfig();
-        config.addDefault("saving-type","pdc");
+        config.addDefault("saving-type","file");
         config.addDefault("max-nickname-length", 25);
         config.addDefault("max-saves", 5);
         config.addDefault("nickname-regex","[A-Za-z0-9_]+");
