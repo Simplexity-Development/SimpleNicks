@@ -4,10 +4,6 @@ A standalone nickname plugin that supports Mini-Message.
 
 Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Message.
 
-> **Warning**
-> 
-> This plugin is currently under development and is in [beta testing](https://github.com/ADHDMC/SimpleNicks/releases).
-
 ## Commands
 
 `/nick set <nickname> [player]`
