@@ -55,10 +55,14 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 `simplenick.admin.full`
 
 - Allows the player to set another player's nickname, regardless of both of their formatting permissions.
-> NOTE:
-> <br>This permission allows for all minimessage formatting types, not just the ones that are set in permissions here
-> <br>These types of formatting can include things like click action, hover text, and similar. 
-> <br>These formats can do really cool stuff, but be careful who you give it to lol
+
+> [!NOTE]
+>
+> This permission allows for all minimessage formatting types, not just the ones that are set in permissions here
+>
+> These types of formatting can include things like click action, hover text, and similar. 
+>
+> These formats can do really cool stuff, but be careful who you give it to lol
 
 ### Player Permissions
 
