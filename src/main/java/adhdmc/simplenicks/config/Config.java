@@ -26,6 +26,7 @@ public class Config {
     }
 
     public void reloadConfig() {
+        SimpleNicks.getInstance().reloadConfig();
         // Check the validity of the regex.
         try {
             String regexSetting = SimpleNicks.getInstance().getConfig().getString("nickname-regex");
