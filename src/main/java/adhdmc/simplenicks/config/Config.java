@@ -1,7 +1,6 @@
 package adhdmc.simplenicks.config;
 
 import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.util.SNMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.regex.Pattern;
@@ -27,6 +26,7 @@ public class Config {
 
     public void reloadConfig() {
         SimpleNicks.getInstance().reloadConfig();
+        LocaleHandler.getInstance().loadLocale();
         // Check the validity of the regex.
         try {
             String regexSetting = SimpleNicks.getInstance().getConfig().getString("nickname-regex");
@@ -35,7 +35,7 @@ public class Config {
             regex = Pattern.compile(regexSetting);
         }
         catch (AssertionError | PatternSyntaxException e) {
-            SimpleNicks.getSimpleNicksLogger().severe(SNMessage.BAD_REGEX.getMessage());
+            SimpleNicks.getSimpleNicksLogger().severe(LocaleHandler.getInstance().getNoRegex());
         }
         // Check validity of saving-type.
         try {
@@ -43,7 +43,7 @@ public class Config {
             assert savingTypeSetting != null;
             savingType = SAVING_TYPE.valueOf(savingTypeSetting.toUpperCase());
         } catch (AssertionError | IllegalArgumentException e) {
-            // TODO: Provide error for invalid saving type.
+            SimpleNicks.getInstance().getLogger().severe("INVALID SAVING TYPE");
         }
         maxLength = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");
         maxSaves = SimpleNicks.getInstance().getConfig().getInt("max-saves");

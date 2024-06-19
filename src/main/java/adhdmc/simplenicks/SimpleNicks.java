@@ -4,7 +4,7 @@ import adhdmc.simplenicks.commands.CommandHandler;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.commands.subcommands.*;
 import adhdmc.simplenicks.config.Config;
-import adhdmc.simplenicks.config.Locale;
+import adhdmc.simplenicks.config.LocaleHandler;
 import adhdmc.simplenicks.listener.LoginListener;
 import adhdmc.simplenicks.util.NickHandler;
 import adhdmc.simplenicks.util.SNExpansion;
@@ -73,8 +73,7 @@ public final class SimpleNicks extends JavaPlugin {
     }
 
     public static void configReload() {
-        Locale.getInstance().reloadConfig();
-        Locale.getInstance().loadLocaleMessages();
+        LocaleHandler.getInstance().loadLocale();
         Config.getInstance().reloadConfig();
         NickHandler.getInstance().loadSavingType();
     }

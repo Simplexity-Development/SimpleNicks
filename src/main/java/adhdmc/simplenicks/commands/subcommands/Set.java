@@ -3,7 +3,7 @@ package adhdmc.simplenicks.commands.subcommands;
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
 import adhdmc.simplenicks.config.Config;
-import adhdmc.simplenicks.util.SNMessage;
+import adhdmc.simplenicks.config.LocaleHandler;
 import adhdmc.simplenicks.util.NickHandler;
 import adhdmc.simplenicks.util.SNPerm;
 import net.kyori.adventure.text.Component;
@@ -31,59 +31,59 @@ public class Set extends SubCommand {
         Pattern regex = Config.getInstance().getRegex();
         // Player Check
         if (!(sender instanceof Player sendingPlayer)) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.CONSOLE_CANNOT_RUN.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Invalid Usage (Not a Player)
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getConsoleCannotRun(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // Invalid Usage (Not a Player)
             return;
         }
         // Arguments Check
         if (args.length == 0) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.NO_ARGUMENTS.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Invalid Arguments
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNoArguments(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // Invalid Arguments
             return;
         }
         if (args.length > 2) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.TOO_MANY_ARGUMENTS.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Too Many Arguments
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getTooManyArguments(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // Too Many Arguments
             return;
         }
         if (args.length == 2 &&
                 !(sender.hasPermission(SNPerm.NICK_OTHERS_FULL.getPermission()) ||
                 sender.hasPermission(SNPerm.NICK_OTHERS_BASIC.getPermission()) ||
                 sender.hasPermission(SNPerm.NICK_OTHERS_RESTRICTIVE.getPermission()))) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.NO_PERMISSION.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // No Permission
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNoPermission(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // No Permission
             return;
         }
         if (!sender.hasPermission(SNPerm.NICK_COMMAND.getPermission())) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.NO_PERMISSION.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // No Permission to set own
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNoPermission(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // No Permission to set own
             return;
         }
         // Nickname Validity Check
         String nicknameStripped = miniMessage.stripTags(args[0]);
         if (!regex.matcher(nicknameStripped).matches()) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.INVALID_NICK_REGEX.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()),
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidNickRegex(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()),
                     Placeholder.parsed("regex", regex.pattern()))); // Non-Alphanumeric Nickname
             return;
         }
         if (nicknameStripped.length() > length) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.INVALID_NICK_TOO_LONG.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()),
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidNickTooLong(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()),
                     Placeholder.parsed("value", String.valueOf(length)))); // Nickname Too Long
             return;
         }
         // Valid Player Check
         Player player = (args.length == 1) ? (Player) sender : SimpleNicks.getInstance().getServer().getPlayer(args[1]);
         if (player == null) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.INVALID_PLAYER.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()))); // Invalid Player
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidPlayer(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // Invalid Player
             return;
         }
         // Check against cached usernames
         if (!player.hasPermission(SNPerm.NICK_USERNAME_BYPASS.getPermission()) && (SimpleNicks.getInstance().getServer().getOfflinePlayerIfCached(nicknameStripped) != null) && !(nicknameStripped.equals(player.getName()))){
-            sender.sendMessage(miniMessage.deserialize(SNMessage.CANNOT_NICK_USERNAME.getMessage(),
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getCantNickUsername(),
                     Placeholder.parsed("name", nicknameStripped),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
             return;
         }
         // TODO: [Check Requirement] Is this required? Can it be reformatted?
@@ -96,16 +96,16 @@ public class Set extends SubCommand {
             } else if (sendingPlayer.hasPermission(SNPerm.NICK_OTHERS_BASIC.getPermission())) {
                 //Basic parse, parses based on the Admin's permissions
                 if (parseMessageContent(sendingPlayer, args[0]) == null) {
-                    sendingPlayer.sendMessage(miniMessage.deserialize(SNMessage.INVALID_TAGS.getMessage(),
-                            Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+                    sendingPlayer.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidTags(),
+                            Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
                     return;
                 }
                 nickname = parseMessageContent(sendingPlayer, args[0]);
             } else if (sendingPlayer.hasPermission(SNPerm.NICK_OTHERS_RESTRICTIVE.getPermission())) {
                 //Restrictive parse, parses based on the player's permissions
                 if (parseMessageContent(player, args[0]) == null) {
-                    sendingPlayer.sendMessage(miniMessage.deserialize(SNMessage.INVALID_TAGS.getMessage(),
-                            Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+                    sendingPlayer.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidTags(),
+                            Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
                     return;
                 }
                 nickname = parseMessageContent(player, args[0]);
@@ -113,8 +113,8 @@ public class Set extends SubCommand {
         } else {
             //Player nicknaming themselves, based on their own permissions
             if (parseMessageContent(player, args[0]) == null){
-                sendingPlayer.sendMessage(miniMessage.deserialize(SNMessage.INVALID_TAGS.getMessage(),
-                        Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+                sendingPlayer.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidTags(),
+                        Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
                 return;
             } else {
                 nickname = parseMessageContent(player, args[0]);
@@ -122,8 +122,8 @@ public class Set extends SubCommand {
         }
         //idk it says this might be null, I hope it's not but just in case lol
         if (nickname == null) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.NICK_NULL.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickIsNull(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
             return;
         }
         // TODO: End [Check Requirement]
@@ -131,19 +131,19 @@ public class Set extends SubCommand {
         NickHandler.getInstance().setNickname(player, args[0]);
         //Send feedback if an admin is setting someone's name, both to the admin and player
         if (sendingPlayer != player) {
-            sendingPlayer.sendMessage(miniMessage.deserialize(SNMessage.NICK_CHANGE_OTHER.getMessage(),
+            sendingPlayer.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickChangeOther(),
                     Placeholder.parsed("username", player.getName()),
                     Placeholder.component("nickname", nickname),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
-            player.sendMessage(miniMessage.deserialize(SNMessage.NICK_CHANGED_BY_OTHER.getMessage(),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage()),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
+            player.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickChangedByOther(),
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()),
                     Placeholder.component("username", sendingPlayer.displayName()),
                     Placeholder.component("nickname", nickname)));
         } else {
             //If a player sets their own name
-            player.sendMessage(miniMessage.deserialize(SNMessage.NICK_CHANGED_SELF.getMessage(),
+            player.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickChangedSelf(),
                     Placeholder.component("nickname", nickname),
-                    Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+                    Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
         }
     }
 

@@ -2,7 +2,7 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.util.SNMessage;
+import adhdmc.simplenicks.config.LocaleHandler;
 import adhdmc.simplenicks.util.SNPerm;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -18,10 +18,10 @@ public class Help extends SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(miniMessage.deserialize(SNMessage.HELP_BASE.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
-        sender.sendMessage(miniMessage.deserialize(SNMessage.HELP_SET.getMessage()));
-        sender.sendMessage(miniMessage.deserialize(SNMessage.HELP_RESET.getMessage()));
-        sender.sendMessage(miniMessage.deserialize(SNMessage.HELP_MINIMESSAGE.getMessage()));
+        sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getHelpBase(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
+        sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getHelpSet()));
+        sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getHelpReset()));
+        sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getHelpMinimessage()));
     }
 
     @Override

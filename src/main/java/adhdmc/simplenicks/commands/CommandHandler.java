@@ -1,7 +1,7 @@
 package adhdmc.simplenicks.commands;
 
 import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.util.SNMessage;
+import adhdmc.simplenicks.config.LocaleHandler;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +19,13 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
 
         // Arguments Check
         if (parsedArgs.length == 0) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.INVALID_COMMAND.getMessage())); // Invalid Arguments
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidCommand())); // Invalid Arguments
             return true;
         }
         // Execute Command
         SubCommand subCommand = SimpleNicks.getSubCommands().getOrDefault(parsedArgs[0].toLowerCase(Locale.ENGLISH), null);
         if (subCommand == null) {
-            sender.sendMessage(miniMessage.deserialize(SNMessage.INVALID_COMMAND.getMessage())); // Invalid SubCommand
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getInvalidCommand())); // Invalid SubCommand
             return true;
         }
         subCommand.execute(sender, Arrays.copyOfRange(parsedArgs, 1, parsedArgs.length));

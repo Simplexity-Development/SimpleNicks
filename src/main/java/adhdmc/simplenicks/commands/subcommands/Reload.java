@@ -2,7 +2,7 @@ package adhdmc.simplenicks.commands.subcommands;
 
 import adhdmc.simplenicks.SimpleNicks;
 import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.util.SNMessage;
+import adhdmc.simplenicks.config.LocaleHandler;
 import adhdmc.simplenicks.util.SNPerm;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -19,11 +19,11 @@ public class Reload extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission(SNPerm.NICK_RELOAD.getPermission())){
-            sender.sendMessage(miniMessage.deserialize(SNMessage.NO_PERMISSION.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+            sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNoPermission(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
             return;
         }
         SimpleNicks.configReload();
-        sender.sendMessage(miniMessage.deserialize(SNMessage.CONFIG_RELOADED.getMessage(), Placeholder.parsed("prefix", SNMessage.PREFIX.getMessage())));
+        sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getConfigReload(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
     }
 
     @Override
