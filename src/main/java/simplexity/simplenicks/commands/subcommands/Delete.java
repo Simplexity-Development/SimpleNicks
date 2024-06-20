@@ -1,10 +1,9 @@
-package adhdmc.simplenicks.commands.subcommands;
+package simplexity.simplenicks.commands.subcommands;
 
-import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.config.LocaleHandler;
-import adhdmc.simplenicks.util.NickHandler;
-import adhdmc.simplenicks.util.SNPerm;
+import simplexity.simplenicks.SimpleNicks;
+import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.util.TagPermissions;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
@@ -12,11 +11,12 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 public class Delete extends SubCommand {
     MiniMessage miniMessage = SimpleNicks.getMiniMessage();
+
     public Delete() {
-        super("delete", "Deletes a given nickname.", "/nick delete <nickname>", SNPerm.NICK_DELETE);
+        super("delete", "Deletes a given nickname.", "/nick delete <nickname>", TagPermissions.NICK_DELETE);
     }
 
     @Override
@@ -41,3 +41,4 @@ public class Delete extends SubCommand {
         return new ArrayList<>();
     }
 }
+*/

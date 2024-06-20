@@ -1,6 +1,6 @@
-package adhdmc.simplenicks.util;
+package simplexity.simplenicks.util;
 
-import adhdmc.simplenicks.SimpleNicks;
+import simplexity.simplenicks.SimpleNicks;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;

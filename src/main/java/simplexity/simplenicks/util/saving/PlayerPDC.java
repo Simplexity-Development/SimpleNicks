@@ -1,6 +1,6 @@
-package adhdmc.simplenicks.util.saving;
+package simplexity.simplenicks.util.saving;
 
-import adhdmc.simplenicks.SimpleNicks;
+import simplexity.simplenicks.SimpleNicks;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -14,7 +14,8 @@ public class PlayerPDC extends AbstractSaving {
     public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
     @Override
-    public void init() { }
+    public void init() {
+    }
 
     @Override
     public String getNickname(OfflinePlayer p) {

@@ -1,26 +1,31 @@
-package adhdmc.simplenicks.config;
+package simplexity.simplenicks.config;
 
-import adhdmc.simplenicks.SimpleNicks;
+import simplexity.simplenicks.SimpleNicks;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class Config {
+public class ConfigHandler {
 
-    public enum SAVING_TYPE { PDC, FILE }
-    private static Config instance;
+
+
+    public enum SAVING_TYPE {PDC, FILE}
+
+    private static ConfigHandler instance;
 
     private Pattern regex = Pattern.compile("[A-Za-z0-9_]+");
     private SAVING_TYPE savingType = SAVING_TYPE.FILE;
     private int maxLength = 25;
     private int maxSaves = 5;
+    private String regexString;
 
-    private Config() {}
+    private ConfigHandler() {
+    }
 
-    public static Config getInstance() {
+    public static ConfigHandler getInstance() {
         if (instance != null) return instance;
-        instance = new Config();
+        instance = new ConfigHandler();
         return instance;
     }
 
@@ -30,12 +35,12 @@ public class Config {
         // Check the validity of the regex.
         try {
             String regexSetting = SimpleNicks.getInstance().getConfig().getString("nickname-regex");
+            regexString = regexSetting;
             assert regexSetting != null;
             assert !regexSetting.isBlank();
             regex = Pattern.compile(regexSetting);
-        }
-        catch (AssertionError | PatternSyntaxException e) {
-            SimpleNicks.getSimpleNicksLogger().severe(LocaleHandler.getInstance().getNoRegex());
+        } catch (AssertionError | PatternSyntaxException e) {
+            SimpleNicks.getSimpleNicksLogger().severe(LocaleHandler.getInstance().getInvalidConfigRegex());
         }
         // Check validity of saving-type.
         try {
@@ -51,14 +56,28 @@ public class Config {
 
     public void setConfigDefaults() {
         FileConfiguration config = SimpleNicks.getInstance().getConfig();
-        config.addDefault("saving-type","file");
+        config.addDefault("saving-type", "file");
         config.addDefault("max-nickname-length", 25);
         config.addDefault("max-saves", 5);
-        config.addDefault("nickname-regex","[A-Za-z0-9_]+");
+        config.addDefault("nickname-regex", "[A-Za-z0-9_]+");
     }
 
-    public Pattern getRegex() { return regex; }
-    public SAVING_TYPE getSavingType() { return savingType; }
-    public int getMaxLength() { return maxLength; }
-    public int getMaxSaves() { return maxSaves; }
+    public Pattern getRegex() {
+        return regex;
+    }
+
+    public SAVING_TYPE getSavingType() {
+        return savingType;
+    }
+
+    public int getMaxLength() {
+        return maxLength;
+    }
+
+    public int getMaxSaves() {
+        return maxSaves;
+    }
+    public String getRegexString() {
+        return regexString;
+    }
 }

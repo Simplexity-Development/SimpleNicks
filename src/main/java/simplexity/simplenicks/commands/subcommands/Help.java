@@ -1,19 +1,19 @@
-package adhdmc.simplenicks.commands.subcommands;
+package simplexity.simplenicks.commands.subcommands;
 
-import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.config.LocaleHandler;
-import adhdmc.simplenicks.util.SNPerm;
+import simplexity.simplenicks.SimpleNicks;
+import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.util.TagPermissions;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-
+/*
 public class Help extends SubCommand {
     MiniMessage miniMessage = SimpleNicks.getMiniMessage();
+
     public Help() {
-        super("help", "Help command for SimpleNicks", "/nick help", SNPerm.NICK_COMMAND);
+        super("help", "Help command for SimpleNicks", "/nick help", TagPermissions.NICK_COMMAND);
     }
 
     @Override
@@ -29,3 +29,4 @@ public class Help extends SubCommand {
         return null;
     }
 }
+*/

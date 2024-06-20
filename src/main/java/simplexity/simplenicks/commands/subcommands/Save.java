@@ -1,11 +1,10 @@
-package adhdmc.simplenicks.commands.subcommands;
+package simplexity.simplenicks.commands.subcommands;
 
-import adhdmc.simplenicks.SimpleNicks;
-import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.config.Config;
-import adhdmc.simplenicks.config.LocaleHandler;
-import adhdmc.simplenicks.util.NickHandler;
-import adhdmc.simplenicks.util.SNPerm;
+import simplexity.simplenicks.SimpleNicks;
+import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.util.TagPermissions;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
@@ -13,11 +12,12 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 public class Save extends SubCommand {
     MiniMessage miniMessage = SimpleNicks.getMiniMessage();
+
     public Save() {
-        super("save", "Saves the current or a provided nickname.", "/nick save [nickname]", SNPerm.NICK_SAVE);
+        super("save", "Saves the current or a provided nickname.", "/nick save [nickname]", TagPermissions.NICK_SAVE);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Save extends SubCommand {
             sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getConsoleCannotRun(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // Invalid Usage (Not a Player)
             return;
         }
-        if (NickHandler.getInstance().getSavedNicknames(player).size() >= Config.getInstance().getMaxSaves()) {
+        if (NickHandler.getInstance().getSavedNicknames(player).size() >= ConfigHandler.getInstance().getMaxSaves()) {
             sender.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickSaveFailureTooMany(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()))); // Invalid Usage (Not a Player)
             return;
         }
@@ -36,7 +36,7 @@ public class Save extends SubCommand {
             player.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickSaveFailure(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix())));
             return;
         }
-        player.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickSaveSuccess(),  Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()), Placeholder.parsed("nickname", nickname)));
+        player.sendMessage(miniMessage.deserialize(LocaleHandler.getInstance().getNickSaveSuccess(), Placeholder.parsed("prefix", LocaleHandler.getInstance().getPrefix()), Placeholder.parsed("nickname", nickname)));
     }
 
     @Override
@@ -44,3 +44,4 @@ public class Save extends SubCommand {
         return new ArrayList<>();
     }
 }
+*/

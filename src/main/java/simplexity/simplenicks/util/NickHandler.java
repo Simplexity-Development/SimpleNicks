@@ -1,9 +1,9 @@
-package adhdmc.simplenicks.util;
+package simplexity.simplenicks.util;
 
-import adhdmc.simplenicks.config.Config;
-import adhdmc.simplenicks.util.saving.AbstractSaving;
-import adhdmc.simplenicks.util.saving.PlayerPDC;
-import adhdmc.simplenicks.util.saving.YMLFile;
+import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.util.saving.AbstractSaving;
+import simplexity.simplenicks.util.saving.PlayerPDC;
+import simplexity.simplenicks.util.saving.YMLFile;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -16,7 +16,8 @@ public class NickHandler {
 
     private AbstractSaving saveHandler;
 
-    private NickHandler() {}
+    private NickHandler() {
+    }
 
     public static NickHandler getInstance() {
         if (instance != null) return instance;
@@ -25,7 +26,10 @@ public class NickHandler {
         return instance;
     }
 
-    public String getNickname(OfflinePlayer p) { return saveHandler.getNickname(p); }
+    public String getNickname(OfflinePlayer p) {
+        return saveHandler.getNickname(p);
+    }
+
     public boolean setNickname(OfflinePlayer p, String nickname) {
         if (!saveHandler.setNickname(p, nickname)) return false;
         refreshNickname(p);
@@ -48,14 +52,22 @@ public class NickHandler {
     }
 
     public void loadSavingType() {
-        switch (Config.getInstance().getSavingType()) {
+        switch (ConfigHandler.getInstance().getSavingType()) {
             case PDC -> saveHandler = new PlayerPDC();
             case FILE -> saveHandler = new YMLFile();
         }
         saveHandler.init();
     }
 
-    public boolean saveNickname(OfflinePlayer p, String nickname) { return saveHandler.saveNickname(p, nickname); }
-    public boolean deleteNickname(OfflinePlayer p, String nickname) { return saveHandler.deleteNickname(p, nickname); }
-    public List<String> getSavedNicknames(OfflinePlayer p) { return saveHandler.getSavedNicknames(p); }
+    public boolean saveNickname(OfflinePlayer p, String nickname) {
+        return saveHandler.saveNickname(p, nickname);
+    }
+
+    public boolean deleteNickname(OfflinePlayer p, String nickname) {
+        return saveHandler.deleteNickname(p, nickname);
+    }
+
+    public List<String> getSavedNicknames(OfflinePlayer p) {
+        return saveHandler.getSavedNicknames(p);
+    }
 }

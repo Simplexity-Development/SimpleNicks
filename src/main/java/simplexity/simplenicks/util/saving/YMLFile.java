@@ -1,6 +1,6 @@
-package adhdmc.simplenicks.util.saving;
+package simplexity.simplenicks.util.saving;
 
-import adhdmc.simplenicks.SimpleNicks;
+import simplexity.simplenicks.SimpleNicks;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -20,11 +20,17 @@ public class YMLFile extends AbstractSaving {
     public void init() {
         if (!dataFile.exists()) {
             dataFile.getParentFile().mkdirs();
-            try { nicknameData.save(dataFile); }
-            catch (IOException e) { e.printStackTrace(); }
+            try {
+                nicknameData.save(dataFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        try { nicknameData.load(dataFile); }
-        catch (IOException | InvalidConfigurationException e) { e.printStackTrace(); }
+        try {
+            nicknameData.load(dataFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -81,8 +87,9 @@ public class YMLFile extends AbstractSaving {
     }
 
     private boolean saveData() {
-        try { nicknameData.save(dataFile); }
-        catch (IOException e) {
+        try {
+            nicknameData.save(dataFile);
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
