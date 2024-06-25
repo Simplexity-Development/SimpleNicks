@@ -14,3 +14,7 @@ nickname-regex: "[A-Za-z0-9_]+"
 
 # How many nicknames can be saved?
 max-saves: 5
+
+# Should names be changed in tablist?
+# (Keep this false if you use any other tablist plugin, there are placeholder API placeholders to use on those)
+tablist-nick: false

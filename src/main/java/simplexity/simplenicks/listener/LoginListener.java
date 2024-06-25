@@ -1,10 +1,10 @@
-package adhdmc.simplenicks.listener;
+package simplexity.simplenicks.listener;
 
-import adhdmc.simplenicks.util.NickHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import simplexity.simplenicks.util.NickHandler;
 
 public class LoginListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
