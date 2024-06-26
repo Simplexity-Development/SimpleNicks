@@ -5,9 +5,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+
 public enum TagPermission {
     //Nickname Perms
-    COLOR("simplenick.nick.color", StandardTags.color()),
+    HEX_COLOR("simplenick.nick.color", StandardTags.color()),
     GRADIENT("simplenick.nick.gradient", StandardTags.gradient()),
     RAINBOW("simplenick.nick.rainbow", StandardTags.rainbow()),
     RESET("simplenick.nick.format.reset", StandardTags.reset()),

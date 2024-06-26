@@ -91,8 +91,16 @@ public class CommandHandler implements TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         tabComplete.clear();
-        switch (args.length) {
-            case 1 -> tabComplete.addAll(keyLoop(sender));
+        int argsLength = args.length;
+        switch (argsLength) {
+            case 0, 1 -> {
+                for (String key : SimpleNicks.getSubCommands().keySet()) {
+                    if (sender.hasPermission(SimpleNicks.getSubCommands().get(key).basicPermission) ||
+                            sender.hasPermission(SimpleNicks.getSubCommands().get(key).getAdminPermission())) {
+                        tabComplete.add(key);
+                    }
+                }
+            }
             case 2 -> {
                 if (SimpleNicks.getSubCommands().containsKey(args[0].toLowerCase())) {
                     SubCommand subCommand = SimpleNicks.getSubCommands().get(args[0].toLowerCase());
@@ -109,17 +117,5 @@ public class CommandHandler implements TabExecutor {
             }
         }
         return tabComplete;
-    }
-
-    private List<String> keyLoop(CommandSender sender) {
-        List<String> keyList = new ArrayList<>();
-        for (String key : SimpleNicks.getSubCommands().keySet()) {
-            if (!sender.hasPermission(SimpleNicks.getSubCommands().get(key).basicPermission) ||
-                    !sender.hasPermission(SimpleNicks.getSubCommands().get(key).getAdminPermission())) {
-                continue;
-            }
-            keyList.add(key);
-        }
-        return keyList;
     }
 }

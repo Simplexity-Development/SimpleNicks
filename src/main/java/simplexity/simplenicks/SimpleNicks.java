@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import simplexity.simplenicks.commands.CommandHandler;
+import simplexity.simplenicks.commands.Reset;
 import simplexity.simplenicks.commands.Set;
 import simplexity.simplenicks.commands.SubCommand;
 import simplexity.simplenicks.config.ConfigHandler;
@@ -65,7 +66,7 @@ public final class SimpleNicks extends JavaPlugin {
     }
 
     private void registerSubCommands() {
-        //subCommands.put("reset", new Reset());
+        subCommands.put("reset", new Reset("reset", Constants.NICK_RESET, Constants.NICK_RESET_OTHERS, false));
         //subCommands.put("help", new Help());
         subCommands.put("set", new Set("set", Constants.NICK_COMMAND, Constants.NICK_OTHERS_RESTRICTIVE, false));
         //subCommands.put("save", new Save());
