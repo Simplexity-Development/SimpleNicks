@@ -29,7 +29,7 @@ public abstract class SubCommand {
 
     public abstract void executeOnSelf(CommandSender sender, Player player, String[] args);
 
-    public abstract ArrayList<String> tabComplete(CommandSender sender);
+    public abstract ArrayList<String> tabComplete(CommandSender sender, String[] args, Player playerPlaceholder);
 
     public String getCommandName() {
         return commandName;

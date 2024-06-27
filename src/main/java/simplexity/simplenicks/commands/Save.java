@@ -48,7 +48,7 @@ public class Save extends SubCommand{
     }
 
     @Override
-    public ArrayList<String> tabComplete(CommandSender sender) {
+    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player playerPlaceholder) {
         return null;
     }
 }
