@@ -18,3 +18,8 @@ max-saves: 5
 # Should names be changed in tablist?
 # (Keep this false if you use any other tablist plugin, there are placeholder API placeholders to use on those)
 tablist-nick: false
+
+# How long should people be offline before their username is available to use as a nickname?
+# In days, -1 to disable username protection altogether
+
+username-protection: 30
