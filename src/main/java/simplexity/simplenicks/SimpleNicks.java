@@ -4,9 +4,12 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import simplexity.simplenicks.commands.CommandHandler;
+import simplexity.simplenicks.commands.Delete;
+import simplexity.simplenicks.commands.Help;
 import simplexity.simplenicks.commands.Reset;
 import simplexity.simplenicks.commands.Save;
 import simplexity.simplenicks.commands.Set;
+import simplexity.simplenicks.commands.SNReload;
 import simplexity.simplenicks.commands.SubCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
@@ -43,6 +46,7 @@ public final class SimpleNicks extends JavaPlugin {
         this.saveDefaultConfig();
         ConfigHandler.getInstance().setConfigDefaults();
         this.getCommand("nick").setExecutor(new CommandHandler());
+        this.getCommand("snreload").setExecutor(new SNReload());
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
@@ -68,10 +72,10 @@ public final class SimpleNicks extends JavaPlugin {
 
     private void registerSubCommands() {
         subCommands.put("reset", new Reset("reset", Constants.NICK_RESET, Constants.NICK_RESET_OTHERS, false));
-        //subCommands.put("help", new Help());
+        subCommands.put("help", new Help("help", Constants.NICK_COMMAND, Constants.NICK_OTHERS_COMMAND, true));
         subCommands.put("set", new Set("set", Constants.NICK_COMMAND, Constants.NICK_OTHERS_RESTRICTIVE, false));
         subCommands.put("save", new Save("save", Constants.NICK_SAVE, Constants.NICK_OTHERS_SAVE, false));
-        //subCommands.put("delete", new Delete());
+        subCommands.put("delete", new Delete("delete", Constants.NICK_DELETE, Constants.NICK_OTHERS_DELETE, false));
     }
 
     public static void configReload() {

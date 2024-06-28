@@ -28,7 +28,7 @@ public class Set extends SubCommand {
 
     @Override
     public void executeOnOther(CommandSender sender, Player player, String[] args) {
-        if (!validateArgsLength(sender, player, args, 3)) {
+        if (!isValidArgsLength(sender, player, args, 3)) {
             return;
         }
         String nickname = args[2];
@@ -53,7 +53,7 @@ public class Set extends SubCommand {
 
     @Override
     public void executeOnSelf(CommandSender sender, Player player, String[] args) {
-        if (!validateArgsLength(sender, player, args, 2)) return;
+        if (!isValidArgsLength(sender, player, args, 2)) return;
         String nickname = args[1];
         if (!passesChecks(sender, nickname, player)) {
             return;
@@ -75,21 +75,15 @@ public class Set extends SubCommand {
         return true;
     }
 
-    private boolean validateArgsLength(CommandSender sender, Player player, String[] args, int minArgsLength) {
-        if (args.length < minArgsLength) {
-            parsedMessage(sender, player, LocaleHandler.getInstance().getNotEnoughArgs(), "");
-            return false;
-        }
-        return true;
-    }
+
 
 
     @Override
-    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player playerPlaceholder) {
-        if (playerPlaceholder == null) {
+    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player) {
+        if (player == null) {
             return null;
         }
-        List<String> savedNickNames = NickHandler.getInstance().getSavedNicknames(playerPlaceholder);
+        List<String> savedNickNames = NickHandler.getInstance().getSavedNicknames(player);
         return (ArrayList<String>) savedNickNames;
     }
 
@@ -133,6 +127,7 @@ public class Set extends SubCommand {
         }
         if (playerToCheck.getPlayer() == player) {
             return true;
+
         }
         if (!sender.hasPermission(Constants.NICK_USERNAME_BYPASS)) {
             long lastSeen = playerToCheck.getLastSeen();

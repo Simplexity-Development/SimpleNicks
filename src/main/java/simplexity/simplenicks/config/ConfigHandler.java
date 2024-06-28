@@ -57,7 +57,7 @@ public class ConfigHandler {
         maxLength = SimpleNicks.getInstance().getConfig().getInt("max-nickname-length");
         maxSaves = SimpleNicks.getInstance().getConfig().getInt("max-saves");
         tablistNick = SimpleNicks.getInstance().getConfig().getBoolean("tablist-nick");
-        usernameProtectionTime = SimpleNicks.getInstance().getConfig().getLong("username-protection-time") * 86400000;
+        usernameProtectionTime = SimpleNicks.getInstance().getConfig().getLong("username-protection") * 86400000;
     }
 
     public void setConfigDefaults() {
@@ -67,7 +67,7 @@ public class ConfigHandler {
         config.addDefault("max-saves", 5);
         config.addDefault("nickname-regex", "[A-Za-z0-9_]+");
         config.addDefault("tablist-nick", false);
-        config.addDefault("username-protection-time", 30);
+        config.addDefault("username-protection", 30);
     }
 
     public Pattern getRegex() {

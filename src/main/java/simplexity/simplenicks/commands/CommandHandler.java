@@ -27,7 +27,9 @@ public class CommandHandler implements TabExecutor {
         }
         if (args.length >= 2) {
             Player player = getPlayerFromArgs(args);
-            if (player != null) {
+            String subCommandString = args[0].toLowerCase();
+            SubCommand subCommand = SimpleNicks.getSubCommands().get(subCommandString);
+            if (subCommand != null && sender.hasPermission(subCommand.adminPermission) && (player != null)) {
                 commandOnOther(sender, args, player);
                 return true;
             }
@@ -83,9 +85,7 @@ public class CommandHandler implements TabExecutor {
         tabComplete.clear();
         Player player = getPlayerForTabComplete(sender, args);
         switch (args.length) {
-            case 0, 1 -> {
-                addSubCommandsToTabComplete(sender);
-            }
+            case 0, 1 -> addSubCommandsToTabComplete(sender);
             case 2 -> {
                 SubCommand subCommand = SimpleNicks.getSubCommands().get(args[0].toLowerCase());
                 if (SimpleNicks.getSubCommands().containsKey(args[0].toLowerCase())) {
@@ -132,7 +132,6 @@ public class CommandHandler implements TabExecutor {
     }
 
     private void sendMessage(CommandSender sender, String message) {
-        sender.sendMessage(miniMessage.deserialize(message,
-                Placeholder.parsed("prefix", LocaleHandler.getInstance().getPluginPrefix())));
+        sender.sendMessage(miniMessage.deserialize(message, Placeholder.parsed("prefix", LocaleHandler.getInstance().getPluginPrefix())));
     }
 }

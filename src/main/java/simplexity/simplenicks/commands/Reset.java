@@ -35,7 +35,7 @@ public class Reset extends SubCommand {
     }
 
     @Override
-    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player playerPlaceholder) {
+    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player) {
         return null;
     }
 }

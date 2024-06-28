@@ -64,8 +64,11 @@ public class YMLFile extends AbstractSaving {
     @Override
     public boolean deleteNickname(OfflinePlayer p, String nickname) {
         List<String> nicknames = getSavedNicknames(p);
+        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
+        if (section == null) return false;
         if (!nicknames.contains(nickname)) return false;
         nicknames.remove(nickname);
+        section.set("saved", nicknames);
         saveData();
         return true;
     }

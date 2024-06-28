@@ -16,10 +16,10 @@ public class LocaleHandler {
     private final FileConfiguration localeConfig = new YamlConfiguration();
     private final Logger logger = SimpleNicks.getInstance().getLogger();
     //Plugin
-    private String pluginPrefix, helpMessage, configReloaded;
+    private String pluginPrefix, helpMessage, configReloaded, shownHelp;
     //Errors
     private String invalidCommand, invalidPlayer, invalidNick, invalidNickLength, invalidTags, invalidConfigRegex,
-            tooManyArgs, notEnoughArgs, nickIsNull, deleteFailure, saveFailure, tooManyToSave, otherPlayersUsername,
+            tooManyArgs, notEnoughArgs, nickIsNull, deleteFailure, nameNonexistent, saveFailure, tooManyToSave, otherPlayersUsername,
             noPermission, mustBePlayer;
     //Nick
     private String changedSelf, changedOther, changedByOther, resetSelf, resetOther, resetByOther, saveNick, deleteNick;
@@ -50,14 +50,17 @@ public class LocaleHandler {
         }
         pluginPrefix = localeConfig.getString("plugin.prefix", "<aqua>SimpleNicks <white>» ");
         helpMessage = localeConfig.getString("plugin.help-message",
-                "    <prefix>========================\n" +
-                        "    <aqua>· <yellow>Setting a nickname: \n" +
-                        "       <gray>/nick set <nickname>\n" +
-                        "    <aqua>· <yellow>removing a nickname: \n" +
-                        "       <gray>/nick reset\"\n" +
-                        "    <aqua>· <yellow>Formatting: \n" +
-                        "        <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>\"\n" +
-                        "  ");
+                """
+                            <prefix>========================
+                            <aqua>· <yellow>Setting a nickname:\s
+                               <gray>/nick set <nickname>
+                            <aqua>· <yellow>removing a nickname:\s
+                               <gray>/nick reset"
+                            <aqua>· <yellow>Formatting:\s
+                                <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"
+                          \
+                        """);
+        shownHelp = localeConfig.getString("plugin.shown-help", "<prefix><target><reset><yellow> has been shown the help screen");
         configReloaded = localeConfig.getString("plugin.config-reloaded", "<prefix><gold>SimpleNicks config and locale reloaded");
         invalidCommand = localeConfig.getString("error.invalid.command", "<prefix><red>Invalid command.");
         invalidPlayer = localeConfig.getString("error.invalid.player", "<prefix><red>Invalid player specified");
@@ -71,7 +74,8 @@ public class LocaleHandler {
         deleteFailure = localeConfig.getString("error.nickname.delete-failure", "<prefix><gray>Failed to delete given username.");
         saveFailure = localeConfig.getString("error.nickname.save-failure", "<prefix><gray>Failed to save current username.");
         tooManyToSave = localeConfig.getString("error.nickname.too-many-to-save", "<prefix><gray>You have too many saved usernames, please remove some with /nick delete <value>");
-        otherPlayersUsername = localeConfig.getString("error.nickname.other-players-username", "<prefix><red>You cannot name yourself <value>, as that is the username of another player on this server. Pick another name");
+        otherPlayersUsername = localeConfig.getString("error.nickname.other-players-username", "<prefix><red>You cannot name yourself <value><reset><red>, as that is the username of another player on this server. Pick another name");
+        nameNonexistent = localeConfig.getString("error.nickname.name-nonexistent", "<prefix><gray>Cannot delete this name because it does not exist");
         noPermission = localeConfig.getString("error.no-permission", "<prefix><red>You do not have permission to run this command");
         mustBePlayer = localeConfig.getString("error.must-be-player", "<prefix><red>This command cannot be run on the Console. You must be a player to run this command");
         changedSelf = localeConfig.getString("nick.changed.self", "<prefix><green>Changed your nickname to <value>!");
@@ -187,6 +191,14 @@ public class LocaleHandler {
 
     public String getDeleteNick() {
         return deleteNick;
+    }
+
+    public String getNameNonexistent() {
+        return nameNonexistent;
+    }
+
+    public String getShownHelp() {
+        return shownHelp;
     }
 }
 

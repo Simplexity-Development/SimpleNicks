@@ -29,7 +29,7 @@ public abstract class SubCommand {
 
     public abstract void executeOnSelf(CommandSender sender, Player player, String[] args);
 
-    public abstract ArrayList<String> tabComplete(CommandSender sender, String[] args, Player playerPlaceholder);
+    public abstract ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player);
 
     public String getCommandName() {
         return commandName;
@@ -65,5 +65,13 @@ public abstract class SubCommand {
                 Placeholder.component("initiator", senderName),
                 Placeholder.component("target", playerName),
                 Placeholder.parsed("value", value));
+    }
+
+    public boolean isValidArgsLength(CommandSender sender, Player player, String[] args, int minArgsLength) {
+        if (args.length < minArgsLength) {
+            sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getNotEnoughArgs(), ""));
+            return false;
+        }
+        return true;
     }
 }
