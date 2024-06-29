@@ -41,6 +41,16 @@ permissions:
     description: Allows the user to set another player's nickname, does not check the formatting permissions delegated to either player
     children:
       simplenick.admin: true
+  simplenick.admin.save:
+    default: op
+    description: Allows the user to save another player's nickname for future use
+    children:
+      simplenick.admin: true
+  simplenick.admin.delete:
+    default: op
+    description: Allows the user to delete one of another player's saved nicknames
+    children:
+      simplenick.admin: true
   simplenick.reload:
     description: allows a user to reload the locale and config of this plugin
     default: op

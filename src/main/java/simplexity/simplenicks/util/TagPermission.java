@@ -3,9 +3,6 @@ package simplexity.simplenicks.util;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
-import org.bukkit.command.CommandSender;
-
-import java.util.ArrayList;
 
 public enum TagPermission {
     //Nickname Perms
