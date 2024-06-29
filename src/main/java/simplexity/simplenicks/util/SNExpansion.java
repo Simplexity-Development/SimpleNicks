@@ -1,9 +1,9 @@
-package adhdmc.simplenicks.util;
+package simplexity.simplenicks.util;
 
-import adhdmc.simplenicks.SimpleNicks;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicks;
 
 public class SNExpansion extends PlaceholderExpansion {
     @Override

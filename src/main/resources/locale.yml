@@ -1,29 +1,44 @@
-invalid-command: "<prefix><red>Invalid command."
-no-arguments: "<prefix><red>No arguments provided."
-too-many-arguments: "<prefix><red>Too many arguments provided."
-cant-nick-username: "<prefix><red>You cannot name yourself <name>, as that is the username of another player on this server. Pick another name"
-no-permission: "<prefix><red>You do not have permission to run this command"
-console-cannot-run: "<prefix><red>This command cannot be run on the Console."
-invalid-player: "<prefix><red>Invalid player specified"
-invalid-nick-regex: "<prefix><red>Not a valid nickname, must follow regex: <regex>"
-invalid-nick-too-long: "<prefix><red>Nickname is too long, must be <= <value>"
-invalid-tags: "<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again"
-prefix: "<aqua>SimpleNicks <white>» "
-help-base: "<prefix><green>--------"
-help-set: "<aqua>· <yellow>Setting a nickname: \n   <gray>/nick set <nickname>"
-help-reset: "<aqua>· <yellow>removing a nickname: \n   <gray>/nick reset"
-help-minimessage: "<aqua>· <yellow>Formatting: \n   <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"
-config-reload: "<prefix><gold>SimpleNicks config and locale reloaded"
-nick-changed-self: "<prefix><green>Changed your own nickname to <nickname>!"
-nick-change-other: "<prefix><green>Changed <username>'s nickname to <nickname>"
-nick-changed-by-other: "<prefix><green><username> changed your nickname to <reset><nickname><green>!"
-nick-reset-self: "<prefix><green>Reset your own nickname!"
-nick-reset-other: "<prefix><green>Reset <username>'s nickname."
-nick-reset-by-other: "<prefix><gray>Your nickname was reset by <username>"
-no-regex: "nickname-regex is null or malformed in file 'config.yml'. Please fix this"
-nick-is-null: "<prefix><red>Something went wrong and the nickname is null, please check your formatting"
-nick-save-success: "<prefix><green>Success! The nickname <nickname><reset><green> has been saved for future use"
-nick-save-failure: "<prefix><gray>Failed to save current username."
-nick-save-failure-too-many: "<prefix><gray>You have too many saved usernames, please remove some with /nick delete <nickname>"
-nick-delete-success: "<prefix><gray>The nickname <nickname><reset><gray> has been successfully removed from your saved names"
-nick-delete-failure: "<prefix><gray>Failed to delete given username."
+plugin:
+  prefix: "<aqua>SimpleNicks <white>» "
+  help-message: >
+    <prefix>========================
+    <aqua>· <yellow>Setting a nickname: 
+       <gray>/nick set <nickname>
+    <aqua>· <yellow>removing a nickname: 
+       <gray>/nick reset"
+    <aqua>· <yellow>Formatting: 
+        <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"
+  shown-help: "<prefix><target><reset><yellow> has been shown the help screen"
+  config-reloaded: "<prefix><gold>SimpleNicks config and locale reloaded"
+
+error:
+  invalid:
+    command: "<prefix><red>Invalid command."
+    player: "<prefix><red>Invalid player specified"
+    nick: "<prefix><red>Not a valid nickname, must follow regex: <value>"
+    nick-length: "<prefix><red>Nickname is too long, must be <= <value>"
+    tags: "<prefix><red>You have used a color or formatting tag you do not have permission to use. Please try again"
+    config-regex: "nickname-regex is null or malformed in file 'config.yml'. Please fix this"
+  arguments:
+    not-enough: "<prefix><red>No arguments provided."
+    too-many: "<prefix><red>Too many arguments provided."
+  nickname:
+    is-null: "<prefix><red>Something went wrong and the nickname is null, please check your formatting"
+    delete-failure: "<prefix><gray>Failed to delete given username."
+    name-nonexistent: "<prefix><gray>Cannot delete this name because it does not exist"
+    save-failure: "<prefix><gray>Failed to save current username."
+    too-many-to-save: "<prefix><gray>You have too many saved usernames, please remove some with /nick delete <value>"
+    other-players-username: "<prefix><red>You cannot name yourself <value><reset><red>, as that is the username of another player on this server. Pick another name"
+  no-permission: "<prefix><red>You do not have permission to run this command"
+  must-be-player: "<prefix><red>This command cannot be run on the Console. You must be a player to run this command"
+nick:
+  changed:
+    self: "<prefix><green>Changed your nickname to <value>!"
+    other: "<prefix><green>Changed <target>'s nickname to <value>"
+    by-other: "<prefix><green><initiator> changed your nickname to <reset><value><green>!"
+  reset:
+    self: "<prefix><green>Reset your nickname!"
+    other: "<prefix><green>Reset <target>'s nickname."
+    by-other: "<prefix><gray>Your nickname was reset by <initiator>"
+  save: "<prefix><green>Success! The nickname <value><reset><green> has been saved for future use"
+  delete: "<prefix><gray>The nickname <value><reset><gray> has been successfully removed from your saved names"

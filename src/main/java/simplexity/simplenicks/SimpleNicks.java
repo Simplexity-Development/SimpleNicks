@@ -1,16 +1,22 @@
-package adhdmc.simplenicks;
+package simplexity.simplenicks;
 
-import adhdmc.simplenicks.commands.CommandHandler;
-import adhdmc.simplenicks.commands.SubCommand;
-import adhdmc.simplenicks.commands.subcommands.*;
-import adhdmc.simplenicks.config.Config;
-import adhdmc.simplenicks.config.LocaleHandler;
-import adhdmc.simplenicks.listener.LoginListener;
-import adhdmc.simplenicks.util.NickHandler;
-import adhdmc.simplenicks.util.SNExpansion;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import simplexity.simplenicks.commands.CommandHandler;
+import simplexity.simplenicks.commands.Delete;
+import simplexity.simplenicks.commands.Help;
+import simplexity.simplenicks.commands.Reset;
+import simplexity.simplenicks.commands.Save;
+import simplexity.simplenicks.commands.Set;
+import simplexity.simplenicks.commands.SNReload;
+import simplexity.simplenicks.commands.SubCommand;
+import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.listener.LoginListener;
+import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.util.SNExpansion;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,8 +44,9 @@ public final class SimpleNicks extends JavaPlugin {
         instance = this;
         registerSubCommands();
         this.saveDefaultConfig();
-        Config.getInstance().setConfigDefaults();
+        ConfigHandler.getInstance().setConfigDefaults();
         this.getCommand("nick").setExecutor(new CommandHandler());
+        this.getCommand("snreload").setExecutor(new SNReload());
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
@@ -59,22 +66,21 @@ public final class SimpleNicks extends JavaPlugin {
         return Collections.unmodifiableMap(subCommands);
     }
 
-    public static Logger getSimpleNicksLogger(){
+    public static Logger getSimpleNicksLogger() {
         return instance.getLogger();
     }
 
     private void registerSubCommands() {
-        subCommands.put("reset", new Reset());
-        subCommands.put("help", new Help());
-        subCommands.put("set", new Set());
-        subCommands.put("reload", new Reload());
-        subCommands.put("save", new Save());
-        subCommands.put("delete", new Delete());
+        subCommands.put("reset", new Reset("reset", Constants.NICK_RESET, Constants.NICK_RESET_OTHERS, false));
+        subCommands.put("help", new Help("help", Constants.NICK_COMMAND, Constants.NICK_OTHERS_COMMAND, true));
+        subCommands.put("set", new Set("set", Constants.NICK_COMMAND, Constants.NICK_OTHERS_RESTRICTIVE, false));
+        subCommands.put("save", new Save("save", Constants.NICK_SAVE, Constants.NICK_OTHERS_SAVE, false));
+        subCommands.put("delete", new Delete("delete", Constants.NICK_DELETE, Constants.NICK_OTHERS_DELETE, false));
     }
 
     public static void configReload() {
         LocaleHandler.getInstance().loadLocale();
-        Config.getInstance().reloadConfig();
+        ConfigHandler.getInstance().reloadConfig();
         NickHandler.getInstance().loadSavingType();
     }
 }
