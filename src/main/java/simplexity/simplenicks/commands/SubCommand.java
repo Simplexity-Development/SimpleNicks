@@ -17,7 +17,6 @@ public abstract class SubCommand {
     public final Permission adminPermission;
     public final boolean canRunWithoutPlayer;
     public final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
-
     public SubCommand(String commandName, Permission basicPermission, Permission adminPermission, boolean consoleRunNoPlayer) {
         this.commandName = commandName;
         this.basicPermission = basicPermission;

@@ -17,10 +17,11 @@ import simplexity.simplenicks.util.TagPermission;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class Set extends SubCommand {
-    MiniMessage serializer = MiniMessage.builder().tags(TagResolver.empty()).build();
+    Logger logger = SimpleNicks.getSimpleNicksLogger();
 
     public Set(String commandName, Permission basicPermission, Permission adminPermission, boolean consoleRunNoPlayer) {
         super(commandName, basicPermission, adminPermission, consoleRunNoPlayer);
@@ -76,8 +77,6 @@ public class Set extends SubCommand {
     }
 
 
-
-
     @Override
     public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player) {
         if (player == null) {
@@ -90,25 +89,20 @@ public class Set extends SubCommand {
     private Component getNickComponent(CommandSender user, String nick) {
         int permissionCount = 0;
         String strippedMessage = miniMessage.stripTags(nick);
-        TagResolver.Builder resolverBuilder = TagResolver.builder();
-        Component finalNick = null;
+        TagResolver.Builder resolver = TagResolver.builder();
         for (TagPermission tagPermission : TagPermission.values()) {
-            if (!user.hasPermission(tagPermission.getPermission())) {
-                continue;
+            if (user.hasPermission(tagPermission.getPermission())) {
+                permissionCount++;
+                resolver.resolver(tagPermission.getTagResolver());
             }
-            permissionCount++;
-            resolverBuilder.resolver(tagPermission.getTagResolver());
-            finalNick = serializer.deserialize(nick, tagPermission.getTagResolver());
         }
         if (permissionCount == 0) {
             return Component.text(strippedMessage);
         }
-        String plainNick = PlainTextComponentSerializer.plainText().serialize(finalNick);
-        if (!plainNick.equals(strippedMessage)) {
-            return null;
-        }
-        return finalNick;
+        MiniMessage parser = MiniMessage.builder().tags(resolver.build()).build();
+        return parser.deserialize(nick);
     }
+
 
     private boolean passesChecks(CommandSender sender, String nickname, Player player) {
         String strippedMessage = miniMessage.stripTags(nickname);
