@@ -69,19 +69,19 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 
 ### Player Permissions
 
-- `simplenicks.nick.set`
+- `simplenick.nick.set`
   - Allows the player to set their own nickname
 
-- `simplenicks.nick.reset`
+- `simplenick.nick.reset`
   - Allows the player to reset their own nickname
 
-- `simplenicks.nick.save`
+- `simplenick.nick.save`
   - Allows saving the current nickname
 
-- `simplenicks.nick.delete`
+- `simplenick.nick.delete`
   - Allows deleting a specified saved nickname
 
-- `simplenicks.nick.<tag>`
+- `simplenick.nick.<tag>`
   - Allows for the use of those Mini-Message tags.
   - Valid Tags are: `color`, `gradient`, and `rainbow`.
 
