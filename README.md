@@ -90,8 +90,10 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
   - Valid Tags are: `reset`, `underline`, `italic`, `strikethrough`, `bold`, and `obsfucated`.
 
 ## PlaceholderAPI
-- `%simplenicks_mininick%`
-  - Nickname pre-parsed
+- Download the `player` ecloud expansion for Placeholder API
+- Use `%player_displayname%`
 
+- If you have a specific setup that needs the minimessage formatting before it has been parsed, i.e. the `"<red>Nickname</red>"` version, you can use `%simplenicks_mininick%`
+  - This won't be necessary for most users though, the previous one will work best.
 ## TODO
 - Create a `/nick whois` or similar command to determine "who is the player(s) with this nickname".

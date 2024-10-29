@@ -21,6 +21,9 @@ permissions:
   simplenick.admin:
     description: allows user to set and reset other players' nicknames
     default: op
+    children:
+      simplenick.nick: true
+      simplenick.nick.set: true
   simplenick.admin.reset:
     default: op
     description: Allows the user to clear another player's nickname
