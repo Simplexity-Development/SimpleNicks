@@ -6,94 +6,85 @@ Mini-Message comes prepackaged with Paper and all forks of Paper support Mini-Me
 
 ## Commands
 
+
+
 `/nick set <nickname> [player]`
 
 - Sets the nickname of the player.
 - Uses Mini-Message Tags such as `<gray>` and `<gradient:red:green>`
-- Allows users with permission `simplenick.admin` to change the nickname of another player using the optional [player] argument.
+- Allows users with permission `simplenick.admin` to change the nickname of another player using the optional [player]
+  argument.
 
 `/nick save [player]`
+
 - Saves the player's current nickname for future use
 
 `/nick delete [player|nick] <nick>`
+
 - Deletes the specified nickname from the player's saved names
 
 `/nick reset [player]`
 
 - Sets the nickname of the player back to the original username, unformatted.
-- Allows users with permission `simplenick.admin` to reset the nickname of another player using the optional [player] argument.
+- Allows users with permission `simplenick.admin` to reset the nickname of another player using the optional [player]
+  argument.
 
-`/nick reload` 
+`/nick reload`
 
 - Reloads the configuration and locale.
 
-`/nick help` 
+`/nick help`
 
 - Provides help text.
 
 ### Admin Permissions
 
-- `simplenick.bypass.username`
-  - Allows the player to use the username of another player on the server, as their own nickname
-- `simplenick.bypass.length`
-  - Allows the player to use a nickname longer than the configured max character
-- `simplenick.bypass.regex`
-  - Allows the player to use a nickname that doesn't match the configured regex
-- `simplenick.reload`
-  - Allows the player to reload the plugin configuration and locale.
-- `simplenick.admin.reset`
-  - Allows the player to reset another player's nickname
-- `simplenick.admin.save`
-  - Allows the player to save another player's nickname
-- `simplenick.admin.delete`
-  - Allows the player to delete another player's saved name
-- `simplenick.admin.restrictive`
-  - Allows the player to set another player's nickname, within the other player's formatting permissions
-  - Does not override the other player's formatting permissions
-  - Does override the other player's nickname permissions 
-  - (if the other player cannot nickname themselves, they can still be admin nick'd with this permission)
-- `simplenick.admin.basic`
-  - Allows the player to set another player's nickname, within their own formatting permissions
-  - Overrides the other player's formatting permissions
-  - Only allows permissions that the admin has
-- `simplenick.admin.full`
-  - Allows the player to set another player's nickname, regardless of both of their formatting permissions.
-
-> [!NOTE]
->
-> This permission allows for all minimessage formatting types, not just the ones that are set in permissions here
->
-> These types of formatting can include things like click action, hover text, and similar. 
->
-> These formats can do really cool stuff, but be careful who you give it to lol
+| Permission                     | Admin permission to:                                                                                                                                                             |
+|:-------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `simplenick.bypass.`           | ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                                                                                                                              |
+| `simplenick.bypass.username`   | Use another player's username as their own nickname on the server                                                                                                                |
+| `simplenick.bypass.length`     | Set a nickname longer than the max character limit                                                                                                                               |
+| `simplenick.bypass.regex`      | Set a nickname that doesn't match the configured regex                                                                                                                           |
+| ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                                                                                                                              |
+| `simplenick.reload`            | Reload the plugin configuration and locale                                                                                                                                       |
+| ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                                                                                                                              |
+| `simplenick.admin.`            | ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                                                                                                                              |
+| `simplenick.admin.reset`       | Reset a target player's nickname                                                                                                                                                 |
+| `simplenick.admin.save`        | Save a target player's nickname to **the target player's** saved nicknames                                                                                                       |
+| `simplenick.admin.delete`      | Delete a target player's saved name from **the target player's** <br>list of saved nicknames                                                                                     |
+| `simplenick.admin.restrictive` | Set a target player's nickname, only using the formats the target player has permissions for<br/>(This is a very niche permission, likely not what most servers are looking for) |
+| `simplenick.admin.basic`       | Set a target player's nickname, using the formats the Admin has permission to use<br>(This is the permission most servers will need for admins)                                  |
+| `simplenick.admin.full`        | Set a target player's nickname with zero regard for formatting, full permission for all formatting. <br>(Not recommended)                                                        |
 
 ### Player Permissions
 
-- `simplenick.nick.set`
-  - Allows the player to set their own nickname
+| Permission                             | Permission to:                                           |
+|:---------------------------------------|:---------------------------------------------------------|
+| `simplenick.nick`                      | ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      |
+| `simplenick.nick.set`                  | Set own nickname                                         |
+| `simplenick.nick.reset`                | Reset own nickname                                       |
+| `simplenick.nick.save`                 | Save current nickname for later use                      |
+| `simplenick.nick.delete`               | Delete a previously saved nickname                       |
+| `simplenick.nick.color`                | Use color formatting tags (`<color:#aabbcc>` or `<red>`) |
+| `simplenick.nick.gradient`             | Use gradient formatting tags (`<gradient:red:blue>`)     |
+| `simplenick.nick.rainbow`              | Use rainbow formatting tags (`<rainbow>`)                |
+| `simplenick.nick.format.`              | ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      |
+| `simplenick.nick.format.reset`         | Use the `<reset>` formatting tags                        |
+| `simplenick.nick.format.underline`     | Use the `<u>`,`</u>` formatting tags                     |
+| `simplenick.nick.format.strikethrough` | Use the `<st>`,`</st>` formatting tags                   |
+| `simplenick.nick.format.bold`          | Use the `<b>`,`</b>` formatting tags                     |
+| `simplenick.nick.format.obsfucated`    | Use the `<obf>`,`</obf>` formatting tags                 |
 
-- `simplenick.nick.reset`
-  - Allows the player to reset their own nickname
-
-- `simplenick.nick.save`
-  - Allows saving the current nickname
-
-- `simplenick.nick.delete`
-  - Allows deleting a specified saved nickname
-
-- `simplenick.nick.<tag>`
-  - Allows for the use of those Mini-Message tags.
-  - Valid Tags are: `color`, `gradient`, and `rainbow`.
-
-- `simplenick.nick.format.<tag>`
-  - Allows for the use of those formatting tags.
-  - Valid Tags are: `reset`, `underline`, `italic`, `strikethrough`, `bold`, and `obsfucated`.
 
 ## PlaceholderAPI
+
 - Download the `player` ecloud expansion for Placeholder API
 - Use `%player_displayname%`
 
-- If you have a specific setup that needs the minimessage formatting before it has been parsed, i.e. the `"<red>Nickname</red>"` version, you can use `%simplenicks_mininick%`
-  - This won't be necessary for most users though, the previous one will work best.
+- If you have a specific setup that needs the minimessage formatting before it has been parsed, i.e. the
+  `"<red>Nickname</red>"` version, you can use `%simplenicks_mininick%`
+    - This won't be necessary for most users though, the previous one will work best.
+
 ## TODO
+
 - Create a `/nick whois` or similar command to determine "who is the player(s) with this nickname".
