@@ -18,43 +18,43 @@ public class PlayerPDC extends AbstractSaving {
     }
 
     @Override
-    public String getNickname(OfflinePlayer p) {
-        Player player = p.getPlayer();
+    public String getNickname(OfflinePlayer offlinePlayer) {
+        Player player = offlinePlayer.getPlayer();
         if (player == null) return null;
-        PersistentDataContainer pdc = p.getPlayer().getPersistentDataContainer();
+        PersistentDataContainer pdc = offlinePlayer.getPlayer().getPersistentDataContainer();
         return pdc.get(nickNameSave, PersistentDataType.STRING);
     }
 
     @Override
-    public boolean setNickname(OfflinePlayer p, String nickname) {
-        Player player = p.getPlayer();
+    public boolean setNickname(OfflinePlayer offlinePlayer, String nickname) {
+        Player player = offlinePlayer.getPlayer();
         if (player == null) return false;
-        PersistentDataContainer pdc = p.getPlayer().getPersistentDataContainer();
+        PersistentDataContainer pdc = offlinePlayer.getPlayer().getPersistentDataContainer();
         pdc.set(nickNameSave, PersistentDataType.STRING, nickname);
         return true;
     }
 
     @Override
-    public boolean saveNickname(OfflinePlayer p, String nickname) {
+    public boolean saveNickname(OfflinePlayer offlinePlayer, String nickname) {
         return false;
     }
 
     @Override
-    public boolean deleteNickname(OfflinePlayer p, String nickname) {
+    public boolean deleteNickname(OfflinePlayer offlinePlayer, String nickname) {
         return false;
     }
 
     @Override
-    public boolean resetNickname(OfflinePlayer p) {
-        Player player = p.getPlayer();
+    public boolean resetNickname(OfflinePlayer offlinePlayer) {
+        Player player = offlinePlayer.getPlayer();
         if (player == null) return false;
-        PersistentDataContainer pdc = p.getPlayer().getPersistentDataContainer();
+        PersistentDataContainer pdc = offlinePlayer.getPlayer().getPersistentDataContainer();
         pdc.remove(nickNameSave);
         return true;
     }
 
     @Override
-    public List<String> getSavedNicknames(OfflinePlayer p) {
+    public List<String> getSavedNicknames(OfflinePlayer offlinePlayer) {
         return new ArrayList<>();
     }
 }

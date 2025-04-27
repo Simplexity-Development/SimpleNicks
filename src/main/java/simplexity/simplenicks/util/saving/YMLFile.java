@@ -34,25 +34,25 @@ public class YMLFile extends AbstractSaving {
     }
 
     @Override
-    public String getNickname(OfflinePlayer p) {
-        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
+    public String getNickname(OfflinePlayer offlinePlayer) {
+        ConfigurationSection section = nicknameData.getConfigurationSection(offlinePlayer.getUniqueId().toString());
         if (section == null) return null;
         return section.getString("current", null);
     }
 
     @Override
-    public boolean setNickname(OfflinePlayer p, String nickname) {
-        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
-        if (section == null) section = nicknameData.createSection(p.getUniqueId().toString());
+    public boolean setNickname(OfflinePlayer offlinePlayer, String nickname) {
+        ConfigurationSection section = nicknameData.getConfigurationSection(offlinePlayer.getUniqueId().toString());
+        if (section == null) section = nicknameData.createSection(offlinePlayer.getUniqueId().toString());
         section.set("current", nickname);
         saveData();
         return true;
     }
 
     @Override
-    public boolean saveNickname(OfflinePlayer p, String nickname) {
-        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
-        if (section == null) section = nicknameData.createSection(p.getUniqueId().toString());
+    public boolean saveNickname(OfflinePlayer offlinePlayer, String nickname) {
+        ConfigurationSection section = nicknameData.getConfigurationSection(offlinePlayer.getUniqueId().toString());
+        if (section == null) section = nicknameData.createSection(offlinePlayer.getUniqueId().toString());
         List<String> savedNicknames = section.getStringList("saved");
         if (savedNicknames.contains(nickname)) return true;
         savedNicknames.add(nickname);
@@ -62,9 +62,9 @@ public class YMLFile extends AbstractSaving {
     }
 
     @Override
-    public boolean deleteNickname(OfflinePlayer p, String nickname) {
-        List<String> nicknames = getSavedNicknames(p);
-        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
+    public boolean deleteNickname(OfflinePlayer offlinePlayer, String nickname) {
+        List<String> nicknames = getSavedNicknames(offlinePlayer);
+        ConfigurationSection section = nicknameData.getConfigurationSection(offlinePlayer.getUniqueId().toString());
         if (section == null) return false;
         if (!nicknames.contains(nickname)) return false;
         nicknames.remove(nickname);
@@ -74,17 +74,17 @@ public class YMLFile extends AbstractSaving {
     }
 
     @Override
-    public boolean resetNickname(OfflinePlayer p) {
-        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
-        if (section == null) section = nicknameData.createSection(p.getUniqueId().toString());
+    public boolean resetNickname(OfflinePlayer offlinePlayer) {
+        ConfigurationSection section = nicknameData.getConfigurationSection(offlinePlayer.getUniqueId().toString());
+        if (section == null) section = nicknameData.createSection(offlinePlayer.getUniqueId().toString());
         section.set("current", null);
         saveData();
         return true;
     }
 
     @Override
-    public List<String> getSavedNicknames(OfflinePlayer p) {
-        ConfigurationSection section = nicknameData.getConfigurationSection(p.getUniqueId().toString());
+    public List<String> getSavedNicknames(OfflinePlayer offlinePlayer) {
+        ConfigurationSection section = nicknameData.getConfigurationSection(offlinePlayer.getUniqueId().toString());
         if (section == null) return new ArrayList<>();
         return section.getStringList("saved");
     }

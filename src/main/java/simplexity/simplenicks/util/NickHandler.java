@@ -11,6 +11,7 @@ import simplexity.simplenicks.util.saving.YMLFile;
 
 import java.util.List;
 
+@SuppressWarnings("UnusedReturnValue")
 public class NickHandler {
 
     private static NickHandler instance;
@@ -28,19 +29,19 @@ public class NickHandler {
         return instance;
     }
 
-    public String getNickname(OfflinePlayer p) {
-        return saveHandler.getNickname(p);
+    public String getNickname(OfflinePlayer player) {
+        return saveHandler.getNickname(player);
     }
 
-    public boolean setNickname(OfflinePlayer p, String nickname) {
-        if (!saveHandler.setNickname(p, nickname)) return false;
-        refreshNickname(p);
+    public boolean setNickname(OfflinePlayer player, String nickname) {
+        if (!saveHandler.setNickname(player, nickname)) return false;
+        refreshNickname(player);
         return true;
     }
 
-    public boolean resetNickname(OfflinePlayer p) {
-        if (!saveHandler.resetNickname(p)) return false;
-        refreshNickname(p);
+    public boolean resetNickname(OfflinePlayer player) {
+        if (!saveHandler.resetNickname(player)) return false;
+        refreshNickname(player);
         return true;
     }
 
@@ -68,15 +69,15 @@ public class NickHandler {
         saveHandler.init();
     }
 
-    public boolean saveNickname(OfflinePlayer p, String nickname) {
-        return saveHandler.saveNickname(p, nickname);
+    public boolean saveNickname(OfflinePlayer player, String nickname) {
+        return saveHandler.saveNickname(player, nickname);
     }
 
-    public boolean deleteNickname(OfflinePlayer p, String nickname) {
-        return saveHandler.deleteNickname(p, nickname);
+    public boolean deleteNickname(OfflinePlayer player, String nickname) {
+        return saveHandler.deleteNickname(player, nickname);
     }
 
-    public List<String> getSavedNicknames(OfflinePlayer p) {
-        return saveHandler.getSavedNicknames(p);
+    public List<String> getSavedNicknames(OfflinePlayer player) {
+        return saveHandler.getSavedNicknames(player);
     }
 }

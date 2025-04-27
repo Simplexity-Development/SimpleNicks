@@ -5,8 +5,6 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 
-import java.util.Locale;
-
 public class SNExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
@@ -15,12 +13,17 @@ public class SNExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return SimpleNicks.getInstance().getDescription().getAuthors().toString();
+        return "simplexity";
     }
 
     @Override
     public @NotNull String getVersion() {
-        return SimpleNicks.getInstance().getDescription().getVersion();
+        return "1.0.0";
+    }
+
+    @Override
+    public boolean persist() {
+        return true;
     }
 
     @Override
