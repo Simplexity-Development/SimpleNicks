@@ -44,7 +44,8 @@ public final class SimpleNicks extends JavaPlugin {
         instance = this;
         registerSubCommands();
         this.saveDefaultConfig();
-        ConfigHandler.getInstance().setConfigDefaults();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         this.getCommand("nick").setExecutor(new CommandHandler());
         this.getCommand("snreload").setExecutor(new SNReload());
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {

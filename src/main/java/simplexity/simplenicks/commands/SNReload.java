@@ -1,13 +1,16 @@
 package simplexity.simplenicks.commands;
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.util.NickHandler;
 
 public class SNReload implements CommandExecutor {
     @Override
@@ -16,6 +19,9 @@ public class SNReload implements CommandExecutor {
         LocaleHandler.getInstance().loadLocale();
         sender.sendMessage(SimpleNicks.getMiniMessage().deserialize(LocaleHandler.getInstance().getConfigReloaded(),
                 Placeholder.parsed("prefix", LocaleHandler.getInstance().getPluginPrefix())));
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            NickHandler.getInstance().refreshNickname(player);
+        }
         return false;
     }
 }

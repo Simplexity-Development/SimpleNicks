@@ -51,7 +51,7 @@ public class NickHandler {
         if (nicknameRaw == null || nicknameRaw.isBlank()) {
             player.displayName(null);
         } else {
-            player.displayName(miniMessage.deserialize(nicknameRaw));
+            player.displayName(miniMessage.deserialize(ConfigHandler.getInstance().getNickPrefix() + nicknameRaw));
             if (ConfigHandler.getInstance().shouldNickTablist()) {
                 player.playerListName(miniMessage.deserialize(nicknameRaw));
             }

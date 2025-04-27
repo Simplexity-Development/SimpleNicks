@@ -15,7 +15,6 @@ commands:
   snreload:
     description: "Reloads the config and locale of SimpleNicks."
     aliases: [simplenicksreload, simplenickreload, snreload]
-    usage: "Usage: /snreload"
     permission: simplenick.reload
 permissions:
   simplenick.admin:

@@ -23,3 +23,6 @@ tablist-nick: false
 # In days, -1 to disable username protection altogether
 
 username-protection: 30
+
+# What prefix should be given for players who have a nickname? put "" if you want no prefix
+nickname-prefix: ""
