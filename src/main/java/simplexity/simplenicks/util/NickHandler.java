@@ -68,10 +68,6 @@ public class NickHandler {
     }
 
     public void loadSavingType() {
-        switch (ConfigHandler.getInstance().getSavingType()) {
-            case PDC -> saveHandler = new PlayerPDC();
-            case FILE -> saveHandler = new YMLFile();
-        }
         saveHandler.init();
     }
 

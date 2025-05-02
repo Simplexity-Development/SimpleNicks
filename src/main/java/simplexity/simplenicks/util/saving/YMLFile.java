@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"UnusedReturnValue", "CallToPrintStackTrace", "ResultOfMethodCallIgnored"})
 public class YMLFile extends AbstractSaving {
     private final File dataFile = new File(SimpleNicks.getInstance().getDataFolder(), "nickname_data.yml");
     private final FileConfiguration nicknameData = new YamlConfiguration();
