@@ -17,18 +17,14 @@ public class ConfigHandler {
         return nickPrefix;
     }
 
-    public enum SAVING_TYPE {PDC, FILE}
 
     private static ConfigHandler instance;
 
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
-    private Pattern regex = Pattern.compile("[A-Za-z0-9_]+");
-    private SAVING_TYPE savingType = SAVING_TYPE.FILE;
-    private int maxLength = 25;
-    private int maxSaves = 5;
-    private boolean tablistNick = false;
-    private String regexString = "[A-Za-z0-9_]+";
-    private String nickPrefix;
+    private Pattern regex;
+    private boolean mySql, tablistNick;
+    private int maxLength, maxSaves;
+    private String regexString, nickPrefix, mySqlIp, mySqlName, mySqlUsername, mySqlPassword;
     private long usernameProtectionTime = 0;
 
     private ConfigHandler() {
@@ -48,18 +44,15 @@ public class ConfigHandler {
         try {
             String regexSetting = config.getString("nickname-regex", "[A-Za-z0-9_]+");
             regexString = regexSetting;
-            assert !regexSetting.isBlank();
             regex = Pattern.compile(regexSetting);
         } catch (PatternSyntaxException e) {
             logger.severe(LocaleHandler.getInstance().getInvalidConfigRegex());
         }
-        // Check validity of saving-type.
-        try {
-            String savingTypeSetting = config.getString("saving-type", "file");
-            savingType = SAVING_TYPE.valueOf(savingTypeSetting.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            logger.severe("INVALID SAVING TYPE");
-        }
+        mySql = config.getBoolean("mysql.enabled", false);
+        mySqlIp = config.getString("mysql.ip", "localhost:3306");
+        mySqlName = config.getString("mysql.name", "simplenicks");
+        mySqlUsername = config.getString("mysql.username", "username1");
+        mySqlPassword = config.getString("mysql.password", "badpassword!");
         maxLength = config.getInt("max-nickname-length", 25);
         maxSaves = config.getInt("max-saves", 5);
         tablistNick = config.getBoolean("tablist-nick", false);
@@ -70,10 +63,6 @@ public class ConfigHandler {
 
     public Pattern getRegex() {
         return regex;
-    }
-
-    public SAVING_TYPE getSavingType() {
-        return savingType;
     }
 
     public int getMaxLength() {
@@ -90,5 +79,25 @@ public class ConfigHandler {
 
     public long getUsernameProtectionTime() {
         return usernameProtectionTime;
+    }
+
+    public boolean isMySql() {
+        return mySql;
+    }
+
+    public String getMySqlIp() {
+        return mySqlIp;
+    }
+
+    public String getMySqlName() {
+        return mySqlName;
+    }
+
+    public String getMySqlUsername() {
+        return mySqlUsername;
+    }
+
+    public String getMySqlPassword() {
+        return mySqlPassword;
     }
 }

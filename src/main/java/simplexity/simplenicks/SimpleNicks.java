@@ -17,6 +17,7 @@ import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.util.Constants;
 import simplexity.simplenicks.util.NickHandler;
 import simplexity.simplenicks.util.SNExpansion;
+import simplexity.simplenicks.util.saving.SqlHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,6 +54,8 @@ public final class SimpleNicks extends JavaPlugin {
         }
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         configReload();
+        SqlHandler.getInstance().setupConfig();
+        SqlHandler.getInstance().init();
     }
 
     public static MiniMessage getMiniMessage() {
@@ -82,6 +85,5 @@ public final class SimpleNicks extends JavaPlugin {
     public static void configReload() {
         LocaleHandler.getInstance().loadLocale();
         ConfigHandler.getInstance().reloadConfig();
-        NickHandler.getInstance().loadSavingType();
     }
 }

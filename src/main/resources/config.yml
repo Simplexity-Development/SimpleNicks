@@ -1,7 +1,9 @@
-# Saving and Loading Method
-# PDC: Persistent Data Container (Nicknames are inaccessible when the player is offline).
-# FILE: information is saved to a YML File (nickname_data.yml).
-saving-type: file
+mysql:
+  enabled: false
+  ip: "localhost:3306"
+  name: simplenicks
+  username: username1
+  password: badpassword!
 
 # The max amount of characters a nickname should be, not including formatting
 # (so a name like <red>Billy<yellow>Bob would only count 'BillyBob' - and would be 8 characters)

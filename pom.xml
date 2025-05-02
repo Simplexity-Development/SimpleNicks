@@ -88,5 +88,10 @@
             <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>6.3.0</version>
+        </dependency>
     </dependencies>
 </project>
