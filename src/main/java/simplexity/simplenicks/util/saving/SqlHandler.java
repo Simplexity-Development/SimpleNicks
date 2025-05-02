@@ -6,10 +6,11 @@ import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Logger;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class SqlHandler {
     private static SqlHandler instance;
 
@@ -20,36 +21,33 @@ public class SqlHandler {
         if (instance == null) instance = new SqlHandler();
         return instance;
     }
+
     private static final HikariConfig hikariConfig = new HikariConfig();
     private static HikariDataSource dataSource;
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
 
-    String parentTable = """
-            CREATE TABLE IF NOT EXISTS players (
-            uuid VARCHAR(36) PRIMARY KEY,
-            last_login DATETIME NOT NULL
-            );
-            """;
-
-    String childTable = """
-            CREATE TABLE IF NOT EXISTS nicknames (
-            uuid VARCHAR(36) NOT NULL,
-            nickname VARCHAR(255) NOT NULL,
-            in_use BOOLEAN NOT NULL DEFAULT 0,
-            normalized VARCHAR(255) NOT NULL,
-            PRIMARY KEY (uuid, nickname),
-            FOREIGN KEY (uuid)
-            REFERENCES players(uuid)
-            ON DELETE CASCADE
-            );
-            """;
-
-    public void init(){
-        try {
-            Connection connection = dataSource.getConnection();
-            Statement statement = connection.createStatement();
-            statement.execute(parentTable);
-            statement.execute(childTable);
+    public void init() {
+        try (Connection connection = getConnection()) {
+            PreparedStatement parentStatement = connection.prepareStatement("""
+                    CREATE TABLE IF NOT EXISTS players (
+                    uuid VARCHAR(36) PRIMARY KEY,
+                    last_login DATETIME NOT NULL
+                    );
+                    """);
+            parentStatement.execute();
+            PreparedStatement childStatement = connection.prepareStatement("""
+                    CREATE TABLE IF NOT EXISTS nicknames (
+                    uuid VARCHAR(36) NOT NULL,
+                    nickname VARCHAR(255) NOT NULL,
+                    in_use BOOLEAN NOT NULL DEFAULT 0,
+                    normalized VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (uuid, nickname),
+                    FOREIGN KEY (uuid)
+                    REFERENCES players(uuid)
+                    ON DELETE CASCADE
+                    );
+                    """);
+            childStatement.execute();
         } catch (SQLException e) {
             logger.severe("Issue connecting to database, info below: ");
             e.printStackTrace();
@@ -72,8 +70,6 @@ public class SqlHandler {
     private static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
-
-
 
 
 }
