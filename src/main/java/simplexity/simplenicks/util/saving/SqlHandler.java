@@ -5,9 +5,14 @@ import com.zaxxer.hikari.HikariDataSource;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @SuppressWarnings("CallToPrintStackTrace")
@@ -39,7 +44,7 @@ public class SqlHandler {
                     CREATE TABLE IF NOT EXISTS nicknames (
                     uuid VARCHAR(36) NOT NULL,
                     nickname VARCHAR(255) NOT NULL,
-                    in_use BOOLEAN NOT NULL DEFAULT 0,
+                    in_use BOOLEAN NOT NULL DEFAULT false,
                     normalized VARCHAR(255) NOT NULL,
                     PRIMARY KEY (uuid, nickname),
                     FOREIGN KEY (uuid)
@@ -54,6 +59,83 @@ public class SqlHandler {
         }
     }
 
+    public boolean playerSaveExists(UUID uuid) {
+        String queryString = "SELECT 1 FROM players WHERE uuid = ? LIMIT 1";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, String.valueOf(uuid));
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            logger.severe("Failed to check if player exists: " + uuid);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean nickAlreadyExists(String normalizedName) {
+        String queryString = "SELECT 1 FROM nicknames WHERE nickname = ? AND in_use = true LIMIT 1";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, String.valueOf(normalizedName));
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            logger.severe("Failed to check if nickname exists: " + normalizedName);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Nullable
+    public List<Nickname> getSavedNicknamesForPlayer(UUID uuid) {
+        List<Nickname> savedNicknames = new ArrayList<>();
+        String queryString = "SELECT nickname AND normalized FROM nicknames WHERE uuid = ? AND in_use = false";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, String.valueOf(uuid));
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) return null;
+            while (resultSet.next()) {
+                String nicknameString = resultSet.getString("nickname");
+                String normalizedString = resultSet.getString("normalized");
+                Nickname nick = new Nickname(nicknameString, normalizedString);
+                savedNicknames.add(nick);
+            }
+        } catch (SQLException e) {
+            logger.severe("Failed to get saved nicknames for player: " + uuid);
+            e.printStackTrace();
+        }
+        return savedNicknames;
+    }
+
+    public void saveNickname(UUID uuid, String nickname, String normalizedNickname, boolean inUse) {
+        String saveString = "REPLACE INTO nicknames (uuid, nickname, in_use, normalized) VALUES (?, ?, ?, ?)";
+        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid);
+        try (Connection connection = getConnection()) {
+            PreparedStatement saveStatement = connection.prepareStatement(saveString);
+            saveStatement.setString(1, String.valueOf(uuid));
+            saveStatement.setString(2, nickname);
+            saveStatement.setBoolean(3, inUse);
+            saveStatement.setString(4, normalizedNickname);
+            saveStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.severe("Failed to save nickname: " + nickname + " for UUID: " + uuid);
+            e.printStackTrace();
+        }
+    }
+
+    private void addPlayerToPlayers(UUID uuid) {
+        String insertQuery = "REPLACE INTO players (uuid, last_login) VALUES (?, CURRENT_TIMESTAMP)";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(insertQuery);
+            statement.setString(1, String.valueOf(uuid));
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.severe("Failed to save player: " + uuid);
+            e.printStackTrace();
+        }
+    }
 
     public void setupConfig() {
         if (!ConfigHandler.getInstance().isMySql()) {
