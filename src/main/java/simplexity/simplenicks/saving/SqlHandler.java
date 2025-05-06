@@ -202,6 +202,7 @@ public class SqlHandler {
 
     public boolean setActiveNickname(UUID uuid, String nicknameString, String normalizedString) {
         String setQuery = "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
+        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid);
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(setQuery);
             statement.setString(1, String.valueOf(uuid));
