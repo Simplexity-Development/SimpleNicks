@@ -5,10 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
-import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.NickHandler;
+import simplexity.simplenicks.saving.Nickname;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Save extends SubCommand{
     public Save(String commandName, Permission basicPermission, Permission adminPermission, boolean consoleRunNoPlayer) {
@@ -35,15 +38,16 @@ public class Save extends SubCommand{
     }
 
     public boolean savePlayerNick(Player player) {
-        String nameToSave = miniMessage.serialize(player.displayName());
-        List<String> nameList = NickHandler.getInstance().getSavedNicknames(player);
-        if (nameList.contains(nameToSave)) {
+        UUID playerUuid = player.getUniqueId();
+        Nickname nick = Cache.getInstance().getActiveNickname(playerUuid);
+        if (nick == null) {
             return false;
         }
+        List<Nickname> nameList = Cache.getInstance().getSavedNicknames(playerUuid);
         if (nameList.size() >= ConfigHandler.getInstance().getMaxSaves()) {
             return false;
         }
-        NickHandler.getInstance().saveNickname(player, nameToSave);
+        Cache.getInstance().saveNickname(nick.nickname(), playerUuid);
         return true;
     }
 

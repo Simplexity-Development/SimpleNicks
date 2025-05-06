@@ -5,7 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import simplexity.simplenicks.config.LocaleHandler;
-import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.NickHandler;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,8 @@ public class Reset extends SubCommand {
     }
 
     public void resetName(Player player) {
-        String username = player.getName();
-        player.displayName(Component.text(username));
-        NickHandler.getInstance().resetNickname(player);
+        player.displayName(null);
+        Cache.getInstance().clearCurrentNickname(player.getUniqueId());
     }
 
     @Override

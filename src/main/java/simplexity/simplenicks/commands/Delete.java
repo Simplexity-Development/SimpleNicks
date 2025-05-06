@@ -4,10 +4,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import simplexity.simplenicks.config.LocaleHandler;
-import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.NickHandler;
+import simplexity.simplenicks.saving.Nickname;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Delete extends SubCommand{
     public Delete(String commandName, Permission basicPermission, Permission adminPermission, boolean consoleRunNoPlayer) {
@@ -38,13 +41,12 @@ public class Delete extends SubCommand{
     }
 
     private boolean removeSavedNick(CommandSender sender, Player player, String nickname) {
-        List<String> savedNicks = NickHandler.getInstance().getSavedNicknames(player);
-        if (!savedNicks.contains(nickname)) {
+        UUID playerUuid = player.getUniqueId();
+        if (!Cache.getInstance().deleteSavedNickname(nickname, playerUuid)) {
             sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getNameNonexistent(), nickname));
             return false;
         }
-        NickHandler.getInstance().deleteNickname(player, nickname);
-        NickHandler.getInstance().refreshNickname(player);
+        NickHandler.getInstance().refreshNickname(playerUuid);
         return true;
     }
 
@@ -53,7 +55,10 @@ public class Delete extends SubCommand{
         if (player == null) {
             return null;
         }
-        List<String> savedNickNames = NickHandler.getInstance().getSavedNicknames(player);
-        return (ArrayList<String>) savedNickNames;
+        ArrayList<String> savedNickNames = new ArrayList<>();
+        for (Nickname nick : Cache.getInstance().getSavedNicknames(player.getUniqueId())) {
+            savedNickNames.add(nick.nickname());
+        }
+        return savedNickNames;
     }
 }

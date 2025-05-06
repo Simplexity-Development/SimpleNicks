@@ -1,4 +1,4 @@
-package simplexity.simplenicks.util.saving;
+package simplexity.simplenicks.saving;
 
 public record Nickname(String nickname, String normalizedNickname) {
 }

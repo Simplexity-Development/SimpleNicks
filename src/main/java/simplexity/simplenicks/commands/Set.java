@@ -3,7 +3,6 @@ package simplexity.simplenicks.commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,12 +10,15 @@ import org.bukkit.permissions.Permission;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
-import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.saving.NickHandler;
 import simplexity.simplenicks.util.TagPermission;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -33,18 +35,11 @@ public class Set extends SubCommand {
             return;
         }
         String nickname = args[2];
-        Component nickComponent = Component.empty();
-        if (sender.hasPermission(Constants.NICK_OTHERS_FULL)) {
-            nickComponent = miniMessage.deserialize(nickname);
-        } else if (sender.hasPermission(Constants.NICK_OTHERS_BASIC)) {
-            nickComponent = getNickComponent(sender, nickname);
-        } else if (sender.hasPermission(Constants.NICK_OTHERS_RESTRICTIVE)) {
-            nickComponent = getNickComponent(player, nickname);
-        }
+        nickname = processName(nickname, sender, player);
         if (!passesChecks(sender, nickname, player)) {
             return;
         }
-        if (setPlayerNick(player, nickComponent)) {
+        if (setPlayerNick(player, nickname)) {
             sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getChangedOther(), nickname));
             player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getChangedByOther(), nickname));
         } else {
@@ -59,48 +54,45 @@ public class Set extends SubCommand {
         if (!passesChecks(sender, nickname, player)) {
             return;
         }
-        Component nickComponent = getNickComponent(sender, nickname);
-        if (setPlayerNick(player, nickComponent)) {
+        nickname = processName(nickname, sender, player);
+        if (setPlayerNick(player, nickname)) {
             player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getChangedSelf(), nickname));
         } else {
             player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getInvalidTags(), nickname));
         }
     }
 
-    private boolean setPlayerNick(Player player, Component nickComponent) {
-        if (nickComponent == null) {
+    private boolean setPlayerNick(Player player, String nickString) {
+        if (nickString == null) {
             return false;
         }
-        String nickToSave = miniMessage.serialize(nickComponent);
-        NickHandler.getInstance().setNickname(player, nickToSave);
-        return true;
+        UUID playerUuid = player.getUniqueId();
+        //todo Checks for existing versions of this nick
+        //Cache.getInstance().nickInUseActiveStorage(nickString, playerUuid);
+        return Cache.getInstance().setActiveNickname(playerUuid, nickString);
     }
 
+    private String processName(String nickArg, CommandSender sender, Player player) {
+        if (sender.hasPermission(Constants.NICK_OTHERS_FULL)) return nickArg;
+        if (sender.hasPermission(Constants.NICK_OTHERS_BASIC)) {
+            return NickHandler.getInstance().cleanNonPermittedTags(sender, nickArg);
+        }
+        if (sender.hasPermission(Constants.NICK_OTHERS_RESTRICTIVE)) {
+            return NickHandler.getInstance().cleanNonPermittedTags(player, nickArg);
+        }
+        return null;
+    }
 
     @Override
     public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player) {
         if (player == null) {
             return null;
         }
-        List<String> savedNickNames = NickHandler.getInstance().getSavedNicknames(player);
-        return (ArrayList<String>) savedNickNames;
-    }
-
-    private Component getNickComponent(CommandSender user, String nick) {
-        int permissionCount = 0;
-        String strippedMessage = miniMessage.stripTags(nick);
-        TagResolver.Builder resolver = TagResolver.builder();
-        for (TagPermission tagPermission : TagPermission.values()) {
-            if (user.hasPermission(tagPermission.getPermission())) {
-                permissionCount++;
-                resolver.resolver(tagPermission.getTagResolver());
-            }
+        ArrayList<String> savedNickNames = new ArrayList<>();
+        for (Nickname nick : Cache.getInstance().getSavedNicknames(player.getUniqueId())) {
+            savedNickNames.add(nick.nickname());
         }
-        if (permissionCount == 0) {
-            return Component.text(strippedMessage);
-        }
-        MiniMessage parser = MiniMessage.builder().tags(resolver.build()).build();
-        return parser.deserialize(nick);
+        return savedNickNames;
     }
 
 
