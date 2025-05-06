@@ -40,11 +40,10 @@ public class SqlHandler {
                     );
                     """);
             parentStatement.execute();
-            PreparedStatement childStatement = connection.prepareStatement("""
-                    CREATE TABLE IF NOT EXISTS nicknames (
+            PreparedStatement savedNickStatement = connection.prepareStatement("""
+                    CREATE TABLE IF NOT EXISTS saved_nicknames (
                     uuid VARCHAR(36) NOT NULL,
                     nickname VARCHAR(255) NOT NULL,
-                    in_use BOOLEAN NOT NULL DEFAULT false,
                     normalized VARCHAR(255) NOT NULL,
                     PRIMARY KEY (uuid, nickname),
                     FOREIGN KEY (uuid)
@@ -52,7 +51,19 @@ public class SqlHandler {
                     ON DELETE CASCADE
                     );
                     """);
-            childStatement.execute();
+            savedNickStatement.execute();
+            PreparedStatement currentNickStatement = connection.prepareStatement("""
+                    CREATE TABLE IF NOT EXISTS current_nicknames (
+                        uuid VARCHAR(36) NOT NULL,
+                        nickname VARCHAR(255) NOT NULL,
+                        normalized VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (uuid, nickname),
+                        FOREIGN KEY (uuid)
+                        REFERENCES players(uuid)
+                        ON DELETE CASCADE
+                    );
+                    """);
+            currentNickStatement.execute();
         } catch (SQLException e) {
             logger.severe("Issue connecting to database, info below: ");
             e.printStackTrace();
@@ -74,7 +85,7 @@ public class SqlHandler {
     }
 
     public boolean nickAlreadyExists(String normalizedName) {
-        String queryString = "SELECT 1 FROM nicknames WHERE nickname = ? AND in_use = true LIMIT 1";
+        String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? LIMIT 1";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, String.valueOf(normalizedName));
@@ -90,7 +101,7 @@ public class SqlHandler {
     @Nullable
     public List<Nickname> getSavedNicknamesForPlayer(UUID uuid) {
         List<Nickname> savedNicknames = new ArrayList<>();
-        String queryString = "SELECT nickname AND normalized FROM nicknames WHERE uuid = ? AND in_use = false";
+        String queryString = "SELECT nickname AND normalized FROM saved_nicknames WHERE uuid = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, String.valueOf(uuid));
@@ -109,15 +120,14 @@ public class SqlHandler {
         return savedNicknames;
     }
 
-    public void saveNickname(UUID uuid, String nickname, String normalizedNickname, boolean inUse) {
-        String saveString = "REPLACE INTO nicknames (uuid, nickname, in_use, normalized) VALUES (?, ?, ?, ?)";
+    public void saveNickname(UUID uuid, String nickname, String normalizedNickname) {
+        String saveString = "REPLACE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
         if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid);
         try (Connection connection = getConnection()) {
             PreparedStatement saveStatement = connection.prepareStatement(saveString);
             saveStatement.setString(1, String.valueOf(uuid));
             saveStatement.setString(2, nickname);
-            saveStatement.setBoolean(3, inUse);
-            saveStatement.setString(4, normalizedNickname);
+            saveStatement.setString(3, normalizedNickname);
             saveStatement.executeUpdate();
         } catch (SQLException e) {
             logger.severe("Failed to save nickname: " + nickname + " for UUID: " + uuid);
