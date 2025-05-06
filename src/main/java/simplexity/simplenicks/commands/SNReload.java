@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
-import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.saving.NickHandler;
 
 public class SNReload implements CommandExecutor {
     @Override
@@ -20,7 +20,7 @@ public class SNReload implements CommandExecutor {
         sender.sendMessage(SimpleNicks.getMiniMessage().deserialize(LocaleHandler.getInstance().getConfigReloaded(),
                 Placeholder.parsed("prefix", LocaleHandler.getInstance().getPluginPrefix())));
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            NickHandler.getInstance().refreshNickname(player);
+            NickHandler.getInstance().refreshNickname(player.getUniqueId());
         }
         return false;
     }

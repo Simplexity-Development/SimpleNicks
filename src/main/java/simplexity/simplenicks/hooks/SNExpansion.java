@@ -1,11 +1,13 @@
-package simplexity.simplenicks.util;
+package simplexity.simplenicks.hooks;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import simplexity.simplenicks.SimpleNicks;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.NickHandler;
+import simplexity.simplenicks.saving.Nickname;
 
 public class SNExpansion extends PlaceholderExpansion {
     @Override
@@ -31,9 +33,9 @@ public class SNExpansion extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equalsIgnoreCase("mininick")) {
-            String nickname = NickHandler.getInstance().getNickname(player);
+            Nickname nickname = Cache.getInstance().getActiveNickname(player.getUniqueId());
             if (nickname != null) {
-                return nickname;
+                return nickname.nickname();
             }
             return player.getName();
         }

@@ -1,4 +1,4 @@
-package simplexity.simplenicks.util.saving;
+package simplexity.simplenicks.saving;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;

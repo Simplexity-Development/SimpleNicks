@@ -1,4 +1,4 @@
-package simplexity.simplenicks.util.saving;
+package simplexity.simplenicks.saving;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -57,7 +57,7 @@ public class SqlHandler {
                         uuid VARCHAR(36) NOT NULL,
                         nickname VARCHAR(255) NOT NULL,
                         normalized VARCHAR(255) NOT NULL,
-                        PRIMARY KEY (uuid, nickname),
+                        PRIMARY KEY (uuid),
                         FOREIGN KEY (uuid)
                         REFERENCES players(uuid)
                         ON DELETE CASCADE
@@ -84,11 +84,12 @@ public class SqlHandler {
         }
     }
 
-    public boolean nickAlreadyExists(String normalizedName) {
-        String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? LIMIT 1";
+    public boolean nickAlreadyExists(String normalizedName, UUID uuidToExclude) {
+        String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? AND uuid != ? LIMIT 1";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, String.valueOf(normalizedName));
+            statement.setString(2, String.valueOf(uuidToExclude));
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
@@ -120,7 +121,40 @@ public class SqlHandler {
         return savedNicknames;
     }
 
-    public void saveNickname(UUID uuid, String nickname, String normalizedNickname) {
+    public boolean userAlreadySavedThisName(UUID uuid, String nickname) {
+        String queryString = "SELECT nickname FROM saved_nicknames WHERE uuid = ? AND nickname = ?";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, String.valueOf(uuid));
+            statement.setString(2, nickname);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            logger.warning("Failed to check if UUID '" + uuid + "' has already saved the nickname '" + nickname +"'");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Nullable
+    public Nickname getCurrentNicknameForPlayer(UUID uuid) {
+        String queryString = "SELECT nickname AND normalized FROM current_nicknames WHERE uuid = ?";
+        try (Connection connection = getConnection()) {
+            PreparedStatement getStatement = connection.prepareStatement(queryString);
+            getStatement.setString(1, String.valueOf(uuid));
+            ResultSet resultSet = getStatement.executeQuery();
+            if (!resultSet.next()) return null;
+            String nickString = resultSet.getString("nickname");
+            String normalizedString = resultSet.getString("normalized");
+            return new Nickname(nickString, normalizedString);
+        } catch (SQLException e) {
+            logger.warning("Failed to get active nickname for UUID: " + uuid);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean saveNickname(UUID uuid, String nickname, String normalizedNickname) {
         String saveString = "REPLACE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
         if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid);
         try (Connection connection = getConnection()) {
@@ -128,10 +162,57 @@ public class SqlHandler {
             saveStatement.setString(1, String.valueOf(uuid));
             saveStatement.setString(2, nickname);
             saveStatement.setString(3, normalizedNickname);
-            saveStatement.executeUpdate();
+            int rowsModified = saveStatement.executeUpdate();
+            return rowsModified > 0;
         } catch (SQLException e) {
             logger.severe("Failed to save nickname: " + nickname + " for UUID: " + uuid);
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteNickname(UUID uuid, String nickname) {
+        String deleteQuery = "DELETE FROM saved_nicknames WHERE uuid = ? AND nickname = ?";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(deleteQuery);
+            statement.setString(1, String.valueOf(uuid));
+            statement.setString(2, nickname);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.warning("Failed to delete nickname '" + nickname + "' for UUID '" + uuid + "'");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean clearActiveNickname(UUID uuid) {
+        String deleteQuery = "DELETE FROM current_nicknames WHERE uuid = ?";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(deleteQuery);
+            statement.setString(1, String.valueOf(uuid));
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.warning("Failed to clear active nickname for UUID: " + uuid);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean setActiveNickname(UUID uuid, String nicknameString, String normalizedString) {
+        String setQuery = "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(setQuery);
+            statement.setString(1, String.valueOf(uuid));
+            statement.setString(2, nicknameString);
+            statement.setString(3, normalizedString);
+            int rowsModified = statement.executeUpdate();
+            return rowsModified > 0;
+        } catch (SQLException e) {
+            logger.warning("Failed to set active nickname '" + nicknameString + "' for UUID '" + uuid + "'");
+            e.printStackTrace();
+            return false;
         }
     }
 

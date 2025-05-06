@@ -15,9 +15,8 @@ import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
 import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.util.Constants;
-import simplexity.simplenicks.util.NickHandler;
-import simplexity.simplenicks.util.SNExpansion;
-import simplexity.simplenicks.util.saving.SqlHandler;
+import simplexity.simplenicks.hooks.SNExpansion;
+import simplexity.simplenicks.saving.SqlHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
