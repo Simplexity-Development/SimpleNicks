@@ -87,9 +87,9 @@ public class SqlHandler {
     }
 
     @Nullable
-    public List<Nickname> getSavedNicknamesForPlayer(UUID uuid) {
+    public ArrayList<Nickname> getSavedNicknamesForPlayer(UUID uuid) {
         if (!playerSaveExists(uuid)) return null;
-        List<Nickname> savedNicknames = new ArrayList<>();
+        ArrayList<Nickname> savedNicknames = new ArrayList<>();
         String queryString = "SELECT nickname, normalized FROM saved_nicknames WHERE uuid = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);

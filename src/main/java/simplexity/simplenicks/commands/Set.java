@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
@@ -83,19 +84,6 @@ public class Set extends SubCommand {
         return null;
     }
 
-    @Override
-    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player) {
-        if (player == null) {
-            return null;
-        }
-        ArrayList<String> savedNickNames = new ArrayList<>();
-        for (Nickname nick : Cache.getInstance().getSavedNicknames(player.getUniqueId())) {
-            savedNickNames.add(nick.nickname());
-        }
-        return savedNickNames;
-    }
-
-
     private boolean passesChecks(CommandSender sender, String nickname, Player player) {
         String strippedMessage = miniMessage.stripTags(nickname);
         Pattern regexPattern = ConfigHandler.getInstance().getRegex();
@@ -125,6 +113,15 @@ public class Set extends SubCommand {
             }
         }
         return true;
+    }
+
+    @Override
+    public ArrayList<String> tabComplete(CommandSender sender, String[] args, @NotNull Player player) {
+        ArrayList<String> savedNickNames = new ArrayList<>();
+        for (Nickname nick : Cache.getInstance().getSavedNicknames(player.getUniqueId())) {
+            savedNickNames.add(nick.nickname());
+        }
+        return savedNickNames;
     }
 
 }
