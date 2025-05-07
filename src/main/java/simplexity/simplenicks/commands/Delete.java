@@ -3,13 +3,13 @@ package simplexity.simplenicks.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.LocaleHandler;
 import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.NickHandler;
 import simplexity.simplenicks.saving.Nickname;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Delete extends SubCommand{
@@ -51,10 +51,7 @@ public class Delete extends SubCommand{
     }
 
     @Override
-    public ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player) {
-        if (player == null) {
-            return null;
-        }
+    public ArrayList<String> tabComplete(CommandSender sender, String[] args, @NotNull Player player) {
         ArrayList<String> savedNickNames = new ArrayList<>();
         for (Nickname nick : Cache.getInstance().getSavedNicknames(player.getUniqueId())) {
             savedNickNames.add(nick.nickname());

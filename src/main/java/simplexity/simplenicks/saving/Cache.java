@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import simplexity.simplenicks.SimpleNicks;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class Cache {
 
     private final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
     private final HashMap<UUID, Nickname> activeNicknames = new HashMap<>();
+    private final HashMap<UUID, ArrayList<Nickname>> savedNicknames = new HashMap<>();
 
     @Nullable
     public Nickname getActiveNickname(UUID uuid){
@@ -39,6 +41,9 @@ public class Cache {
     }
 
     public boolean deleteSavedNickname(String nickname, UUID uuid) {
+        ArrayList<Nickname> userSavedNicknames = getSavedNicknames(uuid);
+        userSavedNicknames.removeIf(name -> name.nickname().equals(nickname));
+        savedNicknames.put(uuid, userSavedNicknames);
         return SqlHandler.getInstance().deleteNickname(uuid, nickname);
     }
 
@@ -67,10 +72,22 @@ public class Cache {
 
     public boolean saveNickname(String name, UUID uuid) {
         String strippedNick = miniMessage.stripTags(name);
+        Nickname nick = new Nickname(name, strippedNick);
+        ArrayList<Nickname> userSavedNicknames = getSavedNicknames(uuid);
+        userSavedNicknames.add(nick);
+        savedNicknames.put(uuid, userSavedNicknames);
         return SqlHandler.getInstance().saveNickname(uuid, name, strippedNick);
     }
 
-    public List<Nickname> getSavedNicknames(UUID uuid) {
-        return SqlHandler.getInstance().getSavedNicknamesForPlayer(uuid);
+    public ArrayList<Nickname> getSavedNicknames(UUID uuid) {
+        if (savedNicknames.containsKey(uuid)) return savedNicknames.get(uuid);
+        ArrayList<Nickname> userSavedNicknames = SqlHandler.getInstance().getSavedNicknamesForPlayer(uuid);
+        savedNicknames.put(uuid, userSavedNicknames);
+        return userSavedNicknames;
+    }
+
+    public void removePlayerFromCache(UUID uuid){
+        savedNicknames.remove(uuid);
+        activeNicknames.remove(uuid);
     }
 }

@@ -47,7 +47,6 @@ public class NickHandler {
 
     public String cleanNonPermittedTags(CommandSender user, String nick) {
         int permissionCount = 0;
-        String strippedMessage = miniMessage.stripTags(nick);
         TagResolver.Builder resolver = TagResolver.builder();
         for (TagPermission tagPermission : TagPermission.values()) {
             if (user.hasPermission(tagPermission.getPermission())) {
