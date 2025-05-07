@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-@SuppressWarnings("CallToPrintStackTrace")
+@SuppressWarnings({"CallToPrintStackTrace", "BooleanMethodIsAlwaysInverted"})
 public class SqlHandler {
     private static SqlHandler instance;
 
@@ -70,19 +70,6 @@ public class SqlHandler {
         }
     }
 
-    public boolean playerSaveExists(UUID uuid) {
-        String queryString = "SELECT 1 FROM players WHERE uuid = ? LIMIT 1";
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(queryString);
-            statement.setString(1, String.valueOf(uuid));
-            ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            logger.severe("Failed to check if player exists: " + uuid);
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public boolean nickAlreadyExists(String normalizedName, UUID uuidToExclude) {
         String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? AND uuid != ? LIMIT 1";
@@ -101,6 +88,7 @@ public class SqlHandler {
 
     @Nullable
     public List<Nickname> getSavedNicknamesForPlayer(UUID uuid) {
+        if (!playerSaveExists(uuid)) return null;
         List<Nickname> savedNicknames = new ArrayList<>();
         String queryString = "SELECT nickname AND normalized FROM saved_nicknames WHERE uuid = ?";
         try (Connection connection = getConnection()) {
@@ -122,6 +110,7 @@ public class SqlHandler {
     }
 
     public boolean userAlreadySavedThisName(UUID uuid, String nickname) {
+        if (!playerSaveExists(uuid)) return false;
         String queryString = "SELECT nickname FROM saved_nicknames WHERE uuid = ? AND nickname = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
@@ -138,6 +127,7 @@ public class SqlHandler {
 
     @Nullable
     public Nickname getCurrentNicknameForPlayer(UUID uuid) {
+        if (!playerSaveExists(uuid)) return null;
         String queryString = "SELECT nickname AND normalized FROM current_nicknames WHERE uuid = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement getStatement = connection.prepareStatement(queryString);
@@ -172,6 +162,7 @@ public class SqlHandler {
     }
 
     public boolean deleteNickname(UUID uuid, String nickname) {
+        if (!playerSaveExists(uuid)) return false;
         String deleteQuery = "DELETE FROM saved_nicknames WHERE uuid = ? AND nickname = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(deleteQuery);
@@ -187,6 +178,7 @@ public class SqlHandler {
     }
 
     public boolean clearActiveNickname(UUID uuid) {
+        if (!playerSaveExists(uuid)) return true;
         String deleteQuery = "DELETE FROM current_nicknames WHERE uuid = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(deleteQuery);
@@ -212,6 +204,20 @@ public class SqlHandler {
             return rowsModified > 0;
         } catch (SQLException e) {
             logger.warning("Failed to set active nickname '" + nicknameString + "' for UUID '" + uuid + "'");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean playerSaveExists(UUID uuid) {
+        String queryString = "SELECT 1 FROM players WHERE uuid = ? LIMIT 1";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, String.valueOf(uuid));
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            logger.severe("Failed to check if player exists: " + uuid);
             e.printStackTrace();
             return false;
         }

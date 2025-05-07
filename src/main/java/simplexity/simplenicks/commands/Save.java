@@ -44,7 +44,7 @@ public class Save extends SubCommand{
             return false;
         }
         List<Nickname> nameList = Cache.getInstance().getSavedNicknames(playerUuid);
-        if (nameList == null) return false;
+        if (nameList == null) nameList = new ArrayList<>();
         if (nameList.size() >= ConfigHandler.getInstance().getMaxSaves()) {
             return false;
         }

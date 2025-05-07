@@ -3,6 +3,7 @@ package simplexity.simplenicks.hooks;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.NickHandler;
 import simplexity.simplenicks.saving.Nickname;
@@ -33,7 +34,9 @@ public class SNExpansion extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("mininick")) {
             Nickname nickname = Cache.getInstance().getActiveNickname(player.getUniqueId());
             if (nickname != null) {
-                return nickname.nickname();
+                String prefix = ConfigHandler.getInstance().getNickPrefix();
+                if (prefix == null || prefix.isEmpty()) return nickname.nickname();
+                return prefix + nickname.nickname();
             }
             return player.getName();
         }
