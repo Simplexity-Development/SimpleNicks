@@ -22,34 +22,55 @@ public class Cache {
 
     private final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
     private final HashMap<UUID, Nickname> activeNicknames = new HashMap<>();
-    private final HashMap<UUID, ArrayList<Nickname>> savedNicknames = new HashMap<>();
+    private final HashMap<UUID, List<Nickname>> savedNicknames = new HashMap<>();
+
+    public void loadCurrentNickname(UUID uuid) {
+        Nickname currentNick = SqlHandler.getInstance().getCurrentNicknameForPlayer(uuid);
+        if (currentNick == null) return;
+        activeNicknames.put(uuid, currentNick);
+    }
 
     @Nullable
     public Nickname getActiveNickname(UUID uuid){
         if (activeNicknames.containsKey(uuid)) return activeNicknames.get(uuid);
-        Nickname currentNick = SqlHandler.getInstance().getCurrentNicknameForPlayer(uuid);
-        if (currentNick == null) return null;
-        activeNicknames.put(uuid, currentNick);
-        return currentNick;
+        return null;
+    }
+
+    public void loadSavedNicknames(UUID uuid) {
+        List<Nickname> savedNames = SqlHandler.getInstance().getSavedNicknamesForPlayer(uuid);
+        if (savedNames == null || savedNames.isEmpty()) return;
+        savedNicknames.put(uuid, savedNames);
+    }
+
+    public List<Nickname> getSavedNicknames(UUID uuid) {
+        if (savedNicknames.containsKey(uuid)) return savedNicknames.get(uuid);
+        return new ArrayList<>();
     }
 
     public boolean setActiveNickname(UUID uuid, String nickname){
         String normalizedNick = miniMessage.stripTags(nickname);
         Nickname nick = new Nickname(nickname, normalizedNick);
+        boolean sqlActiveNameSet = SqlHandler.getInstance().setActiveNickname(uuid, nickname, normalizedNick);
+        if (!sqlActiveNameSet) return false;
         activeNicknames.put(uuid, nick);
-        return SqlHandler.getInstance().setActiveNickname(uuid, nickname, normalizedNick);
+        return true;
     }
 
     public boolean deleteSavedNickname(String nickname, UUID uuid) {
-        ArrayList<Nickname> userSavedNicknames = getSavedNicknames(uuid);
+        boolean sqlDeleted = SqlHandler.getInstance().deleteNickname(uuid, nickname);
+        if (!sqlDeleted) return false;
+        if (!savedNicknames.containsKey(uuid)) return false;
+        List<Nickname> userSavedNicknames = savedNicknames.get(uuid);
         userSavedNicknames.removeIf(name -> name.nickname().equals(nickname));
         savedNicknames.put(uuid, userSavedNicknames);
-        return SqlHandler.getInstance().deleteNickname(uuid, nickname);
+        return true;
     }
 
     public boolean clearCurrentNickname(UUID uuid) {
+        boolean sqlNickRemoved = SqlHandler.getInstance().clearActiveNickname(uuid);
+        if (!sqlNickRemoved) return false;
         activeNicknames.remove(uuid);
-        return SqlHandler.getInstance().clearActiveNickname(uuid);
+        return true;
     }
 
     public boolean userAlreadySavedThis(String name, UUID uuid) {
@@ -73,17 +94,12 @@ public class Cache {
     public boolean saveNickname(String name, UUID uuid) {
         String strippedNick = miniMessage.stripTags(name);
         Nickname nick = new Nickname(name, strippedNick);
-        ArrayList<Nickname> userSavedNicknames = getSavedNicknames(uuid);
+        List<Nickname> userSavedNicknames = getSavedNicknames(uuid);
         userSavedNicknames.add(nick);
+        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, name, strippedNick);
+        if (!savedToSql) return false;
         savedNicknames.put(uuid, userSavedNicknames);
-        return SqlHandler.getInstance().saveNickname(uuid, name, strippedNick);
-    }
-
-    public ArrayList<Nickname> getSavedNicknames(UUID uuid) {
-        if (savedNicknames.containsKey(uuid)) return savedNicknames.get(uuid);
-        ArrayList<Nickname> userSavedNicknames = SqlHandler.getInstance().getSavedNicknamesForPlayer(uuid);
-        savedNicknames.put(uuid, userSavedNicknames);
-        return userSavedNicknames;
+        return true;
     }
 
     public void removePlayerFromCache(UUID uuid){
