@@ -4,12 +4,15 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.util.TagPermission;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -63,5 +66,30 @@ public class NickHandler {
                 .build();
         Component permissionParsed = parser.deserialize(nick);
         return miniMessage.serialize(permissionParsed);
+    }
+
+
+    public List<Player> getOnlinePlayersByNickname(String nickname){
+        List<UUID> usersWithThisName = Cache.getInstance().getUuidOfNormalizedName(nickname);
+        if (usersWithThisName.isEmpty()) return new ArrayList<>();
+        List<Player> playersByNick = new ArrayList<>();
+        for (UUID uuid : usersWithThisName) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) continue;
+            playersByNick.add(player);
+        }
+        return playersByNick;
+    }
+
+    public List<OfflinePlayer> getOfflinePlayersByNickname(String nickname) {
+        List<UUID> usersWithThisName = Cache.getInstance().getUuidOfNormalizedName(nickname);
+        if (usersWithThisName.isEmpty()) return new ArrayList<>();
+        List<OfflinePlayer> playersByNick = new ArrayList<>();
+        for (UUID uuid : usersWithThisName) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+            if (!offlinePlayer.hasPlayedBefore()) continue;
+            playersByNick.add(offlinePlayer);
+        }
+        return playersByNick;
     }
 }

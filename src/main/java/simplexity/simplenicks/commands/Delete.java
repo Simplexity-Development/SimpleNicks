@@ -18,8 +18,8 @@ public class Delete extends SubCommand{
     }
 
     @Override
-    public void executeOnOther(CommandSender sender, Player player, String[] args) {
-        if (!isValidArgsLength(sender, player, args, 3)) {
+    public void execute(CommandSender sender, Player player, String[] args) {
+        if (!validArgsLength(sender, player, args, 3)) {
             return;
         }
         String nickname = args[2];
@@ -31,7 +31,7 @@ public class Delete extends SubCommand{
 
     @Override
     public void executeOnSelf(CommandSender sender, Player player, String[] args) {
-        if (!isValidArgsLength(sender, player, args, 2)) {
+        if (!validArgsLength(sender, player, args, 2)) {
             return;
         }
         String nickname = args[1];

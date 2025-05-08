@@ -38,7 +38,7 @@ public class ConfigHandler {
 
     public void reloadConfig() {
         SimpleNicks.getInstance().reloadConfig();
-        LocaleHandler.getInstance().loadLocale();
+        LocaleHandler.getInstance().reloadLocale();
         FileConfiguration config = SimpleNicks.getInstance().getConfig();
         // Check the validity of the regex.
         try {
@@ -46,7 +46,7 @@ public class ConfigHandler {
             regexString = regexSetting;
             regex = Pattern.compile(regexSetting);
         } catch (PatternSyntaxException e) {
-            logger.severe(LocaleHandler.getInstance().getInvalidConfigRegex());
+            logger.severe(Message.INVALID_CONFIG_REGEX.getMessage());
         }
         mySql = config.getBoolean("mysql.enabled", false);
         mySqlIp = config.getString("mysql.ip", "localhost:3306");

@@ -31,7 +31,7 @@ public class Cache {
     }
 
     @Nullable
-    public Nickname getActiveNickname(UUID uuid){
+    public Nickname getActiveNickname(UUID uuid) {
         if (activeNicknames.containsKey(uuid)) return activeNicknames.get(uuid);
         return null;
     }
@@ -47,7 +47,7 @@ public class Cache {
         return new ArrayList<>();
     }
 
-    public boolean setActiveNickname(UUID uuid, String nickname){
+    public boolean setActiveNickname(UUID uuid, String nickname) {
         String normalizedNick = miniMessage.stripTags(nickname);
         Nickname nick = new Nickname(nickname, normalizedNick);
         boolean sqlActiveNameSet = SqlHandler.getInstance().setActiveNickname(uuid, nickname, normalizedNick);
@@ -71,6 +71,12 @@ public class Cache {
         if (!sqlNickRemoved) return false;
         activeNicknames.remove(uuid);
         return true;
+    }
+
+    public List<UUID> getUuidOfNormalizedName(String nickname) {
+        List<UUID> uuids = SqlHandler.getInstance().getUuidsOfNickname(nickname);
+        if (uuids == null) return new ArrayList<>();
+        return uuids;
     }
 
     public boolean userAlreadySavedThis(String name, UUID uuid) {
@@ -102,7 +108,7 @@ public class Cache {
         return true;
     }
 
-    public void removePlayerFromCache(UUID uuid){
+    public void removePlayerFromCache(UUID uuid) {
         savedNicknames.remove(uuid);
         activeNicknames.remove(uuid);
     }

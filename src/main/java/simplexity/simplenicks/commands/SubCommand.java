@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import simplexity.simplenicks.SimpleNicks;
-import simplexity.simplenicks.config.LocaleHandler;
+import simplexity.simplenicks.config.Message;
 
 import java.util.ArrayList;
 
@@ -24,9 +24,7 @@ public abstract class SubCommand {
         this.canRunWithoutPlayer = consoleRunNoPlayer;
     }
 
-    public abstract void executeOnOther(CommandSender sender, Player player, String[] args);
-
-    public abstract void executeOnSelf(CommandSender sender, Player player, String[] args);
+    public abstract void execute(CommandSender sender, Player player, String[] args, boolean adminCommand);
 
     public abstract ArrayList<String> tabComplete(CommandSender sender, String[] args, Player player);
 
@@ -60,17 +58,13 @@ public abstract class SubCommand {
             playerName = player.name();
         }
         return miniMessage.deserialize(message,
-                Placeholder.parsed("prefix", LocaleHandler.getInstance().getPluginPrefix()),
+                Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
                 Placeholder.component("initiator", senderName),
                 Placeholder.component("target", playerName),
                 Placeholder.parsed("value", value));
     }
 
-    public boolean isValidArgsLength(CommandSender sender, Player player, String[] args, int minArgsLength) {
-        if (args.length < minArgsLength) {
-            sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getNotEnoughArgs(), ""));
-            return false;
-        }
-        return true;
+    public boolean validArgsLength(String[] args, int minArgsLength) {
+        return args.length >= minArgsLength;
     }
 }

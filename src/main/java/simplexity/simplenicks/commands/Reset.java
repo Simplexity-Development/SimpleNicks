@@ -17,7 +17,7 @@ public class Reset extends SubCommand {
     }
 
     @Override
-    public void executeOnOther(CommandSender sender, Player player, String[] args) {
+    public void execute(CommandSender sender, Player player, String[] args) {
         resetName(player);
         sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getResetOther(), player.getName()));
         player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getResetByOther(), player.getName()));

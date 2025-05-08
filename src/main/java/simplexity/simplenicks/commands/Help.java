@@ -14,7 +14,7 @@ public class Help extends SubCommand {
     }
 
     @Override
-    public void executeOnOther(CommandSender sender, Player player, String[] args) {
+    public void execute(CommandSender sender, Player player, String[] args) {
         sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getShownHelp(), player.getName()));
         player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getHelpMessage(), ""));
     }
