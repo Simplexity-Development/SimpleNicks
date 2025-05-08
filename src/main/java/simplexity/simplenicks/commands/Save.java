@@ -19,7 +19,7 @@ public class Save extends SubCommand{
     }
 
     @Override
-    public void executeOnOther(CommandSender sender, Player player, String[] args) {
+    public void execute(CommandSender sender, Player player, String[] args) {
         if (savePlayerNick(player)) {
             sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getSaveNick(), miniMessage.serialize(player.displayName())));
             player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getSaveNick(), miniMessage.serialize(player.displayName())));

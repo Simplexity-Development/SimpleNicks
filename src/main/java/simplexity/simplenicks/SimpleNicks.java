@@ -3,7 +3,7 @@ package simplexity.simplenicks;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import simplexity.simplenicks.commands.CommandHandler;
+import simplexity.simplenicks.commands.NickCommandHandler;
 import simplexity.simplenicks.commands.Delete;
 import simplexity.simplenicks.commands.Help;
 import simplexity.simplenicks.commands.Reset;
@@ -46,7 +46,7 @@ public final class SimpleNicks extends JavaPlugin {
         this.saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
-        this.getCommand("nick").setExecutor(new CommandHandler());
+        this.getCommand("nick").setExecutor(new NickCommandHandler());
         this.getCommand("snreload").setExecutor(new SNReload());
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();

@@ -120,7 +120,7 @@ public class SqlHandler {
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
-            logger.warning("Failed to check if UUID '" + uuid + "' has already saved the nickname '" + nickname +"'");
+            logger.warning("Failed to check if UUID '" + uuid + "' has already saved the nickname '" + nickname + "'");
             e.printStackTrace();
             return false;
         }
@@ -143,6 +143,26 @@ public class SqlHandler {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Nullable
+    public List<UUID> getUuidsOfNickname(String normalizeName) {
+        String queryString = "SELECT uuid FROM current_nicknames WHERE normalized = ?";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, normalizeName);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) return new ArrayList<>();
+            List<UUID> uuids = new ArrayList<>();
+            while (resultSet.next()) {
+                uuids.add(UUID.fromString(resultSet.getString("uuid")));
+            }
+            return uuids;
+        } catch (SQLException e) {
+            logger.warning("Failed to get UUID list from normalized nickname");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean saveNickname(UUID uuid, String nickname, String normalizedNickname) {

@@ -1,8 +1,5 @@
 package simplexity.simplenicks.commands;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,10 +12,8 @@ import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
 import simplexity.simplenicks.saving.NickHandler;
-import simplexity.simplenicks.util.TagPermission;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -31,8 +26,16 @@ public class Set extends SubCommand {
     }
 
     @Override
-    public void executeOnOther(CommandSender sender, Player player, String[] args) {
-        if (!isValidArgsLength(sender, player, args, 3)) {
+    public void execute(CommandSender sender, Player player, String[] args, boolean adminCommand) {
+
+    }
+
+
+
+
+    /*@Override
+    public void execute(CommandSender sender, Player player, String[] args, boolean adminCommand) {
+        if (!validArgsLength(args, 3)) {
             return;
         }
         String nickname = args[2];
@@ -45,21 +48,6 @@ public class Set extends SubCommand {
             player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getChangedByOther(), nickname));
         } else {
             sender.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getInvalidTags(), nickname));
-        }
-    }
-
-    @Override
-    public void executeOnSelf(CommandSender sender, Player player, String[] args) {
-        if (!isValidArgsLength(sender, player, args, 2)) return;
-        String nickname = args[1];
-        if (!passesChecks(sender, nickname, player)) {
-            return;
-        }
-        nickname = processName(nickname, sender, player);
-        if (setPlayerNick(player, nickname)) {
-            player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getChangedSelf(), nickname));
-        } else {
-            player.sendMessage(parsedMessage(sender, player, LocaleHandler.getInstance().getInvalidTags(), nickname));
         }
     }
 
@@ -113,7 +101,7 @@ public class Set extends SubCommand {
             }
         }
         return true;
-    }
+    }*/
 
     @Override
     public ArrayList<String> tabComplete(CommandSender sender, String[] args, @NotNull Player player) {
