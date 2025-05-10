@@ -1,12 +1,15 @@
 package simplexity.simplenicks.commands.admin;
 
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.config.Message;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.util.Constants;
@@ -24,10 +27,9 @@ public class AdminNick implements TabExecutor {
         Player providedPlayer = validateProvidedPlayer(args[0], sender);
         if (providedPlayer == null) return false;
         String commandArg = args[1].toLowerCase();
-        switch (commandArg) {
-
+        if (commandArg.equals("set")) {
+            handleSet(sender, providedPlayer, args);
         }
-
 
 
 
@@ -36,16 +38,28 @@ public class AdminNick implements TabExecutor {
     }
 
     // /adminnick user set name
-    private void handleSet(CommandSender sender, Player target, String[] args){
+    private void handleSet(CommandSender sender, OfflinePlayer target, String[] args){
         if (!sender.hasPermission(Constants.NICK_SET_OTHERS)) {
             sender.sendRichMessage(Message.ERROR_NO_PERMISSION.getMessage());
             return;
         }
         if (args.length < 3) {
-            sender.sendRichMessage("");
+            sender.sendRichMessage(Message.ERROR_NOT_ENOUGH_ARGS.getMessage());
+            return;
         }
-
-
+        String nickname = getPermissionProcessedNickname(args[2], sender, target);
+        if (nickname == null) {
+            sender.sendRichMessage(Message.ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS.getMessage());
+            return;
+        }
+        boolean setSuccessfully = NicknameProcessor.getInstance().setNickname(target, nickname);
+        if (!setSuccessfully) {
+            sender.sendRichMessage(Message.ERROR_SET_FAILURE.getMessage());
+            return;
+        }
+        sender.sendRichMessage(Message.CHANGED_OTHER.getMessage(),
+                Placeholder.parsed("target", target.getName()),
+                Placeholder.parsed("value", nickname));
     }
 
 
@@ -71,7 +85,7 @@ public class AdminNick implements TabExecutor {
     }
 
     @Nullable
-    private String getPermissionProcessedNickname(String nickname, CommandSender sender, Player player){
+    private String getPermissionProcessedNickname(String nickname, CommandSender sender, OfflinePlayer player){
         if (sender.hasPermission(Constants.NICK_SET_OTHERS_FULL)) {
             return nickname;
         }
@@ -79,7 +93,8 @@ public class AdminNick implements TabExecutor {
             return NickUtils.getInstance().cleanNonPermittedTags(sender, nickname);
         }
         if (sender.hasPermission(Constants.NICK_SET_OTHERS_RESTRICTIVE)) {
-            return NickUtils.getInstance().cleanNonPermittedTags(player, nickname);
+            if (!(player instanceof Player onlinePlayer)) return null;
+            return NickUtils.getInstance().cleanNonPermittedTags(onlinePlayer, nickname);
         }
         return null;
     }

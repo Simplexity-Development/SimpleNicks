@@ -3,6 +3,7 @@ package simplexity.simplenicks;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import simplexity.simplenicks.commands.admin.AdminNick;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
 import simplexity.simplenicks.listener.LoginListener;
@@ -34,6 +35,7 @@ public final class SimpleNicks extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
+        getCommand("adminnick").setExecutor(new AdminNick());
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         configReload();
         SqlHandler.getInstance().setupConfig();

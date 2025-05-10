@@ -7,6 +7,9 @@ description: "A simple plugin to allow players to set and reset nicknames."
 softdepend:
   - PlaceholderAPI
 commands:
+  adminnick:
+    description: e
+    permission: simplenick.admin
   nick:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."
     aliases: [simplenicks, simplenick, snick]
