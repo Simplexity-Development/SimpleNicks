@@ -8,6 +8,9 @@ softdepend:
   - PlaceholderAPI
   - packetevents
 commands:
+  adminnick:
+    description: e
+    permission: simplenick.admin
   nick:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."
     aliases: [simplenicks, simplenick, snick]
