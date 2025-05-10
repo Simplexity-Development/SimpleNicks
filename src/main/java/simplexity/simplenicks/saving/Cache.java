@@ -1,6 +1,7 @@
 package simplexity.simplenicks.saving;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import simplexity.simplenicks.SimpleNicks;
 
 import javax.annotation.Nullable;
@@ -24,29 +25,54 @@ public class Cache {
     private final HashMap<UUID, Nickname> activeNicknames = new HashMap<>();
     private final HashMap<UUID, List<Nickname>> savedNicknames = new HashMap<>();
 
+    /**
+     * Loads the player's active nickname from SQL and into cache
+     * @param uuid player UUID
+     */
+
     public void loadCurrentNickname(UUID uuid) {
         Nickname currentNick = SqlHandler.getInstance().getCurrentNicknameForPlayer(uuid);
         if (currentNick == null) return;
         activeNicknames.put(uuid, currentNick);
     }
 
+    /**
+     * Gets the active nickname from cache,
+     * @param uuid Player uuid
+     * @return Nickname player has set, null if no nickname is set
+     */
     @Nullable
     public Nickname getActiveNickname(UUID uuid) {
         if (activeNicknames.containsKey(uuid)) return activeNicknames.get(uuid);
         return null;
     }
 
+    /**
+     * Loads a player's saved nicknames into the cache from SQL
+     * @param uuid Player's UUID
+     */
     public void loadSavedNicknames(UUID uuid) {
         List<Nickname> savedNames = SqlHandler.getInstance().getSavedNicknamesForPlayer(uuid);
         if (savedNames == null || savedNames.isEmpty()) return;
         savedNicknames.put(uuid, savedNames);
     }
 
+    /**
+     * Gets the saved nicknames from the cache
+     * @param uuid Player UUID
+     * @return List<Nickname> - if no nicks exist, returns empty list
+     */
     public List<Nickname> getSavedNicknames(UUID uuid) {
         if (savedNicknames.containsKey(uuid)) return savedNicknames.get(uuid);
         return new ArrayList<>();
     }
 
+    /**
+     * Sets the active nickname for the player
+     * @param uuid Player UUID
+     * @param nickname Version of the nickname with tags included
+     * @return boolean - whether nickname was successfully set or not
+     */
     public boolean setActiveNickname(UUID uuid, String nickname) {
         String normalizedNick = miniMessage.stripTags(nickname);
         Nickname nick = new Nickname(nickname, normalizedNick);
@@ -56,7 +82,7 @@ public class Cache {
         return true;
     }
 
-    public boolean deleteSavedNickname(String nickname, UUID uuid) {
+    public boolean deleteSavedNickname(UUID uuid, String nickname) {
         boolean sqlDeleted = SqlHandler.getInstance().deleteNickname(uuid, nickname);
         if (!sqlDeleted) return false;
         if (!savedNicknames.containsKey(uuid)) return false;
@@ -79,17 +105,8 @@ public class Cache {
         return uuids;
     }
 
-    public boolean userAlreadySavedThis(String name, UUID uuid) {
-        return SqlHandler.getInstance().userAlreadySavedThisName(uuid, name);
-    }
-
-    public boolean nickInUseActiveStorage(String name, UUID uuid) {
-        String strippedNick = miniMessage.stripTags(name);
-        return SqlHandler.getInstance().nickAlreadyExists(strippedNick, uuid);
-    }
-
-    public boolean nickInUseOnlinePlayers(String name, UUID uuid) {
-        String strippedNick = miniMessage.stripTags(name);
+    public boolean nickInUseOnlinePlayers(UUID uuid, String nickname) {
+        String strippedNick = miniMessage.stripTags(nickname);
         for (UUID playerUuid : activeNicknames.keySet()) {
             if (playerUuid.equals(uuid)) continue;
             if (activeNicknames.get(playerUuid).normalizedNickname().equals(strippedNick)) return true;
@@ -97,19 +114,26 @@ public class Cache {
         return false;
     }
 
-    public boolean saveNickname(String name, UUID uuid) {
-        String strippedNick = miniMessage.stripTags(name);
-        Nickname nick = new Nickname(name, strippedNick);
+    public boolean saveNickname(UUID uuid, String nickname) {
+        String strippedNick = miniMessage.stripTags(nickname);
+        Nickname nick = new Nickname(nickname, strippedNick);
         List<Nickname> userSavedNicknames = getSavedNicknames(uuid);
         userSavedNicknames.add(nick);
-        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, name, strippedNick);
+        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, nickname, strippedNick);
         if (!savedToSql) return false;
         savedNicknames.put(uuid, userSavedNicknames);
         return true;
+    }
+
+    public int getSavedNickCount(UUID uuid){
+        if (savedNicknames.containsKey(uuid)) return savedNicknames.get(uuid).size();
+        return 0;
     }
 
     public void removePlayerFromCache(UUID uuid) {
         savedNicknames.remove(uuid);
         activeNicknames.remove(uuid);
     }
+
+
 }

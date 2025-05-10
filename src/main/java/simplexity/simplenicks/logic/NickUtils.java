@@ -1,4 +1,4 @@
-package simplexity.simplenicks.saving;
+package simplexity.simplenicks.logic;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -9,26 +9,31 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.saving.AbstractSaving;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.TagPermission;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("UnusedReturnValue")
-public class NickHandler {
+public class NickUtils {
 
-    private static NickHandler instance;
+    private static NickUtils instance;
 
     private AbstractSaving saveHandler;
     private final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
 
-    private NickHandler() {
+    private NickUtils() {
     }
 
-    public static NickHandler getInstance() {
+    public static NickUtils getInstance() {
         if (instance != null) return instance;
-        instance = new NickHandler();
+        instance = new NickUtils();
         return instance;
     }
 
@@ -92,4 +97,12 @@ public class NickHandler {
         }
         return playersByNick;
     }
+
+    public boolean passesRegexCheck(String normalizedNick) {
+        Pattern configRegex = ConfigHandler.getInstance().getRegex();
+        Matcher matcher = configRegex.matcher(normalizedNick);
+        return !matcher.find();
+    }
+
+
 }

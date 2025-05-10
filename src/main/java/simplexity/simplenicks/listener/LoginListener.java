@@ -5,7 +5,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import simplexity.simplenicks.saving.Cache;
-import simplexity.simplenicks.saving.NickHandler;
+import simplexity.simplenicks.logic.NickUtils;
 
 import java.util.UUID;
 
@@ -15,6 +15,6 @@ public class LoginListener implements Listener {
         UUID playerUuid = joinEvent.getPlayer().getUniqueId();
         Cache.getInstance().loadCurrentNickname(playerUuid);
         Cache.getInstance().loadSavedNicknames(playerUuid);
-        NickHandler.getInstance().refreshNickname(playerUuid);
+        NickUtils.getInstance().refreshNickname(playerUuid);
     }
 }

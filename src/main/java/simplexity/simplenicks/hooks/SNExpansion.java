@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.saving.Cache;
-import simplexity.simplenicks.saving.NickHandler;
 import simplexity.simplenicks.saving.Nickname;
 
 public class SNExpansion extends PlaceholderExpansion {
