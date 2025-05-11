@@ -1,9 +1,11 @@
 package simplexity.simplenicks;
 
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import simplexity.simplenicks.commands.admin.AdminNick;
+import simplexity.simplenicks.commands.admin.NicknameCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
 import simplexity.simplenicks.listener.LoginListener;
@@ -21,6 +23,7 @@ need to check length after parsing
 PlaceholderAPI placeholder for before parsing, and after
 */
 
+@SuppressWarnings("UnstableApiUsage")
 public final class SimpleNicks extends JavaPlugin {
 
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
@@ -40,6 +43,9 @@ public final class SimpleNicks extends JavaPlugin {
         configReload();
         SqlHandler.getInstance().setupConfig();
         SqlHandler.getInstance().init();
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            commands.registrar().register(NicknameCommand.createCommand().build());
+        });
     }
 
     public static MiniMessage getMiniMessage() {
