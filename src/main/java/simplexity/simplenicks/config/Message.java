@@ -5,6 +5,7 @@ public enum Message {
     HELP_MESSAGE("plugin.help-message", "\n<prefix>========================\n<aqua>· <yellow>Setting a nickname:\n<gray>/nick set <nickname>\n<aqua>· <yellow>removing a nickname:\n<gray>/nick reset\n<aqua>· <yellow>Formatting:\n<gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"),
     SHOWN_HELP("plugin.shown-help", "<prefix><target><reset><yellow> has been shown the help screen"),
     CONFIG_RELOADED("plugin.config-reloaded", "<prefix><gold>SimpleNicks config and locale reloaded"),
+    SERVER_DISPLAY_NAME("plugin.server-display-name", "<gray>[Server]</gray>"),
     CHANGED_SELF("nick.changed.self", "<prefix><green>Changed your nickname to <value>!"),
     CHANGED_OTHER("nick.changed.other", "<prefix><green>Changed <target>'s nickname to <value>"),
     CHANGED_BY_OTHER("nick.changed.by-other", "<prefix><green><initiator> changed your nickname to <reset><value><green>!"),
