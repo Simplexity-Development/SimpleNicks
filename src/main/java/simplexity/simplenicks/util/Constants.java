@@ -13,6 +13,7 @@ public class Constants {
     public static Permission NICK_DELETE_OTHERS = new Permission("simplenick.admin.delete");
     public static Permission NICK_GET_OTHERS = new Permission("simplenick.admin.get");
     public static Permission NICK_COMMAND = new Permission("simplenick.nick");
+    public static Permission NICK_SET = new Permission("simplenick.nick.set");
     public static Permission NICK_RESET = new Permission("simplenick.nick.reset");
     public static Permission NICK_SAVE = new Permission("simplenick.nick.save");
     public static Permission NICK_DELETE = new Permission("simplenick.nick.delete");
