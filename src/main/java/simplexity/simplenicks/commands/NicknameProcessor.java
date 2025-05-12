@@ -8,6 +8,7 @@ import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.saving.SqlHandler;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -83,6 +84,7 @@ public class NicknameProcessor {
         return nicks;
     }
 
+    @Nullable
     public Nickname getCurrentNickname(OfflinePlayer player) {
         UUID playerUuid = player.getUniqueId();
         boolean online = player.isOnline();
