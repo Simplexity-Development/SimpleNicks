@@ -9,15 +9,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
-import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
-public class SaveSubCommand implements SubCommand {
+public class ResetSubCommand implements SubCommand {
     @Override
     public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> root) {
 
-        root.then(Commands.literal("save").requires(this::canExecute)
+        root.then(Commands.literal("reset").requires(this::canExecute)
                 .executes(this::execute)
         );
 
@@ -26,13 +25,12 @@ public class SaveSubCommand implements SubCommand {
     @Override
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) {
         OfflinePlayer player = (OfflinePlayer) ctx.getSource().getSender();
-        Nickname nickname = NicknameProcessor.getInstance().getCurrentNickname(player);
-        NicknameProcessor.getInstance().saveNickname(player, nickname.nickname());
+        NicknameProcessor.getInstance().resetNickname(player);
         return Command.SINGLE_SUCCESS;
     }
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_SAVE);
+        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_RESET);
     }
 }
