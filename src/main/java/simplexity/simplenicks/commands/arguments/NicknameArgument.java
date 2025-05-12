@@ -20,34 +20,37 @@ import simplexity.simplenicks.saving.Nickname;
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("UnstableApiUsage")
-public class NicknameArgument implements CustomArgumentType<Nickname,String> {
+public class NicknameArgument implements CustomArgumentType<Nickname, String> {
+
 
     @Override
-    public @NotNull Nickname parse(@NotNull StringReader reader) throws CommandSyntaxException {
-        String nickname = reader.readQuotedString();
+    public @NotNull Nickname parse(@NotNull StringReader reader) {
+        String nickname = reader.getRemaining();
+        reader.setCursor(reader.getTotalLength());
         String normalizedNickname = SimpleNicks.getMiniMessage().stripTags(nickname);
         return new Nickname(nickname, normalizedNickname);
     }
 
     @Override
     public @NotNull ArgumentType<String> getNativeType() {
-        return StringArgumentType.string();
+        return StringArgumentType.greedyString();
     }
 
     /**
      * Provides suggestions for nicknames based on the CommandSender
+     *
      * @param context Command context
      * @param builder SuggestionsBuilder object for adding suggestions to
+     * @param <S>     For Paper, generally CommandSourceStack
      * @return Suggestions as a CompletableFuture
-     * @param <S> For Paper, generally CommandSourceStack
      */
     public <S> @NotNull CompletableFuture<Suggestions> suggestOwnNicknames(@NotNull CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
         CommandSourceStack css = (CommandSourceStack) context.getSource();
         OfflinePlayer player = (OfflinePlayer) css.getSender();
         MiniMessage miniMessage = SimpleNicks.getMiniMessage();
         for (Nickname nickname : NicknameProcessor.getInstance().getSavedNicknames(player)) {
-            String suggestion = "\"" + nickname.nickname() + "\"";
-            String suggestionStripped = "\"" + nickname.normalizedNickname() + "\"";
+            String suggestion = nickname.nickname();
+            String suggestionStripped = nickname.normalizedNickname();
             if (suggestionStripped.toLowerCase().contains(builder.getRemainingLowerCase()) || suggestion.toLowerCase().contains(builder.getRemainingLowerCase())) {
                 builder.suggest(
                         suggestion,
