@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
+import simplexity.simplenicks.config.Message;
 import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -26,6 +27,7 @@ public class ResetSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) {
         OfflinePlayer player = (OfflinePlayer) ctx.getSource().getSender();
         NicknameProcessor.getInstance().resetNickname(player);
+        if (player instanceof Player onlinePlayer) sendFeedback(onlinePlayer, Message.RESET_SELF, null);
         return Command.SINGLE_SUCCESS;
     }
 
