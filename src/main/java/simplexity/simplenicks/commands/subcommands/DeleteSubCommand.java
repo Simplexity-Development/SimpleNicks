@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
+import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -30,8 +31,10 @@ public class DeleteSubCommand implements SubCommand {
     @Override
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) {
         OfflinePlayer player = (OfflinePlayer) ctx.getSource().getSender();
-        NicknameProcessor.getInstance().deleteNickname(player,"");
-        return Command.SINGLE_SUCCESS;
+        Nickname nickname = ctx.getArgument("nickname", Nickname.class);
+        boolean deleted = NicknameProcessor.getInstance().deleteNickname(player, nickname.nickname());
+        if (deleted) return Command.SINGLE_SUCCESS;
+        return 0;
     }
 
     @Override
