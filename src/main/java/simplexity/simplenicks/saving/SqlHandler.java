@@ -95,7 +95,6 @@ public class SqlHandler {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, String.valueOf(uuid));
             ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) return savedNicknames;
             while (resultSet.next()) {
                 String nicknameString = resultSet.getString("nickname");
                 String normalizedString = resultSet.getString("normalized");

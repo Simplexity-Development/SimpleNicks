@@ -1,11 +1,10 @@
-package simplexity.simplenicks.commands.subcommands;
+package simplexity.simplenicks.commands.subcommands.basic;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
@@ -20,14 +19,13 @@ public class ResetSubCommand implements SubCommand {
         root.then(Commands.literal("reset").requires(this::canExecute)
                 .executes(this::execute)
         );
-
     }
 
     @Override
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) {
-        OfflinePlayer player = (OfflinePlayer) ctx.getSource().getSender();
+        Player player = (Player) ctx.getSource().getSender();
         NicknameProcessor.getInstance().resetNickname(player);
-        if (player instanceof Player onlinePlayer) sendFeedback(onlinePlayer, Message.RESET_SELF, null);
+        sendFeedback(player, Message.RESET_SELF, null);
         return Command.SINGLE_SUCCESS;
     }
 
