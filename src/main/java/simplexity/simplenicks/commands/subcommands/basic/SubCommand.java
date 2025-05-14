@@ -1,4 +1,4 @@
-package simplexity.simplenicks.commands.subcommands;
+package simplexity.simplenicks.commands.subcommands.basic;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
