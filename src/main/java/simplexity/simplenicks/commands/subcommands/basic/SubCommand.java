@@ -19,11 +19,11 @@ import java.util.concurrent.CompletableFuture;
 public interface SubCommand {
 
     /**
-     * Attaches this subcommand to the given root.
+     * Attaches this subcommand to the given parent.
      *
-     * @param root Root of the command builder
+     * @param parent Parent node of the command builder
      */
-    void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> root);
+    void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> parent);
 
     /**
      * Defines the execution logic for this command.

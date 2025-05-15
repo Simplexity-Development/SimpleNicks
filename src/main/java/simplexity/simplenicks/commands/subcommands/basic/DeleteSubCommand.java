@@ -21,11 +21,11 @@ public class DeleteSubCommand implements SubCommand {
 
 
     @Override
-    public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> root) {
+    public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> parent) {
 
         NicknameArgument argument = new NicknameArgument();
 
-        root.then(Commands.literal("delete").requires(this::canExecute)
+        parent.then(Commands.literal("delete").requires(this::canExecute)
                 .then(Commands.argument("nickname", argument)
                         .suggests(argument::suggestOwnNicknames)
                         .executes(this::execute))

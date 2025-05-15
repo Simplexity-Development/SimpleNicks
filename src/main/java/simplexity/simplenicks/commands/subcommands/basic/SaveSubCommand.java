@@ -21,11 +21,11 @@ public class SaveSubCommand implements SubCommand {
 
 
     @Override
-    public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> root) {
+    public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> parent) {
 
         NicknameArgument argument = new NicknameArgument();
 
-        root.then(Commands.literal("save").requires(this::canExecute)
+        parent.then(Commands.literal("save").requires(this::canExecute)
                 .executes(this::execute)
                 .then(Commands.argument("nickname", argument)
                         .suggests(argument::suggestOwnNicknames)
