@@ -5,7 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import simplexity.simplenicks.commands.admin.AdminNick;
-import simplexity.simplenicks.commands.admin.NicknameCommand;
+import simplexity.simplenicks.commands.NicknameCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
 import simplexity.simplenicks.listener.LeaveListener;
@@ -39,12 +39,14 @@ public final class SimpleNicks extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
+        //noinspection DataFlowIssue
         getCommand("adminnick").setExecutor(new AdminNick());
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         instance.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         configReload();
         SqlHandler.getInstance().setupConfig();
         SqlHandler.getInstance().init();
+        //noinspection CodeBlock2Expr
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(NicknameCommand.createCommand().build());
         });

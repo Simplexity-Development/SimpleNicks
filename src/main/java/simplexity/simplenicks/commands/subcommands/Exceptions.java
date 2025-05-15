@@ -41,6 +41,34 @@ public class Exceptions {
             )
     );
 
+    @SuppressWarnings("unused")
+    public static final SimpleCommandExceptionType ERROR_INVALID_COMMAND = new SimpleCommandExceptionType(
+            MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_INVALID_COMMAND.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
+    public static final SimpleCommandExceptionType ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS = new SimpleCommandExceptionType(
+            MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
+    public static final SimpleCommandExceptionType ERROR_SET_FAILURE = new SimpleCommandExceptionType(
+            MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_SET_FAILURE.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
     public static final DynamicCommandExceptionType ERROR_LENGTH = new DynamicCommandExceptionType(
             nickname -> MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
@@ -57,6 +85,16 @@ public class Exceptions {
                     miniMessage.deserialize(
                             Message.ERROR_INVALID_NICK.getMessage(),
                             Placeholder.unparsed("regex", ConfigHandler.getInstance().getRegexString()),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
+    public static final DynamicCommandExceptionType ERROR_PLAYER_NOT_FOUND = new DynamicCommandExceptionType(
+            playerName -> MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_INVALID_PLAYER.getMessage(),
+                            Placeholder.unparsed("player_name", playerName.toString()),
                             Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
                     )
             )

@@ -1,8 +1,9 @@
-package simplexity.simplenicks.commands.admin;
+package simplexity.simplenicks.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import simplexity.simplenicks.commands.subcommands.admin.AdminSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.DeleteSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.ResetSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.SaveSubCommand;
@@ -17,6 +18,7 @@ public class NicknameCommand {
         new SaveSubCommand().subcommandTo(builder);
         new ResetSubCommand().subcommandTo(builder);
         new DeleteSubCommand().subcommandTo(builder);
+        new AdminSubCommand().subcommandTo(builder);
         return builder;
     }
 

@@ -14,9 +14,9 @@ import simplexity.simplenicks.util.Constants;
 @SuppressWarnings("UnstableApiUsage")
 public class ResetSubCommand implements SubCommand {
     @Override
-    public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> root) {
+    public void subcommandTo(@NotNull LiteralArgumentBuilder<CommandSourceStack> parent) {
 
-        root.then(Commands.literal("reset").requires(this::canExecute)
+        parent.then(Commands.literal("reset").requires(this::canExecute)
                 .executes(this::execute)
         );
     }
