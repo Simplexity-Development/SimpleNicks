@@ -8,12 +8,14 @@ import simplexity.simplenicks.commands.subcommands.basic.DeleteSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.ResetSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.SaveSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.SetSubCommand;
+import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
 public class NicknameCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> createCommand() {
-        LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("nick");
+        LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("nick")
+                .requires(src -> src.getSender().hasPermission(Constants.NICK_COMMAND));
         new SetSubCommand().subcommandTo(builder);
         new SaveSubCommand().subcommandTo(builder);
         new ResetSubCommand().subcommandTo(builder);

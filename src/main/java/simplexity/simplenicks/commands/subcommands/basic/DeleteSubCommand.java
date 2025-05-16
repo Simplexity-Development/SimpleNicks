@@ -48,6 +48,6 @@ public class DeleteSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_DELETE);
+        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_SAVE);
     }
 }

@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
-import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
 
@@ -52,15 +52,7 @@ public class SaveSubCommand implements SubCommand {
     public int executeWithArgument(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Player player = (Player) ctx.getSource().getSender();
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        if (nickname == null) {
-            throw Exceptions.ERROR_NICK_IS_NULL.create();
-        }
-        if (!player.hasPermission(Constants.NICK_LENGTH_BYPASS) && nickname.normalizedNickname().length() > ConfigHandler.getInstance().getMaxLength()) {
-            throw Exceptions.ERROR_LENGTH.create(nickname.normalizedNickname());
-        }
-        if (!player.hasPermission(Constants.NICK_REGEX_BYPASS) && !ConfigHandler.getInstance().getRegex().matcher(nickname.normalizedNickname()).matches()) {
-            throw Exceptions.ERROR_REGEX.create(nickname.normalizedNickname());
-        }
+        NickUtils.getInstance().nicknameChecks(player, nickname);
         boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.nickname());
         if (!saved) {
             throw Exceptions.ERROR_CANNOT_SAVE.create();

@@ -1,7 +1,6 @@
 package simplexity.simplenicks.saving;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import simplexity.simplenicks.SimpleNicks;
 
 import javax.annotation.Nullable;
@@ -27,6 +26,7 @@ public class Cache {
 
     /**
      * Loads the player's active nickname from SQL and into cache
+     *
      * @param uuid player UUID
      */
 
@@ -38,6 +38,7 @@ public class Cache {
 
     /**
      * Gets the active nickname from cache,
+     *
      * @param uuid Player uuid
      * @return Nickname player has set, null if no nickname is set
      */
@@ -49,6 +50,7 @@ public class Cache {
 
     /**
      * Loads a player's saved nicknames into the cache from SQL
+     *
      * @param uuid Player's UUID
      */
     public void loadSavedNicknames(UUID uuid) {
@@ -59,6 +61,7 @@ public class Cache {
 
     /**
      * Gets the saved nicknames from the cache
+     *
      * @param uuid Player UUID
      * @return List<Nickname> - if no nicks exist, returns empty list
      */
@@ -69,7 +72,8 @@ public class Cache {
 
     /**
      * Sets the active nickname for the player
-     * @param uuid Player UUID
+     *
+     * @param uuid     Player UUID
      * @param nickname Version of the nickname with tags included
      * @return boolean - whether nickname was successfully set or not
      */
@@ -105,11 +109,10 @@ public class Cache {
         return uuids;
     }
 
-    public boolean nickInUseOnlinePlayers(UUID uuid, String nickname) {
-        String strippedNick = miniMessage.stripTags(nickname);
+    public boolean nickInUseOnlinePlayers(@Nullable UUID uuid, String normalizedNick) {
         for (UUID playerUuid : activeNicknames.keySet()) {
             if (playerUuid.equals(uuid)) continue;
-            if (activeNicknames.get(playerUuid).normalizedNickname().equals(strippedNick)) return true;
+            if (activeNicknames.get(playerUuid).normalizedNickname().equals(normalizedNick)) return true;
         }
         return false;
     }
@@ -125,7 +128,7 @@ public class Cache {
         return true;
     }
 
-    public int getSavedNickCount(UUID uuid){
+    public int getSavedNickCount(UUID uuid) {
         if (savedNicknames.containsKey(uuid)) return savedNicknames.get(uuid).size();
         return 0;
     }

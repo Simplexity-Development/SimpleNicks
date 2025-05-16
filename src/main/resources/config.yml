@@ -28,3 +28,12 @@ username-protection: 30
 
 # What prefix should be given for players who have a nickname? put "" if you want no prefix
 nickname-prefix: ""
+
+# Feature to prevent people from having the same nicknames. This will prevent the same nicknames from being used, after formatting.
+# Saved names are not checked for this, only actively applied ones.
+nickname-protection:
+  online:
+    enabled: false
+  offline:
+    enabled: false
+    expires: 30

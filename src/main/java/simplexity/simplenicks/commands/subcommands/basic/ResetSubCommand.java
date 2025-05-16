@@ -31,6 +31,6 @@ public class ResetSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_RESET);
+        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_SET);
     }
 }

@@ -4,7 +4,6 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import simplexity.simplenicks.commands.admin.AdminNick;
 import simplexity.simplenicks.commands.NicknameCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
@@ -39,8 +38,6 @@ public final class SimpleNicks extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
-        //noinspection DataFlowIssue
-        getCommand("adminnick").setExecutor(new AdminNick());
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         instance.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         configReload();

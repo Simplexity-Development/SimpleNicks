@@ -22,10 +22,10 @@ public class ConfigHandler {
 
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
     private Pattern regex;
-    private boolean mySql, tablistNick;
+    private boolean mySql, tablistNick, onlineNickProtection, offlineNickProtection;
     private int maxLength, maxSaves;
     private String regexString, nickPrefix, mySqlIp, mySqlName, mySqlUsername, mySqlPassword;
-    private long usernameProtectionTime = 0;
+    private long usernameProtectionTime, offlineNickProtectionTime = 0;
 
     private ConfigHandler() {
     }
@@ -58,6 +58,9 @@ public class ConfigHandler {
         tablistNick = config.getBoolean("tablist-nick", false);
         usernameProtectionTime = config.getLong("username-protection", 30) * 86400000;
         nickPrefix = config.getString("nickname-prefix", "");
+        onlineNickProtection = config.getBoolean("nickname-protection.online.enabled", false);
+        offlineNickProtection = config.getBoolean("nickname-protection.offline.enabled", false);
+        offlineNickProtectionTime = config.getLong("nickname-protection.offline.expires", 30) * 86400000;
     }
 
 
@@ -99,5 +102,17 @@ public class ConfigHandler {
 
     public String getMySqlPassword() {
         return mySqlPassword;
+    }
+
+    public long getOfflineNickProtectionTime() {
+        return offlineNickProtectionTime;
+    }
+
+    public boolean shouldOnlineNicksBeProtected() {
+        return onlineNickProtection;
+    }
+
+    public boolean shouldOfflineNicksBeProtected() {
+        return offlineNickProtection;
     }
 }
