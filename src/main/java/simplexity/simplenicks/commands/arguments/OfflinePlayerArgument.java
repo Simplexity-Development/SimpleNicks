@@ -38,7 +38,7 @@ public class OfflinePlayerArgument implements CustomArgumentType<OfflinePlayer, 
 
     /**
      * Provides suggestions for players based on the online player list.
-     * Will also provide a hoverable element that shows their current nickname.
+     * Will also provide a hover-able element that shows their current nickname.
      *
      * @param ignoredContext <s>Command context</s> Unused
      * @param builder SuggestionsBuilder object for adding suggestions to

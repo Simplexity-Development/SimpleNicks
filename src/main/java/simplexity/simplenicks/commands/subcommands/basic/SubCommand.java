@@ -6,10 +6,15 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.Message;
 import simplexity.simplenicks.saving.Nickname;
 
@@ -56,6 +61,34 @@ public interface SubCommand {
                 message.getMessage(),
                 Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
                 Placeholder.parsed("value", nickname.nickname())
+        );
+    }
+
+    /**
+     * Parses a message for admin commands.
+     * @param message Message to parse
+     * @param value Placeholder value from message, usually nickname, sometimes something else like a config value
+     * @param initiator CommandSender who initiated the command, the admin
+     * @param target OfflinePlayer who this command is being run on
+     * @return Component parsed message
+     */
+    default Component parseAdminMessage(String message, String value, CommandSender initiator, @NotNull OfflinePlayer target) {
+        MiniMessage miniMessage = SimpleNicks.getMiniMessage();
+        Component initiatorName;
+        String targetUserName = target.getName();
+        if (targetUserName == null) {
+            targetUserName = "[Username not found, idk how but you got this error.]";
+        }
+        if (initiator instanceof Player playerInitiator) {
+            initiatorName = playerInitiator.displayName();
+        } else {
+            initiatorName = miniMessage.deserialize(Message.SERVER_DISPLAY_NAME.getMessage());
+        }
+        return miniMessage.deserialize(message,
+                Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
+                Placeholder.parsed("value", value),
+                Placeholder.component("initiator", initiatorName),
+                Placeholder.parsed("target", targetUserName)
         );
     }
 

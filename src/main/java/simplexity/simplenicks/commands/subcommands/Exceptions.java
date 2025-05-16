@@ -32,6 +32,15 @@ public class Exceptions {
             )
     );
 
+    public static final SimpleCommandExceptionType ERROR_EMPTY_NICK_AFTER_PARSE = new SimpleCommandExceptionType(
+            MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_INVALID_NICK_EMPTY.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
     public static final SimpleCommandExceptionType ERROR_CANNOT_SAVE = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
@@ -96,6 +105,27 @@ public class Exceptions {
                             Message.ERROR_INVALID_PLAYER.getMessage(),
                             Placeholder.unparsed("player_name", playerName.toString()),
                             Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
+    public static final DynamicCommandExceptionType ERROR_NICKNAME_IS_SOMEONES_USERNAME = new DynamicCommandExceptionType(
+            nickname -> MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_OTHER_PLAYERS_USERNAME.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
+                            Placeholder.unparsed("value", nickname.toString())
+                    )
+            )
+    );
+
+
+    public static final DynamicCommandExceptionType ERROR_SOMEONE_USING_THAT_NICKNAME = new DynamicCommandExceptionType(
+            nickname -> MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_OTHER_PLAYERS_NICKNAME.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
+                            Placeholder.unparsed("value", nickname.toString())
                     )
             )
     );

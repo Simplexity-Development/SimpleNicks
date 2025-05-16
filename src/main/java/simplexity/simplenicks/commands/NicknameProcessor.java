@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("UnusedReturnValue")
 public class NicknameProcessor {
     private static NicknameProcessor instance;
 
@@ -101,23 +102,11 @@ public class NicknameProcessor {
         return savedNicks.size();
     }
 
-    public boolean someoneOnlineUsingThis(OfflinePlayer player, String nickname) {
-        UUID playerUuid = player.getUniqueId();
-        return Cache.getInstance().nickInUseOnlinePlayers(playerUuid, nickname);
-    }
-
-    public boolean someoneSavedUsingThis(OfflinePlayer player, String nickname) {
-        UUID playerUuid = player.getUniqueId();
-        String strippedNick = miniMessage.stripTags(nickname);
-        return SqlHandler.getInstance().nickAlreadyExists(playerUuid, strippedNick);
-    }
 
     public boolean playerAlreadySavedThis(OfflinePlayer player, String nickname) {
         UUID playerUuid = player.getUniqueId();
         return SqlHandler.getInstance().userAlreadySavedThisName(playerUuid, nickname);
     }
-
-
 
 
 }

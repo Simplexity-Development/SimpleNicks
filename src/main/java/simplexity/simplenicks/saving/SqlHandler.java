@@ -71,19 +71,24 @@ public class SqlHandler {
     }
 
 
-    public boolean nickAlreadyExists(UUID uuidToExclude, String normalizedName) {
-        String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? AND uuid != ? LIMIT 1";
+    @Nullable
+    public UUID nickAlreadySavedTo(@Nullable UUID uuidToExclude, String normalizedName) {
+        String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? "
+                             + ((uuidToExclude != null) ? "AND uuid != ? " : "") + "LIMIT 1";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, String.valueOf(normalizedName));
-            statement.setString(2, String.valueOf(uuidToExclude));
+            if (uuidToExclude != null) statement.setString(2, String.valueOf(uuidToExclude));
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
+            if (resultSet.next()) {
+                return UUID.fromString(resultSet.getString("uuid"));
+            }
         } catch (SQLException e) {
             logger.severe("Failed to check if nickname exists: " + normalizedName);
             e.printStackTrace();
-            return false;
+            return null;
         }
+        return null;
     }
 
     @Nullable
