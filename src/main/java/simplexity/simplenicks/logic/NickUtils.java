@@ -132,8 +132,17 @@ public class NickUtils {
     public boolean thisIsSomeonesUsername(String normalizedName) {
         long protectionTime = ConfigHandler.getInstance().getUsernameProtectionTime();
         if (protectionTime < 0) return false;
-        OfflinePlayer player = Bukkit.getOfflinePlayer(normalizedName);
-        long lastSeen = player.getLastSeen();
+        OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
+        OfflinePlayer offlinePlayer = null;
+        for (OfflinePlayer player : offlinePlayers) {
+            if (player.getName() == null || player.getName().isEmpty()) continue;
+            if (player.getName().equalsIgnoreCase(normalizedName)) {
+                offlinePlayer = player;
+                break;
+            }
+        }
+        if (offlinePlayer == null) return false;
+        long lastSeen = offlinePlayer.getLastSeen();
         if (lastSeen == 0) return false;
         long timeSinceSeen = System.currentTimeMillis() - lastSeen;
         return timeSinceSeen <= protectionTime;

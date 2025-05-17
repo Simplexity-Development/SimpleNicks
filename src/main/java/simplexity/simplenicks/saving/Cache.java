@@ -77,10 +77,10 @@ public class Cache {
      * @param nickname Version of the nickname with tags included
      * @return boolean - whether nickname was successfully set or not
      */
-    public boolean setActiveNickname(UUID uuid, String nickname) {
+    public boolean setActiveNickname(UUID uuid, String username, String nickname) {
         String normalizedNick = miniMessage.stripTags(nickname);
         Nickname nick = new Nickname(nickname, normalizedNick);
-        boolean sqlActiveNameSet = SqlHandler.getInstance().setActiveNickname(uuid, nickname, normalizedNick);
+        boolean sqlActiveNameSet = SqlHandler.getInstance().setActiveNickname(uuid, username, nickname, normalizedNick);
         if (!sqlActiveNameSet) return false;
         activeNicknames.put(uuid, nick);
         return true;
@@ -117,12 +117,12 @@ public class Cache {
         return false;
     }
 
-    public boolean saveNickname(UUID uuid, String nickname) {
+    public boolean saveNickname(UUID uuid, String username, String nickname) {
         String strippedNick = miniMessage.stripTags(nickname);
         Nickname nick = new Nickname(nickname, strippedNick);
         List<Nickname> userSavedNicknames = getSavedNicknames(uuid);
         userSavedNicknames.add(nick);
-        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, nickname, strippedNick);
+        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, username, nickname, strippedNick);
         if (!savedToSql) return false;
         savedNicknames.put(uuid, userSavedNicknames);
         return true;

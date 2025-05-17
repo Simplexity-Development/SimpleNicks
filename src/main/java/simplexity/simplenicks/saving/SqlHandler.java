@@ -35,7 +35,8 @@ public class SqlHandler {
         try (Connection connection = getConnection()) {
             PreparedStatement parentStatement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS players (
-                    uuid VARCHAR(36) PRIMARY KEY,
+                    uuid VARCHAR(36) PRIMARY KEY NOT NULL,
+                    last_known_name VARCHAR(16) NOT NULL,
                     last_login DATETIME NOT NULL
                     );
                     """);
@@ -169,9 +170,9 @@ public class SqlHandler {
         }
     }
 
-    public boolean saveNickname(UUID uuid, String nickname, String normalizedNickname) {
+    public boolean saveNickname(UUID uuid, String username, String nickname, String normalizedNickname) {
         String saveString = "REPLACE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
-        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid);
+        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid, username);
         try (Connection connection = getConnection()) {
             PreparedStatement saveStatement = connection.prepareStatement(saveString);
             saveStatement.setString(1, String.valueOf(uuid));
@@ -217,9 +218,9 @@ public class SqlHandler {
         }
     }
 
-    public boolean setActiveNickname(UUID uuid, String nicknameString, String normalizedString) {
+    public boolean setActiveNickname(UUID uuid, String username, String nicknameString, String normalizedString) {
         String setQuery = "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
-        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid);
+        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid, username);
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(setQuery);
             statement.setString(1, String.valueOf(uuid));
@@ -248,14 +249,17 @@ public class SqlHandler {
         }
     }
 
-    private void addPlayerToPlayers(UUID uuid) {
-        String insertQuery = "REPLACE INTO players (uuid, last_login) VALUES (?, CURRENT_TIMESTAMP)";
+    //todo: Add updating last login and last known name
+
+    private void addPlayerToPlayers(UUID uuid, String username) {
+        String insertQuery = "REPLACE INTO players (uuid, last_known_name, last_login) VALUES (?, ?, CURRENT_TIMESTAMP)";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(insertQuery);
             statement.setString(1, String.valueOf(uuid));
+            statement.setString(2, username);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.severe("Failed to save player: " + uuid);
+            logger.severe("Failed to save player: " + uuid + ", username: " +  username);
             e.printStackTrace();
         }
     }

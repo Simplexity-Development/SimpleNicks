@@ -26,7 +26,15 @@ public class OfflinePlayerArgument implements CustomArgumentType<OfflinePlayer, 
     @Override
     public @NotNull OfflinePlayer parse(@NotNull StringReader reader) throws CommandSyntaxException {
         String playerName = reader.readString();
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(playerName);
+        OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
+        OfflinePlayer offlinePlayer = null;
+        for (OfflinePlayer player : offlinePlayers) {
+            if (player.getName() == null || player.getName().isEmpty()) continue;
+            if (player.getName().equalsIgnoreCase(playerName)) {
+                offlinePlayer = player;
+                break;
+            }
+        }
         if (offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) throw Exceptions.ERROR_PLAYER_NOT_FOUND.create(playerName);
         return offlinePlayer;
     }
