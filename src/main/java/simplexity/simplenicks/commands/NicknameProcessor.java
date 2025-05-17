@@ -29,14 +29,15 @@ public class NicknameProcessor {
 
     public boolean setNickname(OfflinePlayer player, String nickname) {
         UUID playerUuid = player.getUniqueId();
+        String username = player.getName();
         boolean online = player.isOnline();
         if (online) {
-            boolean success = Cache.getInstance().setActiveNickname(playerUuid, nickname);
+            boolean success = Cache.getInstance().setActiveNickname(playerUuid, username, nickname);
             if (!success) return false;
             NickUtils.getInstance().refreshNickname(playerUuid);
         }
         String normalizedNick = miniMessage.stripTags(nickname);
-        return SqlHandler.getInstance().setActiveNickname(playerUuid, nickname, normalizedNick);
+        return SqlHandler.getInstance().setActiveNickname(playerUuid, username, nickname, normalizedNick);
     }
 
     public boolean resetNickname(OfflinePlayer player) {
@@ -53,15 +54,16 @@ public class NicknameProcessor {
 
     public boolean saveNickname(OfflinePlayer player, String nickname) {
         UUID playerUuid = player.getUniqueId();
+        String username = player.getName();
         boolean online = player.isOnline();
         if (online) {
-            boolean success = Cache.getInstance().saveNickname(playerUuid, nickname);
+            boolean success = Cache.getInstance().saveNickname(playerUuid, username, nickname);
             if (!success) return false;
             NickUtils.getInstance().refreshNickname(playerUuid);
             return true;
         }
         String normalizedNick = miniMessage.stripTags(nickname);
-        return SqlHandler.getInstance().saveNickname(playerUuid, nickname, normalizedNick);
+        return SqlHandler.getInstance().saveNickname(playerUuid, username, nickname, normalizedNick);
     }
 
     public boolean deleteNickname(OfflinePlayer player, String nickname) {
