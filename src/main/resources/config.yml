@@ -14,6 +14,12 @@ max-nickname-length: 30
 # Be warned that putting non-alphanumeric characters may result in issues with other plugins and other unintended side effects
 nickname-regex: "[A-Za-z0-9_]+"
 
+# Nickname Blacklist
+# Blacklist of names that cannot be used (After formatting, capitalization ignored)
+nickname-blacklist:
+  - notch
+  - slur
+
 # How many nicknames can be saved?
 max-saves: 5
 
