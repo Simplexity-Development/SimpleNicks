@@ -172,7 +172,7 @@ public class SqlHandler {
 
     public boolean saveNickname(UUID uuid, String username, String nickname, String normalizedNickname) {
         String saveString = "REPLACE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
-        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid, username);
+        if (!playerSaveExists(uuid)) savePlayerToPlayers(uuid, username);
         try (Connection connection = getConnection()) {
             PreparedStatement saveStatement = connection.prepareStatement(saveString);
             saveStatement.setString(1, String.valueOf(uuid));
@@ -220,7 +220,7 @@ public class SqlHandler {
 
     public boolean setActiveNickname(UUID uuid, String username, String nicknameString, String normalizedString) {
         String setQuery = "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
-        if (!playerSaveExists(uuid)) addPlayerToPlayers(uuid, username);
+        if (!playerSaveExists(uuid)) savePlayerToPlayers(uuid, username);
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(setQuery);
             statement.setString(1, String.valueOf(uuid));
@@ -249,9 +249,24 @@ public class SqlHandler {
         }
     }
 
+    public Long lastLongOfUsername(String username) {
+        String queryString = "SELECT last_login FROM players WHERE last_known_name = ?";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) return resultSet.getLong("last_login");
+            return null;
+        } catch (SQLException e) {
+            logger.severe("Failed to get last login for username: " + username);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //todo: Add updating last login and last known name
 
-    private void addPlayerToPlayers(UUID uuid, String username) {
+    private void savePlayerToPlayers(UUID uuid, String username) {
         String insertQuery = "REPLACE INTO players (uuid, last_known_name, last_login) VALUES (?, ?, CURRENT_TIMESTAMP)";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(insertQuery);

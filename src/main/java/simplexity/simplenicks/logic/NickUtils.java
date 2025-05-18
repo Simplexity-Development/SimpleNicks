@@ -21,6 +21,7 @@ import simplexity.simplenicks.util.TagPermission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,7 @@ public class NickUtils {
 
     private static NickUtils instance;
 
-    private AbstractSaving saveHandler;
+    private final Logger logger = SimpleNicks.getSimpleNicksLogger();
     private final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
 
     private NickUtils() {
@@ -52,6 +53,7 @@ public class NickUtils {
             throw Exceptions.ERROR_LENGTH.create(nickname);
         }
         if (!sender.hasPermission(Constants.NICK_REGEX_BYPASS) && !passesRegexCheck(nickname.normalizedNickname())) {
+            logger.info("regex failed here");
             throw Exceptions.ERROR_REGEX.create(nickname);
         }
         if (!sender.hasPermission(Constants.NICK_PROTECTION_BYPASS) && someoneOnlineUsingThis(sender, nickname.normalizedNickname())) {
@@ -125,8 +127,7 @@ public class NickUtils {
 
     public boolean passesRegexCheck(String normalizedNick) {
         Pattern configRegex = ConfigHandler.getInstance().getRegex();
-        Matcher matcher = configRegex.matcher(normalizedNick);
-        return !matcher.find();
+        return configRegex.matcher(normalizedNick).matches();
     }
 
     public boolean thisIsSomeonesUsername(String normalizedName) {
