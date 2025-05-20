@@ -37,7 +37,7 @@ public class DeleteSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         OfflinePlayer player = (OfflinePlayer) ctx.getSource().getSender();
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        boolean deleted = NicknameProcessor.getInstance().deleteNickname(player, nickname.nickname());
+        boolean deleted = NicknameProcessor.getInstance().deleteNickname(player, nickname.getNickname());
         if (deleted) {
             if (player instanceof Player onlinePlayer) sendFeedback(onlinePlayer, Message.DELETE_NICK, nickname);
             return Command.SINGLE_SUCCESS;

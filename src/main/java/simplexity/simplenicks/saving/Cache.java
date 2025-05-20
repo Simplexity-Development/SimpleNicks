@@ -91,7 +91,7 @@ public class Cache {
         if (!sqlDeleted) return false;
         if (!savedNicknames.containsKey(uuid)) return false;
         List<Nickname> userSavedNicknames = savedNicknames.get(uuid);
-        userSavedNicknames.removeIf(name -> name.nickname().equals(nickname));
+        userSavedNicknames.removeIf(name -> name.getNickname().equals(nickname));
         savedNicknames.put(uuid, userSavedNicknames);
         return true;
     }
@@ -112,7 +112,7 @@ public class Cache {
     public boolean nickInUseOnlinePlayers(@Nullable UUID uuid, String normalizedNick) {
         for (UUID playerUuid : activeNicknames.keySet()) {
             if (playerUuid.equals(uuid)) continue;
-            if (activeNicknames.get(playerUuid).normalizedNickname().equals(normalizedNick)) return true;
+            if (activeNicknames.get(playerUuid).getNormalizedNickname().equals(normalizedNick)) return true;
         }
         return false;
     }

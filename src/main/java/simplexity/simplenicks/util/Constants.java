@@ -14,4 +14,5 @@ public class Constants {
     public static Permission NICK_LENGTH_BYPASS = new Permission("simplenick.bypass.length");
     public static Permission NICK_REGEX_BYPASS = new Permission("simplenick.bypass.regex");
     public static Permission NICK_PROTECTION_BYPASS = new Permission("simplenick.bypass.nick-protection");
+    public static Permission NICK_RELOAD = new Permission("simplenick.reload");
 }

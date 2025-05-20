@@ -26,6 +26,7 @@ public enum Message {
     ERROR_NICK_IS_NULL("error.nickname.is-null", "<prefix><red>Something went wrong and the nickname is null, please check your formatting"),
     ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS("error.nickname.cannot-access-permissions", "<prefix><red>Unable to process. If you are attempting to use a command with the 'restrictive' permission and the other user is offline, the server is unable to access the user's permissions while the user is offline."),
     ERROR_DELETE_FAILURE("error.nickname.delete-failure", "Failed to delete given nickname, it was likely already deleted."),
+    ERROR_RESET_FAILURE("error.nickname.reset-failure", "<red>Failed to reset nickname</red>"),
     ERROR_SET_FAILURE("error.nickname.set-failure", "<prefix><gray>Failed to set the given username."),
     ERROR_SAVE_FAILURE("error.nickname.save-failure", "Failed to save current name, you likely do not have a nickname currently."),
     ERROR_TOO_MANY_TO_SAVE("error.nickname.too-many-to-save", "<prefix><gray>You have too many saved usernames, please remove some with /nick delete <value>"),

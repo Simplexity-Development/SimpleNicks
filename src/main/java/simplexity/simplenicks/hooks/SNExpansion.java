@@ -36,8 +36,8 @@ public class SNExpansion extends PlaceholderExpansion {
             Nickname nickname = Cache.getInstance().getActiveNickname(player.getUniqueId());
             if (nickname != null) {
                 String prefix = ConfigHandler.getInstance().getNickPrefix();
-                if (prefix == null || prefix.isEmpty()) return nickname.nickname();
-                return prefix + nickname.nickname();
+                if (prefix == null || prefix.isEmpty()) return nickname.getNickname();
+                return prefix + nickname.getNickname();
             }
             return player.getName();
         }

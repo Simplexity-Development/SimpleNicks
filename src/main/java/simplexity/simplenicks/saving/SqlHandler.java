@@ -73,23 +73,24 @@ public class SqlHandler {
 
 
     @Nullable
-    public UUID nickAlreadySavedTo(@Nullable UUID uuidToExclude, String normalizedName) {
-        String queryString = "SELECT 1 FROM current_nicknames WHERE nickname = ? "
-                             + ((uuidToExclude != null) ? "AND uuid != ? " : "") + "LIMIT 1";
+    public List<UUID> nickAlreadySavedTo(@Nullable UUID uuidToExclude, String normalizedName) {
+        String queryString = "SELECT uuid FROM current_nicknames WHERE nickname = ?";
+        List<UUID> uuidsWithName = new ArrayList<>();
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, String.valueOf(normalizedName));
-            if (uuidToExclude != null) statement.setString(2, String.valueOf(uuidToExclude));
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return UUID.fromString(resultSet.getString("uuid"));
+            while (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                if (uuid.equals(uuidToExclude)) continue;
+                uuidsWithName.add(uuid);
             }
+            return uuidsWithName;
         } catch (SQLException e) {
             logger.severe("Failed to check if nickname exists: " + normalizedName);
             e.printStackTrace();
             return null;
         }
-        return null;
     }
 
     @Nullable
@@ -249,11 +250,14 @@ public class SqlHandler {
         }
     }
 
-    public Long lastLongOfUsername(String username) {
-        String queryString = "SELECT last_login FROM players WHERE last_known_name = ?";
+    public Long lastLongOfUsername(String username, long expiryTime) {
+        String queryString = "SELECT last_login FROM players WHERE last_known_name = ? AND (? < 0 OR last_login >= ?)";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
+            long minTimeStamp = System.currentTimeMillis() - expiryTime;
             statement.setString(1, username);
+            statement.setLong(2, expiryTime);
+            statement.setLong(3, minTimeStamp);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) return resultSet.getLong("last_login");
             return null;
@@ -264,14 +268,30 @@ public class SqlHandler {
         }
     }
 
-    //todo: Add updating last login and last known name
+    public Long lastLongOfUuid(UUID uuid, long expiryTime) {
+        String queryString = "SELECT last_login FROM players WHERE uuid = ? AND (? < 0 OR last_login >= ?)";
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            long minTimeStamp = System.currentTimeMillis() - expiryTime;
+            statement.setString(1, String.valueOf(uuid));
+            statement.setLong(2, expiryTime);
+            statement.setLong(3, minTimeStamp);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) return resultSet.getLong("last_login");
+            return null;
+        } catch (SQLException e) {
+            logger.severe("Failed to get last login for UUID: " + uuid + ", with expiry time: " + expiryTime);
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-    private void savePlayerToPlayers(UUID uuid, String username) {
+    public void savePlayerToPlayers(UUID uuid, String username) {
         String insertQuery = "REPLACE INTO players (uuid, last_known_name, last_login) VALUES (?, ?, CURRENT_TIMESTAMP)";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(insertQuery);
             statement.setString(1, String.valueOf(uuid));
-            statement.setString(2, username);
+            statement.setString(2, username.toLowerCase());
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.severe("Failed to save player: " + uuid + ", username: " +  username);

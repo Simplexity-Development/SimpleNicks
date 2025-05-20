@@ -19,6 +19,7 @@ public class AdminSubCommand implements SubCommand {
                         .requires(this::canExecute);
 
         new AdminSetSubCommand().subcommandTo(admin);
+        new AdminResetSubCommand().subcommandTo(admin);
 
         parent.then(admin);
 

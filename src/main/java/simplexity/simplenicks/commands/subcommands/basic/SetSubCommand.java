@@ -38,12 +38,12 @@ public class SetSubCommand implements SubCommand {
     @Override
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        if (nickname.normalizedNickname().isEmpty()) {
+        if (nickname.getNormalizedNickname().isEmpty()) {
             throw Exceptions.ERROR_NICK_IS_NULL.create();
         }
         Player player = (Player) ctx.getSource().getSender();
         NickUtils.getInstance().nicknameChecks(player, nickname);
-        NicknameProcessor.getInstance().setNickname((OfflinePlayer) ctx.getSource().getSender(), nickname.nickname());
+        NicknameProcessor.getInstance().setNickname((OfflinePlayer) ctx.getSource().getSender(), nickname.getNickname());
         sendFeedback(player, Message.CHANGED_SELF, nickname);
         return Command.SINGLE_SUCCESS;
     }

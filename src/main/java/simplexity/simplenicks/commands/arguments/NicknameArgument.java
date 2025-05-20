@@ -87,13 +87,13 @@ public class NicknameArgument implements CustomArgumentType<Nickname, String> {
     private void addSuggestionsForPlayer(@NotNull SuggestionsBuilder builder, OfflinePlayer player) {
         MiniMessage miniMessage = SimpleNicks.getMiniMessage();
         for (Nickname nickname : NicknameProcessor.getInstance().getSavedNicknames(player)) {
-            String suggestion = nickname.nickname();
-            String suggestionStripped = nickname.normalizedNickname();
+            String suggestion = nickname.getNickname();
+            String suggestionStripped = nickname.getNormalizedNickname();
             if (suggestionStripped.toLowerCase().contains(builder.getRemainingLowerCase()) || suggestion.toLowerCase().contains(builder.getRemainingLowerCase())) {
                 builder.suggest(
                         suggestion,
                         MessageComponentSerializer.message().serialize(
-                                miniMessage.deserialize("Preview: " + nickname.nickname())
+                                miniMessage.deserialize("Preview: " + nickname.getNickname())
                         )
                 );
             }

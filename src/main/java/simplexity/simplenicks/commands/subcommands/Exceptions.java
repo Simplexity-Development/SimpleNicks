@@ -69,6 +69,15 @@ public class Exceptions {
             )
     );
 
+    public static final SimpleCommandExceptionType ERROR_UNABLE_TO_RESET_NICK = new SimpleCommandExceptionType(
+            MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            Message.ERROR_RESET_FAILURE.getMessage(),
+                            Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage())
+                    )
+            )
+    );
+
     public static final SimpleCommandExceptionType ERROR_SET_FAILURE = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
