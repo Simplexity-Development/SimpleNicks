@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
+import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.Nickname;
 
 import java.util.concurrent.CompletableFuture;
@@ -84,6 +85,13 @@ public class NicknameArgument implements CustomArgumentType<Nickname, String> {
         return builder.buildFuture();
     }
 
+    public <S> @NotNull CompletableFuture<Suggestions> suggestAllOnlineNicknames(@NotNull CommandContext<S> context, @NotNull SuggestionsBuilder builder){
+        for (Nickname nickname : Cache.getInstance().getOnlineNicknames().values()) {
+            builder.suggest(nickname.getNormalizedNickname());
+        }
+        return builder.buildFuture();
+    }
+
     private void addSuggestionsForPlayer(@NotNull SuggestionsBuilder builder, OfflinePlayer player) {
         MiniMessage miniMessage = SimpleNicks.getMiniMessage();
         for (Nickname nickname : NicknameProcessor.getInstance().getSavedNicknames(player)) {
@@ -99,5 +107,7 @@ public class NicknameArgument implements CustomArgumentType<Nickname, String> {
             }
         }
     }
+
+
 
 }

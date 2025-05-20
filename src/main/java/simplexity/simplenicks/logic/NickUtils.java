@@ -115,8 +115,9 @@ public class NickUtils {
         return playersByNick;
     }
 
-    public List<OfflinePlayer> getOfflinePlayersByNickname(String nickname) {
-        List<UUID> usersWithThisName = Cache.getInstance().getUuidOfNormalizedName(nickname);
+    public List<OfflinePlayer> getOfflinePlayersByNickname(String normalizedNickname) {
+        List<UUID> usersWithThisName = SqlHandler.getInstance().getUuidsOfNickname(normalizedNickname);
+        if (usersWithThisName == null) return null;
         if (usersWithThisName.isEmpty()) return new ArrayList<>();
         List<OfflinePlayer> playersByNick = new ArrayList<>();
         for (UUID uuid : usersWithThisName) {
