@@ -30,6 +30,7 @@ public enum Message {
     ERROR_SET_FAILURE("error.nickname.set-failure", "<prefix><gray>Failed to set the given username."),
     ERROR_SAVE_FAILURE("error.nickname.save-failure", "Failed to save current name, you likely do not have a nickname currently."),
     ERROR_TOO_MANY_TO_SAVE("error.nickname.too-many-to-save", "<prefix><gray>You have too many saved usernames, please remove some with /nick delete <value>"),
+    ERROR_NO_PLAYERS_FOUND_BY_THIS_NAME("error.nickname.no-players-found-by-this-name", "<red>No players were found using this nickname</red>"),
     ERROR_OTHER_PLAYERS_USERNAME("error.nickname.other-players-username", "<prefix><red>You cannot name yourself <value><reset><red>, as that is the username of another player on this server. Pick another name"),
     ERROR_OTHER_PLAYERS_NICKNAME("error.nickname.other-players-nickname", "<prefix><gray>Sorry! Someone online is already using the nickname <value>! Try another one!"),
     ERROR_NAME_NONEXISTENT("error.nickname.name-nonexistent", "<prefix><gray>Cannot delete this name because it does not exist"),

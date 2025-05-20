@@ -10,6 +10,7 @@ public class Constants {
     public static Permission NICK_COMMAND = new Permission("simplenick.nick");
     public static Permission NICK_SET = new Permission("simplenick.nick.set");
     public static Permission NICK_SAVE = new Permission("simplenick.nick.save");
+    public static Permission NICK_LOOKUP = new Permission("simplenick.nick.lookup");
     public static Permission NICK_USERNAME_BYPASS = new Permission("simplenick.bypass.username");
     public static Permission NICK_LENGTH_BYPASS = new Permission("simplenick.bypass.length");
     public static Permission NICK_REGEX_BYPASS = new Permission("simplenick.bypass.regex");

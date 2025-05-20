@@ -5,8 +5,10 @@ import simplexity.simplenicks.SimpleNicks;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Cache {
@@ -136,6 +138,10 @@ public class Cache {
     public void removePlayerFromCache(UUID uuid) {
         savedNicknames.remove(uuid);
         activeNicknames.remove(uuid);
+    }
+
+    public Map<UUID, Nickname> getOnlineNicknames(){
+        return Collections.unmodifiableMap(activeNicknames);
     }
 
 

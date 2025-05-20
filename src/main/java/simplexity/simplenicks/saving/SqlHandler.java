@@ -140,10 +140,12 @@ public class SqlHandler {
             PreparedStatement getStatement = connection.prepareStatement(queryString);
             getStatement.setString(1, String.valueOf(uuid));
             ResultSet resultSet = getStatement.executeQuery();
-            if (!resultSet.next()) return null;
-            String nickString = resultSet.getString("nickname");
-            String normalizedString = resultSet.getString("normalized");
-            return new Nickname(nickString, normalizedString);
+            if (resultSet.next()) {
+                String nickString = resultSet.getString("nickname");
+                String normalizedString = resultSet.getString("normalized");
+                return new Nickname(nickString, normalizedString);
+            }
+            return null;
         } catch (SQLException e) {
             logger.warning("Failed to get active nickname for UUID: " + uuid);
             e.printStackTrace();
@@ -158,7 +160,6 @@ public class SqlHandler {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, normalizeName);
             ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) return new ArrayList<>();
             List<UUID> uuids = new ArrayList<>();
             while (resultSet.next()) {
                 uuids.add(UUID.fromString(resultSet.getString("uuid")));
@@ -294,7 +295,7 @@ public class SqlHandler {
             statement.setString(2, username.toLowerCase());
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.severe("Failed to save player: " + uuid + ", username: " +  username);
+            logger.severe("Failed to save player: " + uuid + ", username: " + username);
             e.printStackTrace();
         }
     }
