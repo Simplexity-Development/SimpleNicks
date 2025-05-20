@@ -60,7 +60,7 @@ public interface SubCommand {
         player.sendRichMessage(
                 message.getMessage(),
                 Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
-                Placeholder.parsed("value", nickname.nickname())
+                Placeholder.parsed("value", nickname.getNickname())
         );
     }
 

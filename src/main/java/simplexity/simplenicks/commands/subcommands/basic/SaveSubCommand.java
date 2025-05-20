@@ -41,7 +41,7 @@ public class SaveSubCommand implements SubCommand {
         if (nickname == null) {
             throw Exceptions.ERROR_CANNOT_SAVE.create();
         }
-        boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.nickname());
+        boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
         if (!saved) {
             throw Exceptions.ERROR_CANNOT_SAVE.create();
         }
@@ -53,7 +53,7 @@ public class SaveSubCommand implements SubCommand {
         Player player = (Player) ctx.getSource().getSender();
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
         NickUtils.getInstance().nicknameChecks(player, nickname);
-        boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.nickname());
+        boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
         if (!saved) {
             throw Exceptions.ERROR_CANNOT_SAVE.create();
         }

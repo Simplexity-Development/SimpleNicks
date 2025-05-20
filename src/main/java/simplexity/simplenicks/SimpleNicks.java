@@ -43,7 +43,6 @@ public final class SimpleNicks extends JavaPlugin {
         configReload();
         SqlHandler.getInstance().setupConfig();
         SqlHandler.getInstance().init();
-        //noinspection CodeBlock2Expr
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(NicknameCommand.createCommand().build());
         });

@@ -5,6 +5,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import simplexity.simplenicks.commands.subcommands.admin.AdminSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.DeleteSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.ReloadSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.ResetSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.SaveSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.SetSubCommand;
@@ -21,6 +22,7 @@ public class NicknameCommand {
         new ResetSubCommand().subcommandTo(builder);
         new DeleteSubCommand().subcommandTo(builder);
         new AdminSubCommand().subcommandTo(builder);
+        new ReloadSubCommand().subcommandTo(builder);
         return builder;
     }
 
