@@ -32,7 +32,7 @@ public class AdminSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender().hasPermission(Constants.NICK_OTHERS_COMMAND);
+        return css.getSender().hasPermission(Constants.NICK_ADMIN);
     }
 
 }

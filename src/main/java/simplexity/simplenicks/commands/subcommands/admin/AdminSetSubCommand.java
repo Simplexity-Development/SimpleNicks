@@ -61,7 +61,7 @@ public class AdminSetSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         CommandSender sender = css.getSender();
-        return sender.hasPermission(Constants.NICK_SET_OTHERS);
+        return sender.hasPermission(Constants.NICK_ADMIN_SET);
     }
 
 }
