@@ -20,7 +20,6 @@ import simplexity.simplenicks.util.TagPermission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -44,22 +43,22 @@ public class NickUtils {
         if (normalizedNick.isEmpty()) {
             throw Exceptions.ERROR_EMPTY_NICK_AFTER_PARSE.create();
         }
-        if (!sender.hasPermission(Constants.NICK_USERNAME_BYPASS) && thisIsSomeonesUsername(normalizedNick)) {
+        if (!sender.hasPermission(Constants.NICK_BYPASS_USERNAME) && thisIsSomeonesUsername(normalizedNick)) {
             throw Exceptions.ERROR_NICKNAME_IS_SOMEONES_USERNAME.create(normalizedNick);
         }
-        if (!sender.hasPermission(Constants.NICK_LENGTH_BYPASS) && normalizedNick.length() > ConfigHandler.getInstance().getMaxLength()) {
+        if (!sender.hasPermission(Constants.NICK_BYPASS_LENGTH) && normalizedNick.length() > ConfigHandler.getInstance().getMaxLength()) {
             throw Exceptions.ERROR_LENGTH.create(normalizedNick);
         }
-        if (!sender.hasPermission(Constants.NICK_REGEX_BYPASS) && !passesRegexCheck(normalizedNick)) {
+        if (!sender.hasPermission(Constants.NICK_BYPASS_REGEX) && !passesRegexCheck(normalizedNick)) {
             throw Exceptions.ERROR_REGEX.create(normalizedNick);
         }
         if (ConfigHandler.getInstance().shouldOnlineNicksBeProtected()) {
-            if (!sender.hasPermission(Constants.NICK_PROTECTION_BYPASS) && someoneOnlineUsingThis(sender, normalizedNick)) {
+            if (!sender.hasPermission(Constants.NICK_BYPASS_NICK_PROTECTION) && someoneOnlineUsingThis(sender, normalizedNick)) {
                 throw Exceptions.ERROR_SOMEONE_USING_THAT_NICKNAME.create(normalizedNick);
             }
         }
         if (ConfigHandler.getInstance().shouldOfflineNicksBeProtected()) {
-            if (!sender.hasPermission(Constants.NICK_PROTECTION_BYPASS) && someoneSavedUsingThis(sender, normalizedNick)) {
+            if (!sender.hasPermission(Constants.NICK_BYPASS_NICK_PROTECTION) && someoneSavedUsingThis(sender, normalizedNick)) {
                 throw Exceptions.ERROR_SOMEONE_USING_THAT_NICKNAME.create(normalizedNick);
             }
         }
