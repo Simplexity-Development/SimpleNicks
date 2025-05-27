@@ -44,7 +44,7 @@ public class WhoSubCommand implements SubCommand {
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
         List<OfflinePlayer> playersWithNick = NickUtils.getInstance().getOfflinePlayersByNickname(nickname.getNormalizedNickname());
         if (playersWithNick == null) throw Exceptions.ERROR_NICK_IS_NULL.create();
-        Component messageComponent = miniMessage.deserialize(Message.NICK_LOOKUP_HEADER.getMessage(),
+        Component messageComponent = miniMessage.deserialize(Message.NICK_WHO_HEADER.getMessage(),
                 Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
                 Placeholder.parsed("value", nickname.getNormalizedNickname()));
         if (playersWithNick.isEmpty()) {
@@ -61,7 +61,7 @@ public class WhoSubCommand implements SubCommand {
             long timeDiff = currentTime - lastSeen;
             timeDiff = timeDiff / 1000;
             messageComponent = messageComponent.append(miniMessage.deserialize(
-                    Message.NICK_LOOKUP_USER.getMessage() + Message.INSERT_TIME_FORMAT_AGO.getMessage(),
+                    Message.NICK_WHO_USER.getMessage() + Message.INSERT_TIME_FORMAT_AGO.getMessage(),
                     Placeholder.parsed("name", username),
                     MessageUtils.getTimeFormat(timeDiff)));
 
