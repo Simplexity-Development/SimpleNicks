@@ -1,6 +1,6 @@
 package simplexity.simplenicks.config;
 
-public enum Message {
+public enum LocaleMessage {
     PLUGIN_PREFIX("plugin.prefix", "<aqua>SimpleNicks <white>» "),
     HELP_MESSAGE("plugin.help-message", "\n<prefix>========================\n<aqua>· <yellow>Setting a nickname:\n<gray>/nick set <nickname>\n<aqua>· <yellow>removing a nickname:\n<gray>/nick reset\n<aqua>· <yellow>Formatting:\n<gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"),
     SHOWN_HELP("plugin.shown-help", "<prefix><target><reset><yellow> has been shown the help screen"),
@@ -16,6 +16,9 @@ public enum Message {
     DELETE_NICK("nick.delete.self", "<prefix><gray>The nickname <value><reset><gray> has been successfully removed from your saved names"),
     NICK_WHO_HEADER("nick.who.header", "<prefix>Users with the name <yellow><value></yellow>: "),
     NICK_WHO_USER("nick.who.user", "\n- <green><name></green> - Last Seen: <time></gray>"),
+    ADMIN_NICK_LOOKUP_HEADER("nick.admin.lookup.header", "<white><username>'s nickname info:"),
+    ADMIN_NICK_LOOKUP_CURRENT_NICK("nick.admin.lookup.current-nick", "\n<yellow><bold>Current Nick:</bold></yellow> <name>"),
+    ADMIN_NICK_LOOKUP_SAVED_NICKS_HEADER("nick.admin.lookup.saved-nicks", "\n<green>Saved Nicknames:</green><list>"),
     INSERT_TIME_FORMAT_GROUP("insert.time-format.group", "<day><hour><min><sec>"),
     INSERT_TIME_FORMAT_DAY("insert.time-format.day", " <yellow><count></yellow> day"),
     INSERT_TIME_FORMAT_DAYS("insert.time-format.days", " <yellow><count></yellow> days"),
@@ -28,6 +31,8 @@ public enum Message {
     INSERT_TIME_FORMAT_NOW("insert.time-format.now", "<yellow>Now</yellow>"),
     INSERT_TIME_FORMAT_AGO("insert.time-format.ago", "<yellow> ago</yellow>"),
     INSERT_NONE("insert.none", "<yellow>None</yellow>"),
+    INSERT_SAVED_NICK("insert.saved-nick.format", "\n<white>-</white> <name><reset>"),
+    INSERT_NO_SAVED_NICKS("insert.saved-nick.none", "\n<gray>(none)</gray>"),
     ERROR_INVALID_COMMAND("error.invalid.command", "<prefix><red>Invalid command."),
     ERROR_INVALID_PLAYER("error.invalid.player", "<prefix><red>Invalid player specified"),
     ERROR_INVALID_NICK("error.invalid.nick", "<prefix><red>Not a valid nickname, must follow regex: <regex>"),
@@ -51,13 +56,14 @@ public enum Message {
     ERROR_NO_PERMISSION("error.no-permission", "<prefix><red>You do not have permission to run this command"),
     ERROR_MUST_BE_PLAYER("error.must-be-player", "<prefix><red>This command cannot be run on the Console. You must be a player to run this command"),
     ERROR_MULTIPLE_PLAYERS_BY_THAT_NAME("error.multiple-players-by-that-name", "<prefix><red>There are multiple online players by that name, please try using the actual username."),
-    ;
+    ERROR_CANNOT_REACH_DATABASE("error.cannot-reach-database", "<red>There was an issue reaching the database and your command was unable to be completed. Please let a staff member know about this issue if it continues</red>"),
+    ERROR_USER_HAS_NO_NICKNAMES("error.user-has-no-nicknames", "<red>This user is not associated with any nicknames</red>");
 
 
     private final String path;
     private String message;
 
-    Message(String path, String message) {
+    LocaleMessage(String path, String message) {
         this.path = path;
         this.message = message;
     }

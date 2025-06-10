@@ -10,7 +10,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.ConfigHandler;
-import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -25,8 +25,8 @@ public class ReloadSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         CommandSender sender = ctx.getSource().getSender();
         ConfigHandler.getInstance().reloadConfig();
-        sender.sendRichMessage(Message.CONFIG_RELOADED.getMessage(),
-                Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()));
+        sender.sendRichMessage(LocaleMessage.CONFIG_RELOADED.getMessage(),
+                Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()));
         return Command.SINGLE_SUCCESS;
     }
 

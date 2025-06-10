@@ -51,16 +51,16 @@ public class LocaleHandler {
 
 
     private void populateLocale() {
-        Set<Message> missing = new HashSet<>(Arrays.asList(Message.values()));
-        for (Message message : Message.values()) {
-            if (locale.contains(message.getPath())) {
-                message.setMessage(locale.getString(message.getPath()));
-                missing.remove(message);
+        Set<LocaleMessage> missing = new HashSet<>(Arrays.asList(LocaleMessage.values()));
+        for (LocaleMessage localeMessage : LocaleMessage.values()) {
+            if (locale.contains(localeMessage.getPath())) {
+                localeMessage.setMessage(locale.getString(localeMessage.getPath()));
+                missing.remove(localeMessage);
             }
         }
 
-        for (Message message : missing) {
-            locale.set(message.getPath(), message.getMessage());
+        for (LocaleMessage localeMessage : missing) {
+            locale.set(localeMessage.getPath(), localeMessage.getMessage());
         }
 
 
@@ -86,4 +86,3 @@ public class LocaleHandler {
     }
 
 }
-

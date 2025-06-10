@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
-import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.saving.Nickname;
 
 import java.util.concurrent.CompletableFuture;
@@ -52,14 +52,14 @@ public interface SubCommand {
      * Sends a feedback message to the player, confirming the command went through properly
      *
      * @param player   Player
-     * @param message  Message
+     * @param localeMessage  Message
      * @param nickname Nickname
      */
-    default void sendFeedback(Player player, Message message, Nickname nickname) {
+    default void sendFeedback(Player player, LocaleMessage localeMessage, Nickname nickname) {
         if (nickname == null) nickname = new Nickname("", "");
         player.sendRichMessage(
-                message.getMessage(),
-                Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
+                localeMessage.getMessage(),
+                Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()),
                 Placeholder.parsed("value", nickname.getNickname())
         );
     }
@@ -82,10 +82,10 @@ public interface SubCommand {
         if (initiator instanceof Player playerInitiator) {
             initiatorName = playerInitiator.displayName();
         } else {
-            initiatorName = miniMessage.deserialize(Message.SERVER_DISPLAY_NAME.getMessage());
+            initiatorName = miniMessage.deserialize(LocaleMessage.SERVER_DISPLAY_NAME.getMessage());
         }
         return miniMessage.deserialize(message,
-                Placeholder.parsed("prefix", Message.PLUGIN_PREFIX.getMessage()),
+                Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()),
                 Placeholder.parsed("value", value),
                 Placeholder.component("initiator", initiatorName),
                 Placeholder.parsed("target", targetUserName)

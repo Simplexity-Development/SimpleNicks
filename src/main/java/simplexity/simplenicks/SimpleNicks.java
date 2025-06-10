@@ -38,8 +38,8 @@ public final class SimpleNicks extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
-        instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
-        instance.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
+        getServer().getPluginManager().registerEvents(new LoginListener(), this);
+        getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         configReload();
         SqlHandler.getInstance().setupConfig();
         SqlHandler.getInstance().init();

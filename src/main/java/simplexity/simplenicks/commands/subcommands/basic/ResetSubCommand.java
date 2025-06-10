@@ -8,7 +8,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
-import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -25,7 +25,7 @@ public class ResetSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getSender();
         NicknameProcessor.getInstance().resetNickname(player);
-        sendFeedback(player, Message.RESET_SELF, null);
+        sendFeedback(player, LocaleMessage.RESET_SELF, null);
         return Command.SINGLE_SUCCESS;
     }
 
