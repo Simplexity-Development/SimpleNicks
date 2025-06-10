@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
-import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
 
@@ -39,7 +39,7 @@ public class DeleteSubCommand implements SubCommand {
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
         boolean deleted = NicknameProcessor.getInstance().deleteNickname(player, nickname.getNickname());
         if (deleted) {
-            if (player instanceof Player onlinePlayer) sendFeedback(onlinePlayer, Message.DELETE_NICK, nickname);
+            if (player instanceof Player onlinePlayer) sendFeedback(onlinePlayer, LocaleMessage.DELETE_NICK, nickname);
             return Command.SINGLE_SUCCESS;
         }
         throw Exceptions.ERROR_CANNOT_DELETE.create();

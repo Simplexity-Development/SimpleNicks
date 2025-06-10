@@ -15,7 +15,7 @@ import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.arguments.OfflinePlayerArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
-import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
@@ -52,9 +52,9 @@ public class AdminSetSubCommand implements SubCommand {
         NickUtils.getInstance().nicknameChecks(sender, nickname);
         boolean setSuccessfully = NicknameProcessor.getInstance().setNickname(target, cleanedNick);
         if (!setSuccessfully) throw Exceptions.ERROR_SET_FAILURE.create();
-        sender.sendMessage(parseAdminMessage(Message.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));
+        sender.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));
         if (target instanceof Player onlineTarget)
-            onlineTarget.sendMessage(parseAdminMessage(Message.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
+            onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
         return Command.SINGLE_SUCCESS;
     }
 

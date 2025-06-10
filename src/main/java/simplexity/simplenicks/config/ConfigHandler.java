@@ -46,7 +46,7 @@ public class ConfigHandler {
             regexString = regexSetting;
             regex = Pattern.compile(regexSetting);
         } catch (PatternSyntaxException e) {
-            logger.severe(Message.ERROR_INVALID_CONFIG_REGEX.getMessage());
+            logger.severe(LocaleMessage.ERROR_INVALID_CONFIG_REGEX.getMessage());
         }
         mySql = config.getBoolean("mysql.enabled", false);
         mySqlIp = config.getString("mysql.ip", "localhost:3306");

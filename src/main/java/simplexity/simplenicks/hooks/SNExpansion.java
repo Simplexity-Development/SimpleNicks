@@ -1,8 +1,6 @@
 package simplexity.simplenicks.hooks;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.ConfigHandler;
@@ -22,7 +20,7 @@ public class SNExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "2.0.0";
+        return "1.1.0";
     }
 
     @Override
@@ -32,22 +30,20 @@ public class SNExpansion extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
-        if (params.equalsIgnoreCase("mininick")) {
-            Nickname nickname = Cache.getInstance().getActiveNickname(player.getUniqueId());
-            if (nickname != null) {
-                String prefix = ConfigHandler.getInstance().getNickPrefix();
-                if (prefix == null || prefix.isEmpty()) return nickname.getNickname();
-                return prefix + nickname.getNickname();
-            }
-            return player.getName();
-        }
-        if (params.equalsIgnoreCase("nickname")) {
-            String nickname = NickHandler.getInstance().getNickname(player);
+        Nickname nickname = Cache.getInstance().getActiveNickname(player.getUniqueId());
+        if (params.equalsIgnoreCase("nick-no-prefix")) {
             if (nickname == null) {
                 return player.getName();
             }
-            Component parsedNick = SimpleNicks.getMiniMessage().deserialize(nickname);
-            return LegacyComponentSerializer.legacySection().serialize(parsedNick);
+            return nickname.getNickname();
+        }
+        if (params.equalsIgnoreCase("mininick") || params.equalsIgnoreCase("nick")) {
+            if (nickname == null) {
+                return player.getName();
+            }
+            String prefix = ConfigHandler.getInstance().getNickPrefix();
+            if (prefix == null || prefix.isEmpty()) return nickname.getNickname();
+            return prefix + nickname.getNickname();
         }
         return null;
     }

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
-import simplexity.simplenicks.config.Message;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.util.Constants;
@@ -44,7 +44,7 @@ public class SetSubCommand implements SubCommand {
         Player player = (Player) ctx.getSource().getSender();
         NickUtils.getInstance().nicknameChecks(player, nickname);
         NicknameProcessor.getInstance().setNickname((OfflinePlayer) ctx.getSource().getSender(), nickname.getNickname());
-        sendFeedback(player, Message.CHANGED_SELF, nickname);
+        sendFeedback(player, LocaleMessage.CHANGED_SELF, nickname);
         return Command.SINGLE_SUCCESS;
     }
 
