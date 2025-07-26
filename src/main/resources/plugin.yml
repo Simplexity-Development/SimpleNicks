@@ -6,7 +6,6 @@ api-version: 1.19
 description: "A simple plugin to allow players to set and reset nicknames."
 softdepend:
   - PlaceholderAPI
-  - packetevents
 commands:
   nick:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."
@@ -16,24 +15,15 @@ permissions:
   simplenick.admin:
     description: allows user to set and reset other players' nicknames
     default: op
-    children:
-      simplenick.nick: true
-      simplenick.nick.set: true
   simplenick.admin.reset:
     default: op
     description: Allows the user to clear another player's nickname
-    children:
-        simplenick.admin: true
   simplenick.admin.save:
     default: op
     description: Allows the user to save another player's nickname for future use
-    children:
-      simplenick.admin: true
   simplenick.admin.delete:
     default: op
     description: Allows the user to delete one of another player's saved nicknames
-    children:
-      simplenick.admin: true
   simplenick.reload:
     description: allows a user to reload the locale and config of this plugin
     default: op
@@ -52,65 +42,36 @@ permissions:
   simplenick.nick.save:
     description: save your current nickname for future use, only works on 'FILE' save type
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.delete:
     description: delete one of your previously saved nicknames
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.set:
     description: allows usage of the /nick command
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.reset:
     description: allows a user to reset their own nickname
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.color:
     description: allows color codes to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.gradient:
     description: allows gradients to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.rainbow:
     description: allows the rainbow tag to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
   simplenick.nick.format.reset:
     description: allows the reset formatting tag to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
-      simplenick.nick.format: true
   simplenick.nick.format.italic:
     description: allows the italic formatting tag to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
-      simplenick.nick.format: true
   simplenick.nick.format.strikethrough:
     description: allows the strikethrough formatting tag to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
-      simplenick.nick.format: true
   simplenick.nick.format.bold:
     description: allows the bold format tag to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
-      simplenick.nick.format: true
   simplenick.nick.format.obfuscated:
     description: allows the obfuscated format tag to be used in a nickname
     default: op
-    children:
-      simplenick.nick: true
-      simplenick.nick.format: true
