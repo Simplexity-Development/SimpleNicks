@@ -14,6 +14,8 @@ public enum LocaleMessage {
     RESET_BY_OTHER("nick.reset.reset-by-other", "<prefix><gray>Your nickname was reset by <initiator>"),
     SAVE_NICK("nick.save.self", "<prefix><green>Success! The nickname <value><reset><green> has been saved for future use"),
     DELETE_NICK("nick.delete.self", "<prefix><gray>The nickname <value><reset><gray> has been successfully removed from your saved names"),
+    NICK_DELETED_BY_OTHER("nick.delete.by-other", "<prefix><gray>The nickname <value><reset><gray> has been deleted from your saved nicknames by <initiator>"),
+    NICK_DELETED_OTHER("nick.delete.other", "<prefix><gray>You have successfully deleted <value><reset><gray> from <target>'s saved nicknames"),
     NICK_WHO_HEADER("nick.who.header", "<prefix>Users with the name <yellow><value></yellow>: "),
     NICK_WHO_USER("nick.who.user", "\n- <green><name></green> - Last Seen: <time></gray>"),
     ADMIN_NICK_LOOKUP_HEADER("nick.admin.lookup.header", "<white><username>'s nickname info:"),
