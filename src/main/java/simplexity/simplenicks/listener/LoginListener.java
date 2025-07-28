@@ -15,11 +15,11 @@ public class LoginListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent joinEvent) {
         UUID playerUuid = joinEvent.getPlayer().getUniqueId();
+        String username = joinEvent.getPlayer().getName();
+        SqlHandler.getInstance().savePlayerToPlayers(playerUuid, username).join();
         SaveMigrator.migratePdcNickname(joinEvent.getPlayer());
         Cache.getInstance().loadCurrentNickname(playerUuid);
         Cache.getInstance().loadSavedNicknames(playerUuid);
         NickUtils.getInstance().refreshNickname(playerUuid);
-        String username = joinEvent.getPlayer().getName();
-        SqlHandler.getInstance().savePlayerToPlayers(playerUuid, username);
     }
 }
