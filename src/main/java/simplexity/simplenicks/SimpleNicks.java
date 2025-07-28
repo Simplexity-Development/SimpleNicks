@@ -9,6 +9,7 @@ import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
 import simplexity.simplenicks.listener.LeaveListener;
 import simplexity.simplenicks.listener.LoginListener;
+import simplexity.simplenicks.saving.SaveMigrator;
 import simplexity.simplenicks.saving.SqlHandler;
 
 import java.util.logging.Logger;
@@ -43,6 +44,7 @@ public final class SimpleNicks extends JavaPlugin {
         configReload();
         SqlHandler.getInstance().setupConfig();
         SqlHandler.getInstance().init();
+        SaveMigrator.migrateFromYml();
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(NicknameCommand.createCommand().build());
         });
