@@ -43,3 +43,6 @@ nickname-protection:
   offline:
     enabled: false
     expires: 30
+
+# Development option, this will flood your logs, discouraged from enabling unless asked
+debug-mode: false

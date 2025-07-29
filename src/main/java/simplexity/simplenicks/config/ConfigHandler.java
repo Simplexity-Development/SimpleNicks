@@ -22,7 +22,7 @@ public class ConfigHandler {
 
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
     private Pattern regex;
-    private boolean mySql, tablistNick, onlineNickProtection, offlineNickProtection;
+    private boolean mySql, tablistNick, onlineNickProtection, offlineNickProtection, debugMode;
     private int maxLength, maxSaves;
     private String regexString, nickPrefix, mySqlIp, mySqlName, mySqlUsername, mySqlPassword;
     private long usernameProtectionTime, offlineNickProtectionTime = 0;
@@ -48,6 +48,7 @@ public class ConfigHandler {
         } catch (PatternSyntaxException e) {
             logger.severe(LocaleMessage.ERROR_INVALID_CONFIG_REGEX.getMessage());
         }
+        debugMode = config.getBoolean("debug-mode", false);
         mySql = config.getBoolean("mysql.enabled", false);
         mySqlIp = config.getString("mysql.ip", "localhost:3306");
         mySqlName = config.getString("mysql.name", "simplenicks");
@@ -114,5 +115,9 @@ public class ConfigHandler {
 
     public boolean shouldOfflineNicksBeProtected() {
         return offlineNickProtection;
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
     }
 }
