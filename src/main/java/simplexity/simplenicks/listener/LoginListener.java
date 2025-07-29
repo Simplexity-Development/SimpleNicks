@@ -16,7 +16,7 @@ public class LoginListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent joinEvent) {
         UUID playerUuid = joinEvent.getPlayer().getUniqueId();
         String username = joinEvent.getPlayer().getName();
-        SqlHandler.getInstance().savePlayerToPlayers(playerUuid, username).join();
+        SqlHandler.getInstance().updatePlayerTableSqlite(playerUuid, username).join();
         SaveMigrator.migratePdcNickname(joinEvent.getPlayer());
         Cache.getInstance().loadCurrentNickname(playerUuid);
         Cache.getInstance().loadSavedNicknames(playerUuid);

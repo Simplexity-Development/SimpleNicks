@@ -1,6 +1,8 @@
 package simplexity.simplenicks.saving;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import simplexity.simplenicks.SimpleNicks;
 
 import javax.annotation.Nullable;
@@ -35,6 +37,7 @@ public class Cache {
     public void loadCurrentNickname(UUID uuid) {
         Nickname currentNick = SqlHandler.getInstance().getCurrentNicknameForPlayer(uuid).join();
         if (currentNick == null) return;
+        if (playerIsOffline(uuid)) return;
         activeNicknames.put(uuid, currentNick);
     }
 
@@ -58,6 +61,7 @@ public class Cache {
     public void loadSavedNicknames(UUID uuid) {
         List<Nickname> savedNames = SqlHandler.getInstance().getSavedNicknamesForPlayer(uuid).join();
         if (savedNames == null || savedNames.isEmpty()) return;
+        if (playerIsOffline(uuid)) return;
         savedNicknames.put(uuid, savedNames);
     }
 
@@ -84,6 +88,7 @@ public class Cache {
         Nickname nick = new Nickname(nickname, normalizedNick);
         boolean sqlActiveNameSet = SqlHandler.getInstance().setActiveNickname(uuid, username, nickname, normalizedNick).join();
         if (!sqlActiveNameSet) return false;
+        if (playerIsOffline(uuid)) return true;
         activeNicknames.put(uuid, nick);
         return true;
     }
@@ -94,6 +99,7 @@ public class Cache {
         if (!savedNicknames.containsKey(uuid)) return false;
         List<Nickname> userSavedNicknames = savedNicknames.get(uuid);
         userSavedNicknames.removeIf(name -> name.getNickname().equals(nickname));
+        if (playerIsOffline(uuid)) return true;
         savedNicknames.put(uuid, userSavedNicknames);
         return true;
     }
@@ -101,6 +107,7 @@ public class Cache {
     public boolean clearCurrentNickname(UUID uuid) {
         boolean sqlNickRemoved = SqlHandler.getInstance().clearActiveNickname(uuid).join();
         if (!sqlNickRemoved) return false;
+        if (playerIsOffline(uuid)) return true;
         activeNicknames.remove(uuid);
         return true;
     }
@@ -126,6 +133,7 @@ public class Cache {
         userSavedNicknames.add(nick);
         boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, username, nickname, strippedNick).join();
         if (!savedToSql) return false;
+        if (playerIsOffline(uuid)) return true;
         savedNicknames.put(uuid, userSavedNicknames);
         return true;
     }
@@ -142,6 +150,11 @@ public class Cache {
 
     public Map<UUID, Nickname> getOnlineNicknames(){
         return Collections.unmodifiableMap(activeNicknames);
+    }
+
+    private boolean playerIsOffline(UUID uuid){
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        return player.isOnline();
     }
 
 

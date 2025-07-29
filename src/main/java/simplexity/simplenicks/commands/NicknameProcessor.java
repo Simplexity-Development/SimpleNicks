@@ -43,39 +43,38 @@ public class NicknameProcessor {
     public boolean resetNickname(OfflinePlayer player) {
         UUID playerUuid = player.getUniqueId();
         boolean online = player.isOnline();
+        boolean success = Cache.getInstance().clearCurrentNickname(playerUuid);
+        if (!success) return false;
         if (online) {
-            boolean success = Cache.getInstance().clearCurrentNickname(playerUuid);
-            if (!success) return false;
             NickUtils.getInstance().refreshNickname(playerUuid);
             return true;
         }
-        return SqlHandler.getInstance().clearActiveNickname(playerUuid).join();
+        return true;
     }
 
     public boolean saveNickname(OfflinePlayer player, String nickname) {
         UUID playerUuid = player.getUniqueId();
         String username = player.getName();
         boolean online = player.isOnline();
+        boolean success = Cache.getInstance().saveNickname(playerUuid, username, nickname);
+        if (!success) return false;
         if (online) {
-            boolean success = Cache.getInstance().saveNickname(playerUuid, username, nickname);
-            if (!success) return false;
             NickUtils.getInstance().refreshNickname(playerUuid);
             return true;
         }
-        String normalizedNick = miniMessage.stripTags(nickname);
-        return SqlHandler.getInstance().saveNickname(playerUuid, username, nickname, normalizedNick).join();
+        return true;
     }
 
     public boolean deleteNickname(OfflinePlayer player, String nickname) {
         UUID playerUuid = player.getUniqueId();
         boolean online = player.isOnline();
+        boolean success = Cache.getInstance().deleteSavedNickname(playerUuid, nickname);
+        if (!success) return false;
         if (online) {
-            boolean success = Cache.getInstance().deleteSavedNickname(playerUuid, nickname);
-            if (!success) return false;
             NickUtils.getInstance().refreshNickname(playerUuid);
             return true;
         }
-        return SqlHandler.getInstance().deleteNickname(playerUuid, nickname).join();
+        return true;
     }
 
     public List<Nickname> getSavedNicknames(OfflinePlayer player) {

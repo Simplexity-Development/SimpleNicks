@@ -35,6 +35,7 @@ public class SqlHandler {
 
     public void init() {
         try (Connection connection = getConnection()) {
+            debug("Creating players table...");
             PreparedStatement parentStatement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS players (
                     uuid VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -43,6 +44,7 @@ public class SqlHandler {
                     );
                     """);
             parentStatement.execute();
+            debug("Creating saved_nicknames table...");
             PreparedStatement savedNickStatement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS saved_nicknames (
                     uuid VARCHAR(36) NOT NULL,
@@ -55,6 +57,7 @@ public class SqlHandler {
                     );
                     """);
             savedNickStatement.execute();
+            debug("Creating current_nicknames table...");
             PreparedStatement currentNickStatement = connection.prepareStatement("""
                     CREATE TABLE IF NOT EXISTS current_nicknames (
                         uuid VARCHAR(36) NOT NULL,
@@ -75,6 +78,7 @@ public class SqlHandler {
 
     public CompletableFuture<List<UUID>> nickAlreadySavedTo(@Nullable UUID uuidToExclude, String normalizedName) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Checking if nickname '{}' is already in use (excluding UUID='{}')", normalizedName, uuidToExclude);
             String queryString = "SELECT uuid FROM current_nicknames WHERE nickname = ?";
             List<UUID> uuidsWithName = new ArrayList<>();
             try (Connection connection = getConnection()) {
@@ -85,6 +89,7 @@ public class SqlHandler {
                     UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                     if (uuid.equals(uuidToExclude)) continue;
                     uuidsWithName.add(uuid);
+                    debug("Nickname found in use by UUID={}", uuid);
                 }
                 return uuidsWithName;
             } catch (SQLException e) {
@@ -96,6 +101,7 @@ public class SqlHandler {
 
     public CompletableFuture<List<Nickname>> getSavedNicknamesForPlayer(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Fetching saved nicknames for UUID={}", uuid);
             List<Nickname> savedNicknames = new ArrayList<>();
             if (!playerSaveExists(uuid).join()) return savedNicknames;
             String queryString = "SELECT nickname, normalized FROM saved_nicknames WHERE uuid = ?";
@@ -107,6 +113,7 @@ public class SqlHandler {
                     String nicknameString = resultSet.getString("nickname");
                     String normalizedString = resultSet.getString("normalized");
                     Nickname nick = new Nickname(nicknameString, normalizedString);
+                    debug("Found saved nickname: '{}' (normalized '{}')", nicknameString, normalizedString);
                     savedNicknames.add(nick);
                 }
             } catch (SQLException e) {
@@ -119,6 +126,7 @@ public class SqlHandler {
 
     public CompletableFuture<Boolean> userAlreadySavedThisName(UUID uuid, String nickname) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Checking if UUID={} already saved nickname='{}'", uuid, nickname);
             if (!playerSaveExists(uuid).join()) return false;
             String queryString = "SELECT nickname FROM saved_nicknames WHERE uuid = ? AND nickname = ?";
             try (Connection connection = getConnection()) {
@@ -137,6 +145,7 @@ public class SqlHandler {
 
     public CompletableFuture<Nickname> getCurrentNicknameForPlayer(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Fetching current nickname for UUID={}", uuid);
             if (!playerSaveExists(uuid).join()) return null;
             String queryString = "SELECT nickname, normalized FROM current_nicknames WHERE uuid = ?";
             try (Connection connection = getConnection()) {
@@ -146,6 +155,7 @@ public class SqlHandler {
                 if (resultSet.next()) {
                     String nickString = resultSet.getString("nickname");
                     String normalizedString = resultSet.getString("normalized");
+                    debug("Current nickname found: '{}' (normalized '{}')", nickString, normalizedString);
                     return new Nickname(nickString, normalizedString);
                 }
                 return null;
@@ -157,20 +167,23 @@ public class SqlHandler {
     }
 
 
-    public CompletableFuture<List<UUID>> getUuidsOfNickname(String normalizeName) {
+    public CompletableFuture<List<UUID>> getUuidsOfNickname(String normalizedName) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Looking up UUIDs using normalized nickname='{}'", normalizedName);
             String queryString = "SELECT uuid FROM current_nicknames WHERE normalized = ?";
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(queryString);
-                statement.setString(1, normalizeName);
+                statement.setString(1, normalizedName);
                 ResultSet resultSet = statement.executeQuery();
                 List<UUID> uuids = new ArrayList<>();
                 while (resultSet.next()) {
-                    uuids.add(UUID.fromString(resultSet.getString("uuid")));
+                    UUID id = UUID.fromString(resultSet.getString("uuid"));
+                    uuids.add(id);
+                    debug("Found UUID={} for nickname", id);
                 }
                 return uuids;
             } catch (SQLException e) {
-                logger.warn("Failed to get UUID list from normalized nickname: {}", normalizeName, e);
+                logger.warn("Failed to get UUID list from normalized nickname: {}", normalizedName, e);
                 return null;
             }
         });
@@ -178,9 +191,10 @@ public class SqlHandler {
 
     public CompletableFuture<Boolean> saveNickname(UUID uuid, String username, String nickname, String normalizedNickname) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Saving nickname '{}' (normalized '{}') for UUID={}, username={}", nickname, normalizedNickname, uuid, username);
             String saveString = "REPLACE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
             if (!playerSaveExists(uuid).join()) {
-                if (!savePlayerToPlayers(uuid, username).join()) return false;
+                if (!updatePlayerTableSqlite(uuid, username).join()) return false;
             }
             try (Connection connection = getConnection()) {
                 PreparedStatement saveStatement = connection.prepareStatement(saveString);
@@ -188,6 +202,7 @@ public class SqlHandler {
                 saveStatement.setString(2, nickname);
                 saveStatement.setString(3, normalizedNickname);
                 int rowsChanged = saveStatement.executeUpdate();
+                debug("Rows modified when saving nickname: {}", rowsChanged);
                 return rowsChanged > 0;
             } catch (SQLException e) {
                 logger.warn("Failed to save nickname '{}' for UUID '{}'. Normalized nickname: {}, Username: {} ",
@@ -199,6 +214,7 @@ public class SqlHandler {
 
     public CompletableFuture<Boolean> deleteNickname(UUID uuid, String nickname) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Deleting nickname '{}' for UUID={}", nickname, uuid);
             if (!playerSaveExists(uuid).join()) return null;
             String deleteQuery = "DELETE FROM saved_nicknames WHERE uuid = ? AND nickname = ?";
             try (Connection connection = getConnection()) {
@@ -206,6 +222,7 @@ public class SqlHandler {
                 statement.setString(1, String.valueOf(uuid));
                 statement.setString(2, nickname);
                 int rowsChanged = statement.executeUpdate();
+                debug("Rows affected in delete: {}", rowsChanged);
                 return rowsChanged > 0;
             } catch (SQLException e) {
                 logger.warn("Failed to delete nickname '{}' for UUID '{}'", nickname, uuid, e);
@@ -217,12 +234,14 @@ public class SqlHandler {
 
     public CompletableFuture<Boolean> clearActiveNickname(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Clearing current nickname for UUID={}", uuid);
             if (!playerSaveExists(uuid).join()) return false;
             String deleteQuery = "DELETE FROM current_nicknames WHERE uuid = ?";
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(deleteQuery);
                 statement.setString(1, String.valueOf(uuid));
                 int rowsAffected = statement.executeUpdate();
+                debug("Rows affected in clear: {}", rowsAffected);
                 return rowsAffected > 0;
             } catch (SQLException e) {
                 logger.warn("Failed to clear active nickname for UUID '{}'", uuid, e);
@@ -234,9 +253,10 @@ public class SqlHandler {
 
     public CompletableFuture<Boolean> setActiveNickname(UUID uuid, String username, String nicknameString, String normalizedString) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Setting active nickname '{}' (normalized '{}') for UUID={}, username={}", nicknameString, normalizedString, uuid, username);
             String setQuery = "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
             if (!playerSaveExists(uuid).join()) {
-                if (!savePlayerToPlayers(uuid, username).join()) return false;
+                if (!updatePlayerTableSqlite(uuid, username).join()) return false;
             }
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(setQuery);
@@ -244,6 +264,7 @@ public class SqlHandler {
                 statement.setString(2, nicknameString);
                 statement.setString(3, normalizedString);
                 int rowsModified = statement.executeUpdate();
+                debug("Rows affected setting active nickname: {}", rowsModified);
                 return rowsModified > 0;
             } catch (SQLException e) {
                 logger.warn("Failed to set active nickname '{}' for UUID '{}'. Normalized name: {}, Username: {}",
@@ -262,7 +283,9 @@ public class SqlHandler {
                 PreparedStatement statement = connection.prepareStatement(queryString);
                 statement.setString(1, String.valueOf(uuid));
                 ResultSet resultSet = statement.executeQuery();
-                return resultSet.next();
+                boolean exists = resultSet.next();
+                debug("Check if player UUID={} exists: {}", uuid, exists);
+                return exists;
             } catch (SQLException e) {
                 logger.warn("Failed to check if player with UUID {} exists", uuid, e);
                 e.printStackTrace();
@@ -273,6 +296,7 @@ public class SqlHandler {
 
     public CompletableFuture<Long> lastLongOfUsername(String username, long expiryTime) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Fetching last login for username='{}', expiry={}", username, expiryTime);
             String queryString = "SELECT last_login FROM players WHERE last_known_name = ? AND (? < 0 OR last_login >= ?)";
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(queryString);
@@ -292,6 +316,7 @@ public class SqlHandler {
 
     public CompletableFuture<Long> lastLongOfUuid(UUID uuid, long expiryTime) {
         return CompletableFuture.supplyAsync(() -> {
+            debug("Fetching last login for UUID='{}', expiry={}", uuid, expiryTime);
             String queryString = "SELECT last_login FROM players WHERE uuid = ? AND (? < 0 OR last_login >= ?)";
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(queryString);
@@ -309,14 +334,20 @@ public class SqlHandler {
         });
     }
 
-    public CompletableFuture<Boolean> savePlayerToPlayers(UUID uuid, String username) {
+    public CompletableFuture<Boolean> updatePlayerTableSqlite(UUID uuid, String username) {
         return CompletableFuture.supplyAsync(() -> {
-            String insertQuery = "REPLACE INTO players (uuid, last_known_name, last_login) VALUES (?, ?, CURRENT_TIMESTAMP)";
+            debug("Saving player to players table: UUID={}, username={}", uuid, username);
+            String insertQuery = "INSERT INTO players (uuid, last_known_name, last_login) " +
+                                 "VALUES (?, ?, CURRENT_TIMESTAMP)" +
+                                 "ON CONFLICT(uuid) DO UPDATE SET " +
+                                 "last_known_name = excluded.last_known_name," +
+                                 "last_login = CURRENT_TIMESTAMP";
             try (Connection connection = getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(insertQuery);
                 statement.setString(1, String.valueOf(uuid));
                 statement.setString(2, username.toLowerCase());
                 int rowsChanged = statement.executeUpdate();
+                debug("Rows affected in savePlayerToPlayers: {}", rowsChanged);
                 return rowsChanged > 0;
             } catch (SQLException e) {
                 logger.warn("Failed to save player with UUID: {}, username: {}", uuid, username, e);
@@ -329,16 +360,24 @@ public class SqlHandler {
         if (!ConfigHandler.getInstance().isMySql()) {
             hikariConfig.setJdbcUrl("jdbc:sqlite:" + SimpleNicks.getInstance().getDataFolder() + "/simplenicks.db?foreign_keys=on");
             dataSource = new HikariDataSource(hikariConfig);
+            debug("Initialized SQLite connection.");
             return;
         }
         hikariConfig.setJdbcUrl("jdbc:mysql://" + ConfigHandler.getInstance().getMySqlIp() + "/" + ConfigHandler.getInstance().getMySqlName());
         hikariConfig.setUsername(ConfigHandler.getInstance().getMySqlUsername());
         hikariConfig.setPassword(ConfigHandler.getInstance().getMySqlPassword());
         dataSource = new HikariDataSource(hikariConfig);
+        debug("Initialized MySQL connection to '{}'", hikariConfig.getJdbcUrl());
     }
 
     private static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    private void debug(String message, Object... args) {
+        if (ConfigHandler.getInstance().isDebugMode()) {
+            logger.info("[SQL DEBUG] {}, {}", message, args);
+        }
     }
 
 

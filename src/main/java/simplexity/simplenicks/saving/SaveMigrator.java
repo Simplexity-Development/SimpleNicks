@@ -75,6 +75,13 @@ public class SaveMigrator {
             migratedUsers++;
         }
         logger.info("Save data migrated successfully! {} users' data migrated", migratedUsers);
+        File backupFile = new File(SimpleNicks.getInstance().getDataFolder(), "MIGRATED_nickname_data.yml");
+        boolean renamed = dataFile.renameTo(backupFile);
+        if (!renamed) {
+            logger.warn("Unable to rename 'nickname_data.yml' - if migration was successful, please remove or rename this file so as to not overwrite new save data.");
+        } else {
+            logger.info("Successfully renamed 'nickname_data.yml' - this migration process will no longer be attempted (unless you rename it back, for some reason, I wouldn't recommend that)");
+        }
     }
 
     public static void migratePdcNickname(Player player) {
@@ -84,9 +91,5 @@ public class SaveMigrator {
         UUID uuid = player.getUniqueId();
         Cache.getInstance().setActiveNickname(uuid, player.getName(), currentNick);
         pdc.remove(nickNameSave);
-    }
-
-    private static String normalizeNick(String nick) {
-        return SimpleNicks.getMiniMessage().stripTags(nick);
     }
 }
