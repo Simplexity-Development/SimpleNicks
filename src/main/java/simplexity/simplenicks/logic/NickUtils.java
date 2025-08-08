@@ -115,7 +115,7 @@ public class NickUtils {
     }
 
     public List<OfflinePlayer> getOfflinePlayersByNickname(String normalizedNickname) {
-        List<UUID> usersWithThisName = SqlHandler.getInstance().getUuidsOfNickname(normalizedNickname).join();
+        List<UUID> usersWithThisName = SqlHandler.getInstance().getUuidsOfNickname(normalizedNickname);
         if (usersWithThisName == null) return null;
         if (usersWithThisName.isEmpty()) return new ArrayList<>();
         List<OfflinePlayer> playersByNick = new ArrayList<>();
@@ -136,7 +136,7 @@ public class NickUtils {
         long protectionTime = ConfigHandler.getInstance().getUsernameProtectionTime();
         if (protectionTime < 0) return false;
         normalizedName = normalizedName.toLowerCase();
-        return SqlHandler.getInstance().lastLongOfUsername(normalizedName, ConfigHandler.getInstance().getUsernameProtectionTime()).join() != null;
+        return SqlHandler.getInstance().lastLoginOfUsername(normalizedName, ConfigHandler.getInstance().getUsernameProtectionTime()) != null;
     }
 
     public boolean someoneOnlineUsingThis(CommandSender sender, String normalizedNick) {
@@ -148,10 +148,10 @@ public class NickUtils {
     public boolean someoneSavedUsingThis(CommandSender sender, String normalizedNick) {
         UUID senderUuid = null;
         if (sender instanceof Player playerSender) senderUuid = playerSender.getUniqueId();
-        List<UUID> uuidsWithThis = SqlHandler.getInstance().nickAlreadySavedTo(senderUuid, normalizedNick).join();
+        List<UUID> uuidsWithThis = SqlHandler.getInstance().nickAlreadySavedTo(senderUuid, normalizedNick);
         if (uuidsWithThis == null || uuidsWithThis.isEmpty()) return false;
         for (UUID uuid : uuidsWithThis) {
-            if (SqlHandler.getInstance().lastLongOfUuid(uuid, ConfigHandler.getInstance().getOfflineNickProtectionTime()).join() != null)
+            if (SqlHandler.getInstance().lastLongOfUuid(uuid, ConfigHandler.getInstance().getOfflineNickProtectionTime()) != null)
                 return true;
         }
         return false;

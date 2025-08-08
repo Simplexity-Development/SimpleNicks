@@ -10,12 +10,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.apache.commons.lang3.NotImplementedException;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.LocaleMessage;
+import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
 
 import java.util.concurrent.CompletableFuture;
@@ -51,25 +53,25 @@ public interface SubCommand {
     /**
      * Sends a feedback message to the player, confirming the command went through properly
      *
-     * @param player   Player
-     * @param localeMessage  Message
-     * @param nickname Nickname
+     * @param player        Player
+     * @param localeMessage Message
+     * @param nickname      Nickname
      */
     default void sendFeedback(Player player, LocaleMessage localeMessage, Nickname nickname) {
         if (nickname == null) nickname = new Nickname("", "");
         player.sendRichMessage(
                 localeMessage.getMessage(),
-                Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()),
                 Placeholder.parsed("value", nickname.getNickname())
         );
     }
 
     /**
      * Parses a message for admin commands.
-     * @param message Message to parse
-     * @param value Placeholder value from message, usually nickname, sometimes something else like a config value
+     *
+     * @param message   Message to parse
+     * @param value     Placeholder value from message, usually nickname, sometimes something else like a config value
      * @param initiator CommandSender who initiated the command, the admin
-     * @param target OfflinePlayer who this command is being run on
+     * @param target    OfflinePlayer who this command is being run on
      * @return Component parsed message
      */
     default Component parseAdminMessage(String message, String value, CommandSender initiator, @NotNull OfflinePlayer target) {
@@ -85,7 +87,6 @@ public interface SubCommand {
             initiatorName = miniMessage.deserialize(LocaleMessage.SERVER_DISPLAY_NAME.getMessage());
         }
         return miniMessage.deserialize(message,
-                Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()),
                 Placeholder.parsed("value", value),
                 Placeholder.component("initiator", initiatorName),
                 Placeholder.parsed("target", targetUserName)
@@ -108,5 +109,8 @@ public interface SubCommand {
         throw new NotImplementedException("listSuggestions was used, but not implemented.");
     }
 
-
+    default void refreshName(OfflinePlayer player) {
+        if (!player.isOnline()) return;
+        Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> NickUtils.getInstance().refreshNickname(player.getUniqueId()));
+    }
 }

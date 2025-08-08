@@ -9,13 +9,13 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.OfflinePlayerArgument;
-import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.config.MessageUtils;
@@ -46,9 +46,11 @@ public class AdminLookupSubCommand implements SubCommand {
         CommandSender sender = ctx.getSource().getSender();
         OfflinePlayer lookupTarget = ctx.getArgument("player", OfflinePlayer.class);
         String username = lookupTarget.getName();
-        Nickname currentNickname = NicknameProcessor.getInstance().getCurrentNickname(lookupTarget);
-        List<Nickname> savedNicknames = NicknameProcessor.getInstance().getSavedNicknames(lookupTarget);
-        sender.sendMessage(lookupInfoComponent(username, currentNickname, savedNicknames));
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            Nickname currentNickname = NicknameProcessor.getInstance().getCurrentNickname(lookupTarget);
+            List<Nickname> savedNicknames = NicknameProcessor.getInstance().getSavedNicknames(lookupTarget);
+            sender.sendMessage(lookupInfoComponent(username, currentNickname, savedNicknames));
+        });
         return Command.SINGLE_SUCCESS;
     }
 
@@ -58,9 +60,9 @@ public class AdminLookupSubCommand implements SubCommand {
         return sender.hasPermission(Constants.NICK_ADMIN_LOOKUP);
     }
 
-    public Component lookupInfoComponent(String username, Nickname currentNick, List<Nickname> savedNames) throws CommandSyntaxException {
+    public Component lookupInfoComponent(String username, Nickname currentNick, List<Nickname> savedNames) {
         if (currentNick == null && (savedNames == null || savedNames.isEmpty()))
-            throw Exceptions.ERROR_NO_NICKNAMES.create();
+            return miniMessage.deserialize(LocaleMessage.ERROR_NO_PLAYERS_FOUND_BY_THIS_NAME.getMessage());
         Component nickname;
         if (currentNick == null) {
             nickname = miniMessage.deserialize(LocaleMessage.INSERT_NONE.getMessage());

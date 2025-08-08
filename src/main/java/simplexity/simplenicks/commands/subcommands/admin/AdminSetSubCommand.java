@@ -6,14 +6,15 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.arguments.OfflinePlayerArgument;
-import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
@@ -50,11 +51,20 @@ public class AdminSetSubCommand implements SubCommand {
         String cleanedNick = NickUtils.getInstance().cleanNonPermittedTags(sender, nickname.getNickname());
         nickname.setNickname(cleanedNick);
         NickUtils.getInstance().nicknameChecks(sender, nickname);
-        boolean setSuccessfully = NicknameProcessor.getInstance().setNickname(target, cleanedNick);
-        if (!setSuccessfully) throw Exceptions.ERROR_SET_FAILURE.create();
-        sender.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));
-        if (target instanceof Player onlineTarget)
-            onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            boolean success = NicknameProcessor.getInstance().setNickname(target, cleanedNick);
+            if (success) {
+                Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
+                    if ((target instanceof Player onlineTarget)) {
+                        NickUtils.getInstance().refreshNickname(target.getUniqueId());
+                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
+                    }
+                    sender.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));
+                });
+            } else {
+                sender.sendRichMessage(LocaleMessage.ERROR_SET_FAILURE.getMessage());
+            }
+        });
         return Command.SINGLE_SUCCESS;
     }
 

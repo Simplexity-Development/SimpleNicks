@@ -5,10 +5,13 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.config.LocaleMessage;
+import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.util.Constants;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -24,8 +27,17 @@ public class ResetSubCommand implements SubCommand {
     @Override
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) {
         Player player = (Player) ctx.getSource().getSender();
-        NicknameProcessor.getInstance().resetNickname(player);
-        sendFeedback(player, LocaleMessage.RESET_SELF, null);
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            boolean success = NicknameProcessor.getInstance().resetNickname(player);
+            if (success) {
+                Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
+                    NickUtils.getInstance().refreshNickname(player.getUniqueId());
+                    sendFeedback(player, LocaleMessage.RESET_SELF, null);
+                });
+            } else {
+                sendFeedback(player, LocaleMessage.ERROR_RESET_FAILURE, null);
+            }
+        });
         return Command.SINGLE_SUCCESS;
     }
 

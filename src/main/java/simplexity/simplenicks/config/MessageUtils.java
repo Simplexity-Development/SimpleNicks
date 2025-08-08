@@ -19,43 +19,46 @@ public class MessageUtils {
         long minutes = (timeSeconds / 60) % 60;
         long hours = (timeSeconds / (60 * 60)) % 24;
         long days = (timeSeconds / (60 * 60 * 24)) % 365;
-        Component dayComponent = Component.empty();
-        Component hourComponent = Component.empty();
-        Component minuteComponent = Component.empty();
-        Component secondComponent = Component.empty();
+
+        if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+            Component nowComponent = miniMessage.deserialize(LocaleMessage.INSERT_TIME_FORMAT_NOW.getMessage());
+            return TagResolver.resolver(Placeholder.component("time", nowComponent));
+        }
+
+        Component finalComponent = Component.empty();
+
         if (days > 0) {
-            if (days == 1) {
-                dayComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_DAY.getMessage(), days);
-            } else {
-                dayComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_DAYS.getMessage(), days);
-            }
+            finalComponent = finalComponent.append(
+                    parseNumber(days == 1
+                            ? LocaleMessage.INSERT_TIME_FORMAT_DAY.getMessage()
+                            : LocaleMessage.INSERT_TIME_FORMAT_DAYS.getMessage(), days)
+            );
         }
         if (hours > 0) {
-            if (hours == 1) {
-                hourComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_HOUR.getMessage(), hours);
-            } else {
-                hourComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_HOURS.getMessage(), hours);
-            }
+            finalComponent = finalComponent.append(
+                    parseNumber(hours == 1
+                            ? LocaleMessage.INSERT_TIME_FORMAT_HOUR.getMessage()
+                            : LocaleMessage.INSERT_TIME_FORMAT_HOURS.getMessage(), hours)
+            );
         }
         if (minutes > 0) {
-            if (minutes == 1) {
-                minuteComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_MINUTE.getMessage(), minutes);
-            } else {
-                minuteComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_MINUTES.getMessage(), minutes);
-            }
+            finalComponent = finalComponent.append(
+                    parseNumber(minutes == 1
+                            ? LocaleMessage.INSERT_TIME_FORMAT_MINUTE.getMessage()
+                            : LocaleMessage.INSERT_TIME_FORMAT_MINUTES.getMessage(), minutes)
+            );
         }
-        if (seconds > 0) {
-            if (seconds == 1) {
-                secondComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_SECOND.getMessage(), seconds);
-            } else {
-                secondComponent = parseNumber(LocaleMessage.INSERT_TIME_FORMAT_SECONDS.getMessage(), seconds);
-            }
+        if (seconds > 0 && days == 0 && hours == 0) {
+            finalComponent = finalComponent.append(
+                    parseNumber(seconds == 1
+                            ? LocaleMessage.INSERT_TIME_FORMAT_SECOND.getMessage()
+                            : LocaleMessage.INSERT_TIME_FORMAT_SECONDS.getMessage(), seconds)
+            );
         }
-        Component finalComponent = miniMessage.deserialize(LocaleMessage.INSERT_TIME_FORMAT_GROUP.getMessage(),
-                Placeholder.component("day", dayComponent),
-                Placeholder.component("hour", hourComponent),
-                Placeholder.component("min", minuteComponent),
-                Placeholder.component("sec", secondComponent));
+        finalComponent = finalComponent.append(
+                miniMessage.deserialize(LocaleMessage.INSERT_TIME_FORMAT_AGO.getMessage())
+        );
+
         return TagResolver.resolver(Placeholder.component("time", finalComponent));
     }
 
