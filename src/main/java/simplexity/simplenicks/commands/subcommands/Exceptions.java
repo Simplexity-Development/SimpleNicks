@@ -17,8 +17,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_CANNOT_DELETE = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_DELETE_FAILURE.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_DELETE_FAILURE.getMessage()
                     )
             )
     );
@@ -26,8 +25,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_NICK_IS_NULL = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                    miniMessage.deserialize(
-                           LocaleMessage.ERROR_NICK_IS_NULL.getMessage(),
-                           Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                           LocaleMessage.ERROR_NICK_IS_NULL.getMessage()
                    )
             )
     );
@@ -35,8 +33,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_EMPTY_NICK_AFTER_PARSE = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_INVALID_NICK_EMPTY.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_INVALID_NICK_EMPTY.getMessage()
                     )
             )
     );
@@ -44,8 +41,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_CANNOT_SAVE = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_SAVE_FAILURE.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_SAVE_FAILURE.getMessage()
                     )
             )
     );
@@ -54,8 +50,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_INVALID_COMMAND = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_INVALID_COMMAND.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_INVALID_COMMAND.getMessage()
                     )
             )
     );
@@ -63,8 +58,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS.getMessage()
                     )
             )
     );
@@ -72,8 +66,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_UNABLE_TO_RESET_NICK = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_RESET_FAILURE.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_RESET_FAILURE.getMessage()
                     )
             )
     );
@@ -81,8 +74,7 @@ public class Exceptions {
     public static final SimpleCommandExceptionType ERROR_SET_FAILURE = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
-                            LocaleMessage.ERROR_SET_FAILURE.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            LocaleMessage.ERROR_SET_FAILURE.getMessage()
                     )
             )
     );
@@ -92,8 +84,7 @@ public class Exceptions {
                     miniMessage.deserialize(
                             LocaleMessage.ERROR_INVALID_NICK_LENGTH.getMessage(),
                             Placeholder.unparsed("value", String.valueOf(ConfigHandler.getInstance().getMaxLength())),
-                            Placeholder.unparsed("name", nickname.toString()),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            Placeholder.unparsed("name", nickname.toString())
                     )
             )
     );
@@ -102,8 +93,7 @@ public class Exceptions {
             nickname -> MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
                             LocaleMessage.ERROR_INVALID_NICK.getMessage(),
-                            Placeholder.unparsed("regex", ConfigHandler.getInstance().getRegexString()),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            Placeholder.unparsed("regex", ConfigHandler.getInstance().getRegexString())
                     )
             )
     );
@@ -112,8 +102,7 @@ public class Exceptions {
             playerName -> MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
                             LocaleMessage.ERROR_INVALID_PLAYER.getMessage(),
-                            Placeholder.unparsed("player_name", playerName.toString()),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage())
+                            Placeholder.unparsed("player_name", playerName.toString())
                     )
             )
     );
@@ -122,7 +111,6 @@ public class Exceptions {
             nickname -> MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
                             LocaleMessage.ERROR_OTHER_PLAYERS_USERNAME.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()),
                             Placeholder.unparsed("value", nickname.toString())
                     )
             )
@@ -133,7 +121,6 @@ public class Exceptions {
             nickname -> MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
                             LocaleMessage.ERROR_OTHER_PLAYERS_NICKNAME.getMessage(),
-                            Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()),
                             Placeholder.unparsed("value", nickname.toString())
                     )
             )

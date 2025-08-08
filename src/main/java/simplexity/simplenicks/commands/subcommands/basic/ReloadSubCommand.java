@@ -6,7 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.ConfigHandler;
@@ -25,8 +24,7 @@ public class ReloadSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         CommandSender sender = ctx.getSource().getSender();
         ConfigHandler.getInstance().reloadConfig();
-        sender.sendRichMessage(LocaleMessage.CONFIG_RELOADED.getMessage(),
-                Placeholder.parsed("prefix", LocaleMessage.PLUGIN_PREFIX.getMessage()));
+        sender.sendRichMessage(LocaleMessage.CONFIG_RELOADED.getMessage());
         return Command.SINGLE_SUCCESS;
     }
 

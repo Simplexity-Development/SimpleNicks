@@ -6,8 +6,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
@@ -41,11 +43,17 @@ public class SaveSubCommand implements SubCommand {
         if (nickname == null) {
             throw Exceptions.ERROR_CANNOT_SAVE.create();
         }
-        boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
-        if (!saved) {
-            throw Exceptions.ERROR_CANNOT_SAVE.create();
-        }
-        sendFeedback(player, LocaleMessage.SAVE_NICK, nickname);
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
+            if (saved) {
+                Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
+                    NickUtils.getInstance().refreshNickname(player.getUniqueId());
+                    sendFeedback(player, LocaleMessage.SAVE_NICK, nickname);
+                });
+            } else {
+                sendFeedback(player, LocaleMessage.ERROR_SAVE_FAILURE, nickname);
+            }
+        });
         return Command.SINGLE_SUCCESS;
     }
 

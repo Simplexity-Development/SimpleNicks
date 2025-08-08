@@ -6,9 +6,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
@@ -43,8 +44,17 @@ public class SetSubCommand implements SubCommand {
         }
         Player player = (Player) ctx.getSource().getSender();
         NickUtils.getInstance().nicknameChecks(player, nickname);
-        NicknameProcessor.getInstance().setNickname((OfflinePlayer) ctx.getSource().getSender(), nickname.getNickname());
-        sendFeedback(player, LocaleMessage.CHANGED_SELF, nickname);
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            boolean succeeded = NicknameProcessor.getInstance().setNickname(player, nickname.getNickname());
+            if (succeeded) {
+                Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
+                    refreshName(player);
+                    sendFeedback(player, LocaleMessage.CHANGED_SELF, nickname);
+                });
+            } else {
+                sendFeedback(player, LocaleMessage.ERROR_SET_FAILURE, nickname);
+            }
+        });
         return Command.SINGLE_SUCCESS;
     }
 

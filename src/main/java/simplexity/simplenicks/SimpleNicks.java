@@ -42,7 +42,6 @@ public final class SimpleNicks extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LoginListener(), this);
         getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         configReload();
-        SqlHandler.getInstance().setupConfig();
         SqlHandler.getInstance().init();
         SaveMigrator.migrateFromYml();
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
