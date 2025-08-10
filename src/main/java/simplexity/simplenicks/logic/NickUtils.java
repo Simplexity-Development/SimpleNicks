@@ -65,7 +65,7 @@ public class NickUtils {
     }
 
 
-    public boolean refreshNickname(UUID uuid) {
+    public boolean refreshDisplayName(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return false;
         Nickname nickname = Cache.getInstance().getActiveNickname(uuid);

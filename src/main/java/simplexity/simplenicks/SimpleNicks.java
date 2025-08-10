@@ -9,6 +9,7 @@ import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
 import simplexity.simplenicks.listener.LeaveListener;
 import simplexity.simplenicks.listener.LoginListener;
+import simplexity.simplenicks.saving.SaveMigrator;
 import simplexity.simplenicks.saving.SqlHandler;
 
 import java.util.logging.Logger;

@@ -31,7 +31,7 @@ public class ResetSubCommand implements SubCommand {
             boolean success = NicknameProcessor.getInstance().resetNickname(player);
             if (success) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
-                    NickUtils.getInstance().refreshNickname(player.getUniqueId());
+                    NickUtils.getInstance().refreshDisplayName(player.getUniqueId());
                     sendFeedback(player, LocaleMessage.RESET_SELF, null);
                 });
             } else {

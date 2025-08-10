@@ -160,6 +160,7 @@ public class SqlHandler {
     }
 
 
+    @Nullable
     public Nickname getCurrentNicknameForPlayer(UUID uuid) {
         debug("Fetching current nickname for UUID={}", uuid);
         if (!playerSaveExists(uuid)) return null;
@@ -360,6 +361,7 @@ public class SqlHandler {
     public void setupConfig() {
         if (!ConfigHandler.getInstance().isMySql()) {
             hikariConfig.setJdbcUrl("jdbc:sqlite:" + SimpleNicks.getInstance().getDataFolder() + "/simplenicks.db?foreign_keys=on");
+            hikariConfig.setMaximumPoolSize(10);
             dataSource = new HikariDataSource(hikariConfig);
             debug("Initialized SQLite connection.");
             return;
@@ -367,6 +369,7 @@ public class SqlHandler {
         hikariConfig.setJdbcUrl("jdbc:mysql://" + ConfigHandler.getInstance().getMySqlIp() + "/" + ConfigHandler.getInstance().getMySqlName());
         hikariConfig.setUsername(ConfigHandler.getInstance().getMySqlUsername());
         hikariConfig.setPassword(ConfigHandler.getInstance().getMySqlPassword());
+        hikariConfig.setMaximumPoolSize(10);
         dataSource = new HikariDataSource(hikariConfig);
         debug("Initialized MySQL connection to '{}'", hikariConfig.getJdbcUrl());
     }
