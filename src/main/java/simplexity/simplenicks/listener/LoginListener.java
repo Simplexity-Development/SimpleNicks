@@ -11,6 +11,7 @@ import simplexity.simplenicks.util.NickHandler;
 public class LoginListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerLogin(PlayerJoinEvent joinEvent) {
-        Bukkit.getScheduler().runTaskLater(SimpleNicks.getInstance(), () -> NickHandler.getInstance().refreshNickname(joinEvent.getPlayer()), 20L);
+        Bukkit.getScheduler().runTaskLater(SimpleNicks.getInstance(), () ->
+                NickHandler.getInstance().refreshNickname(joinEvent.getPlayer()), 20L);
     }
 }

@@ -6,6 +6,7 @@ api-version: 1.19
 description: "A simple plugin to allow players to set and reset nicknames."
 softdepend:
   - PlaceholderAPI
+  - packetevents
 commands:
   nick:
     description: "Base command for SimpleNicks, Admin permission required to alter other's names."

@@ -7,15 +7,16 @@ import simplexity.simplenicks.commands.CommandHandler;
 import simplexity.simplenicks.commands.Delete;
 import simplexity.simplenicks.commands.Help;
 import simplexity.simplenicks.commands.Reset;
+import simplexity.simplenicks.commands.SNReload;
 import simplexity.simplenicks.commands.Save;
 import simplexity.simplenicks.commands.Set;
-import simplexity.simplenicks.commands.SNReload;
 import simplexity.simplenicks.commands.SubCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleHandler;
 import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.util.Constants;
 import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.util.PacketStuff;
 import simplexity.simplenicks.util.SNExpansion;
 
 import java.util.Collections;
@@ -51,6 +52,9 @@ public final class SimpleNicks extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
         }
+        if (this.getServer().getPluginManager().isPluginEnabled("floodgate")) {
+            PacketStuff.registerPacketStuff();
+        }
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         configReload();
     }
@@ -84,4 +88,5 @@ public final class SimpleNicks extends JavaPlugin {
         ConfigHandler.getInstance().reloadConfig();
         NickHandler.getInstance().loadSavingType();
     }
+
 }
