@@ -113,7 +113,7 @@ public class Cache {
      */
     public boolean setActiveNickname(UUID uuid, String username, String nickname) {
         debug("Setting active nickname '{}' for UUID {}", nickname, uuid);
-        String normalizedNick = miniMessage.stripTags(nickname);
+        String normalizedNick = miniMessage.stripTags(nickname).toLowerCase();
         Nickname nick = new Nickname(nickname, normalizedNick);
         boolean sqlActiveNameSet = SqlHandler.getInstance().setActiveNickname(uuid, username, nickname, normalizedNick);
         if (!sqlActiveNameSet) {
@@ -182,7 +182,7 @@ public class Cache {
         debug("Checking if nickname '{}' is in use (excluding UUID {})", normalizedNick, uuid);
         for (UUID playerUuid : activeNicknames.keySet()) {
             if (playerUuid.equals(uuid)) continue;
-            if (activeNicknames.get(playerUuid).getNormalizedNickname().equals(normalizedNick)) {
+            if (activeNicknames.get(playerUuid).getNormalizedNickname().equalsIgnoreCase(normalizedNick)) {
                 debug("Nickname '{}' is already in use by UUID {}", normalizedNick, playerUuid);
                 return true;
             }
@@ -193,11 +193,11 @@ public class Cache {
 
     public boolean saveNickname(UUID uuid, String username, String nickname) {
         debug("Saving nickname '{}' for UUID {}", nickname, uuid);
-        String strippedNick = miniMessage.stripTags(nickname);
-        Nickname nick = new Nickname(nickname, strippedNick);
+        String normalized = miniMessage.stripTags(nickname).toLowerCase();
+        Nickname nick = new Nickname(nickname, normalized);
         List<Nickname> userSavedNicknames = getSavedNicknames(uuid);
         userSavedNicknames.add(nick);
-        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, username, nickname, strippedNick);
+        boolean savedToSql = SqlHandler.getInstance().saveNickname(uuid, username, nickname, normalized);
         if (!savedToSql) {
             debug("Failed to save nickname '{}' to SQL for UUID {}", nickname, uuid);
             return false;

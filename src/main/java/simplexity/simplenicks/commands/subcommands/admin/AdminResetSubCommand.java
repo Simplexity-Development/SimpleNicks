@@ -6,7 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -62,8 +61,4 @@ public class AdminResetSubCommand implements SubCommand {
         return sender.hasPermission(Constants.NICK_ADMIN_RESET);
     }
 
-    @Override
-    public Component parseAdminMessage(String message, String value, CommandSender initiator, @NotNull OfflinePlayer target) {
-        return SubCommand.super.parseAdminMessage(message, value, initiator, target);
-    }
 }

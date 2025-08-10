@@ -28,7 +28,7 @@ public class NicknameArgument implements CustomArgumentType<Nickname, String> {
     public @NotNull Nickname parse(@NotNull StringReader reader) {
         String nickname = reader.getRemaining();
         reader.setCursor(reader.getTotalLength());
-        String normalizedNickname = SimpleNicks.getMiniMessage().stripTags(nickname);
+        String normalizedNickname = SimpleNicks.getMiniMessage().stripTags(nickname).toLowerCase();
         return new Nickname(nickname, normalizedNickname);
     }
 

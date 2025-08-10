@@ -13,6 +13,7 @@ import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
+import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
@@ -43,6 +44,7 @@ public class SaveSubCommand implements SubCommand {
         if (nickname == null) {
             throw Exceptions.ERROR_CANNOT_SAVE.create();
         }
+        checkSaveSlots(player);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
             if (saved) {
@@ -61,16 +63,27 @@ public class SaveSubCommand implements SubCommand {
         Player player = (Player) ctx.getSource().getSender();
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
         NickUtils.getInstance().nicknameChecks(player, nickname);
-        boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
-        if (!saved) {
-            throw Exceptions.ERROR_CANNOT_SAVE.create();
-        }
-        sendFeedback(player, LocaleMessage.SAVE_NICK, nickname);
+        checkSaveSlots(player);
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
+            if (saved) {
+                sendFeedback(player, LocaleMessage.SAVE_NICK, nickname);
+            } else {
+                sendFeedback(player, LocaleMessage.ERROR_SAVE_FAILURE, nickname);
+            }
+        });
         return Command.SINGLE_SUCCESS;
     }
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_SAVE);
+        if (!(css.getSender() instanceof Player player)) return false;
+        return player.hasPermission(Constants.NICK_SAVE);
+    }
+
+    public void checkSaveSlots(Player player) throws CommandSyntaxException {
+        int currentUsed = NicknameProcessor.getInstance().getCurrentSavedNickCount(player);
+        if (currentUsed >= ConfigHandler.getInstance().getMaxSaves())
+            throw Exceptions.ERROR_TOO_MANY_SAVED_NAMES.create();
     }
 }
