@@ -42,7 +42,7 @@ public class DeleteSubCommand implements SubCommand {
             boolean success = NicknameProcessor.getInstance().deleteNickname(player, nickname.getNickname());
             if (success) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
-                    NickUtils.getInstance().refreshNickname(player.getUniqueId());
+                    NickUtils.getInstance().refreshDisplayName(player.getUniqueId());
                     sendFeedback(player, LocaleMessage.DELETE_NICK, nickname);
                 });
             } else {

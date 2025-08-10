@@ -24,7 +24,7 @@ public class LoginListener implements Listener {
             Cache.getInstance().loadSavedNicknames(playerUuid);
             Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                 SaveMigrator.migratePdcNickname(joinEvent.getPlayer());
-                NickUtils.getInstance().refreshNickname(playerUuid);
+                NickUtils.getInstance().refreshDisplayName(playerUuid);
             });
         });
     }

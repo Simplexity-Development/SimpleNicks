@@ -49,7 +49,7 @@ public class SaveSubCommand implements SubCommand {
             boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
             if (saved) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
-                    NickUtils.getInstance().refreshNickname(player.getUniqueId());
+                    NickUtils.getInstance().refreshDisplayName(player.getUniqueId());
                     sendFeedback(player, LocaleMessage.SAVE_NICK, nickname);
                 });
             } else {

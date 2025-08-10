@@ -56,7 +56,7 @@ public class AdminSetSubCommand implements SubCommand {
             if (success) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     if ((target instanceof Player onlineTarget)) {
-                        NickUtils.getInstance().refreshNickname(target.getUniqueId());
+                        NickUtils.getInstance().refreshDisplayName(target.getUniqueId());
                         onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
                     }
                     sender.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));

@@ -25,7 +25,7 @@ public class AdminMigrateCommand implements SubCommand {
     @Override
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ctx.getSource().getSender().sendRichMessage(LocaleMessage.MIGRATION_STARTED.getMessage());
-        SaveMigrator.migrateFromYml(ctx.getSource().getSender());
+        SaveMigrator.migrateFromYml();
         return Command.SINGLE_SUCCESS;
     }
 
