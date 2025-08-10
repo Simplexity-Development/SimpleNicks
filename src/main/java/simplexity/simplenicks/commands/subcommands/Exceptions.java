@@ -55,6 +55,14 @@ public class Exceptions {
             )
     );
 
+    public static final SimpleCommandExceptionType ERROR_TOO_MANY_SAVED_NAMES = new SimpleCommandExceptionType(
+            MessageComponentSerializer.message().serialize(
+                    miniMessage.deserialize(
+                            LocaleMessage.ERROR_TOO_MANY_TO_SAVE.getMessage()
+                    )
+            )
+    );
+
     public static final SimpleCommandExceptionType ERROR_CANNOT_ACCESS_PLAYERS_PERMISSIONS = new SimpleCommandExceptionType(
             MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
