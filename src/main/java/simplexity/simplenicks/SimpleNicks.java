@@ -16,7 +16,6 @@ import simplexity.simplenicks.config.LocaleHandler;
 import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.util.Constants;
 import simplexity.simplenicks.util.NickHandler;
-import simplexity.simplenicks.util.PacketStuff;
 import simplexity.simplenicks.util.SNExpansion;
 
 import java.util.Collections;
@@ -51,9 +50,6 @@ public final class SimpleNicks extends JavaPlugin {
         this.getCommand("snreload").setExecutor(new SNReload());
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
-        }
-        if (this.getServer().getPluginManager().isPluginEnabled("floodgate")) {
-            PacketStuff.registerPacketStuff();
         }
         instance.getServer().getPluginManager().registerEvents(new LoginListener(), this);
         configReload();

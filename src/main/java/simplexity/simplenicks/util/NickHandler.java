@@ -30,17 +30,23 @@ public class NickHandler {
     }
 
     public String getNickname(OfflinePlayer player) {
+        return Cache.nicknameCache.get(player.getUniqueId());
+    }
+
+    public String loadNickname(OfflinePlayer player){
         return saveHandler.getNickname(player);
     }
 
     public boolean setNickname(OfflinePlayer player, String nickname) {
         if (!saveHandler.setNickname(player, nickname)) return false;
+        Cache.nicknameCache.put(player.getUniqueId(), nickname);
         refreshNickname(player);
         return true;
     }
 
     public boolean resetNickname(OfflinePlayer player) {
         if (!saveHandler.resetNickname(player)) return false;
+        Cache.nicknameCache.remove(player.getUniqueId());
         refreshNickname(player);
         return true;
     }
