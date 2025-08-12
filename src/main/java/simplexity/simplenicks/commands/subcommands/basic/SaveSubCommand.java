@@ -49,7 +49,7 @@ public class SaveSubCommand implements SubCommand {
             boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
             if (saved) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
-                    NickUtils.getInstance().refreshDisplayName(player.getUniqueId());
+                    NickUtils.refreshDisplayName(player.getUniqueId());
                     sendFeedback(player, LocaleMessage.SAVE_NICK, nickname);
                 });
             } else {
@@ -62,7 +62,7 @@ public class SaveSubCommand implements SubCommand {
     public int executeWithArgument(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Player player = (Player) ctx.getSource().getSender();
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        NickUtils.getInstance().nicknameChecks(player, nickname);
+        NickUtils.nicknameChecks(player, nickname);
         checkSaveSlots(player);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());

@@ -22,7 +22,6 @@ public class AdminSubCommand implements SubCommand {
         new AdminResetSubCommand().subcommandTo(admin);
         new AdminLookupSubCommand().subcommandTo(admin);
         new AdminDeleteSubCommand().subcommandTo(admin);
-        new AdminMigrateCommand().subcommandTo(admin);
 
         parent.then(admin);
 

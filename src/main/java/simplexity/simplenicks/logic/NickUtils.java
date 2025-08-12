@@ -25,20 +25,10 @@ import java.util.regex.Pattern;
 @SuppressWarnings("UnusedReturnValue")
 public class NickUtils {
 
-    private static NickUtils instance;
+    private static final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
 
-    private final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
 
-    private NickUtils() {
-    }
-
-    public static NickUtils getInstance() {
-        if (instance != null) return instance;
-        instance = new NickUtils();
-        return instance;
-    }
-
-    public void nicknameChecks(CommandSender sender, Nickname nickname) throws CommandSyntaxException {
+    public static void nicknameChecks(CommandSender sender, Nickname nickname) throws CommandSyntaxException {
         String normalizedNick = nickname.getNormalizedNickname();
         if (normalizedNick.isEmpty()) {
             throw Exceptions.ERROR_EMPTY_NICK_AFTER_PARSE.create();
@@ -65,7 +55,7 @@ public class NickUtils {
     }
 
 
-    public boolean refreshDisplayName(UUID uuid) {
+    public static boolean refreshDisplayName(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return false;
         Nickname nickname = Cache.getInstance().getActiveNickname(uuid);
@@ -81,7 +71,7 @@ public class NickUtils {
     }
 
 
-    public String cleanNonPermittedTags(CommandSender user, String nick) {
+    public static String cleanNonPermittedTags(CommandSender user, String nick) {
         int permissionCount = 0;
         TagResolver.Builder resolver = TagResolver.builder();
         for (TagPermission tagPermission : TagPermission.values()) {
@@ -101,8 +91,12 @@ public class NickUtils {
         return miniMessage.serialize(permissionParsed);
     }
 
+    public static String normalizeNickname(String nickname){
+        return miniMessage.stripTags(nickname).toLowerCase();
+    }
 
-    public List<Player> getOnlinePlayersByNickname(String nickname) {
+
+    public static List<Player> getOnlinePlayersByNickname(String nickname) {
         List<UUID> usersWithThisName = Cache.getInstance().getUuidOfNormalizedName(nickname);
         if (usersWithThisName.isEmpty()) return new ArrayList<>();
         List<Player> playersByNick = new ArrayList<>();
@@ -114,7 +108,7 @@ public class NickUtils {
         return playersByNick;
     }
 
-    public List<OfflinePlayer> getOfflinePlayersByNickname(String normalizedNickname) {
+    public static List<OfflinePlayer> getOfflinePlayersByNickname(String normalizedNickname) {
         List<UUID> usersWithThisName = SqlHandler.getInstance().getUuidsOfNickname(normalizedNickname);
         if (usersWithThisName == null) return null;
         if (usersWithThisName.isEmpty()) return new ArrayList<>();
@@ -127,25 +121,25 @@ public class NickUtils {
         return playersByNick;
     }
 
-    public boolean passesRegexCheck(String normalizedNick) {
+    public static boolean passesRegexCheck(String normalizedNick) {
         Pattern configRegex = ConfigHandler.getInstance().getRegex();
         return configRegex.matcher(normalizedNick).matches();
     }
 
-    public boolean thisIsSomeonesUsername(String normalizedName) {
+    public static boolean thisIsSomeonesUsername(String normalizedName) {
         long protectionTime = ConfigHandler.getInstance().getUsernameProtectionTime();
         if (protectionTime < 0) return false;
         normalizedName = normalizedName.toLowerCase();
         return SqlHandler.getInstance().lastLoginOfUsername(normalizedName, ConfigHandler.getInstance().getUsernameProtectionTime()) != null;
     }
 
-    public boolean someoneOnlineUsingThis(CommandSender sender, String normalizedNick) {
+    public static boolean someoneOnlineUsingThis(CommandSender sender, String normalizedNick) {
         UUID playerUuid = null;
         if (sender instanceof Player playerSender) playerUuid = playerSender.getUniqueId();
         return Cache.getInstance().nickInUseOnlinePlayers(playerUuid, normalizedNick);
     }
 
-    public boolean someoneSavedUsingThis(CommandSender sender, String normalizedNick) {
+    public static boolean someoneSavedUsingThis(CommandSender sender, String normalizedNick) {
         UUID senderUuid = null;
         if (sender instanceof Player playerSender) senderUuid = playerSender.getUniqueId();
         List<UUID> uuidsWithThis = SqlHandler.getInstance().nickAlreadySavedTo(senderUuid, normalizedNick);
