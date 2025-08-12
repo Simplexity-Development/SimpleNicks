@@ -17,7 +17,7 @@ import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SaveSubCommand implements SubCommand {
@@ -78,7 +78,7 @@ public class SaveSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         if (!(css.getSender() instanceof Player player)) return false;
-        return player.hasPermission(Constants.NICK_SAVE);
+        return player.hasPermission(NickPermission.NICK_SAVE.getPermission());
     }
 
     public void checkSaveSlots(Player player) throws CommandSyntaxException {

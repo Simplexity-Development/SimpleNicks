@@ -19,7 +19,7 @@ import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AdminDeleteSubCommand implements SubCommand {
@@ -63,7 +63,7 @@ public class AdminDeleteSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         CommandSender sender = css.getSender();
-        return sender.hasPermission(Constants.NICK_ADMIN_DELETE);
+        return sender.hasPermission(NickPermission.NICK_ADMIN_DELETE.getPermission());
     }
 
 }

@@ -438,6 +438,10 @@ public class SqlHandler {
         return true;
     }
 
+    public void closeDatabase(){
+        if (dataSource != null && !dataSource.isClosed()) dataSource.close();
+    }
+
     public void setupConfig() {
         if (!ConfigHandler.getInstance().isMySql()) {
             hikariConfig.setJdbcUrl("jdbc:sqlite:" + SimpleNicks.getInstance().getDataFolder() + "/simplenicks.db?foreign_keys=on");

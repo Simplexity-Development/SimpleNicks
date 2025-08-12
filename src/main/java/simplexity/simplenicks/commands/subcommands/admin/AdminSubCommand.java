@@ -7,7 +7,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AdminSubCommand implements SubCommand {
@@ -34,7 +34,7 @@ public class AdminSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender().hasPermission(Constants.NICK_ADMIN);
+        return css.getSender().hasPermission(NickPermission.NICK_ADMIN.getPermission());
     }
 
 }

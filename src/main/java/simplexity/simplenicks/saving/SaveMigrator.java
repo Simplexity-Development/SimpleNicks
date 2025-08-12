@@ -1,6 +1,5 @@
 package simplexity.simplenicks.saving;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -26,9 +25,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveMigrator {
 
+    /*
+    I know this is a mess of a class but it is only supposed to be used once, and hopefully never again a;lkdsjf
+     */
+
     private static final Logger logger = SimpleNicks.getInstance().getSLF4JLogger();
     public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
-    private static final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
     private static final List<NicknameRecord> records = new ArrayList<>();
     private static final AtomicInteger processed = new AtomicInteger();
     private static final AtomicInteger failed = new AtomicInteger();

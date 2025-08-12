@@ -3,29 +3,31 @@ package simplexity.simplenicks.util;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 public enum TagPermission {
     //Nickname Perms
-    HEX_COLOR("simplenick.nick.color", StandardTags.color()),
-    GRADIENT("simplenick.nick.gradient", StandardTags.gradient()),
-    RAINBOW("simplenick.nick.rainbow", StandardTags.rainbow()),
-    RESET("simplenick.nick.format.reset", StandardTags.reset()),
-    UNDERLINE("simplenick.nick.format.underline", StandardTags.decorations(TextDecoration.UNDERLINED)),
-    ITALIC("simplenick.nick.format.italic", StandardTags.decorations(TextDecoration.ITALIC)),
-    STRIKETHROUGH("simplenick.nick.format.strikethrough", StandardTags.decorations(TextDecoration.STRIKETHROUGH)),
-    BOLD("simplenick.nick.format.bold", StandardTags.decorations(TextDecoration.BOLD)),
-    OBFUSCATED("simplenick.nick.format.obfuscated", StandardTags.decorations(TextDecoration.OBFUSCATED));
+    HEX_COLOR(new Permission("simplenick.nick.color", PermissionDefault.OP), StandardTags.color()),
+    GRADIENT(new Permission("simplenick.nick.gradient", PermissionDefault.OP), StandardTags.gradient()),
+    RAINBOW(new Permission("simplenick.nick.rainbow", PermissionDefault.OP), StandardTags.rainbow()),
+    RESET(new Permission("simplenick.nick.format.reset", PermissionDefault.OP), StandardTags.reset()),
+    UNDERLINE(new Permission("simplenick.nick.format.underline", PermissionDefault.OP), StandardTags.decorations(TextDecoration.UNDERLINED)),
+    ITALIC(new Permission("simplenick.nick.format.italic", PermissionDefault.OP), StandardTags.decorations(TextDecoration.ITALIC)),
+    STRIKETHROUGH(new Permission("simplenick.nick.format.strikethrough", PermissionDefault.OP), StandardTags.decorations(TextDecoration.STRIKETHROUGH)),
+    BOLD(new Permission("simplenick.nick.format.bold", PermissionDefault.OP), StandardTags.decorations(TextDecoration.BOLD)),
+    OBFUSCATED(new Permission("simplenick.nick.format.obfuscated", PermissionDefault.OP), StandardTags.decorations(TextDecoration.OBFUSCATED));
 
 
-    private final String permission;
+    private final Permission permission;
     private final TagResolver resolver;
 
-    TagPermission(String permission, TagResolver resolver) {
+    TagPermission(Permission permission, TagResolver resolver) {
         this.permission = permission;
         this.resolver = resolver;
     }
 
-    public String getPermission() {
+    public Permission getPermission() {
         return permission;
     }
 

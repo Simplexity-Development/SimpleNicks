@@ -20,7 +20,7 @@ import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.config.MessageUtils;
 import simplexity.simplenicks.saving.Nickname;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class AdminLookupSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         CommandSender sender = css.getSender();
-        return sender.hasPermission(Constants.NICK_ADMIN_LOOKUP);
+        return sender.hasPermission(NickPermission.NICK_ADMIN_LOOKUP.getPermission());
     }
 
     public Component lookupInfoComponent(String username, Nickname currentNick, List<Nickname> savedNames) {
