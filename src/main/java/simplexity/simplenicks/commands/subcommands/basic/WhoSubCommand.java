@@ -43,8 +43,7 @@ public class WhoSubCommand implements SubCommand {
         CommandSender sender = ctx.getSource().getSender();
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
-            List<OfflinePlayer> playersWithNick = NickUtils.getInstance()
-                    .getOfflinePlayersByNickname(nickname.getNormalizedNickname());
+            List<OfflinePlayer> playersWithNick = NickUtils.getOfflinePlayersByNickname(nickname.getNormalizedNickname());
 
             if (playersWithNick == null) {
                 sender.sendRichMessage(LocaleMessage.ERROR_NO_PLAYERS_FOUND_BY_THIS_NAME.getMessage());

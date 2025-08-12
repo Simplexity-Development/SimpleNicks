@@ -33,6 +33,7 @@ public class SqlHandler {
     private final Logger logger = SimpleNicks.getInstance().getSLF4JLogger();
     private static final int SCHEMA_VERSION = 1;
 
+
     public void init() {
         setupConfig();
         try (Connection connection = getConnection()) {
@@ -209,7 +210,7 @@ public class SqlHandler {
                 normalized, uuid, username);
         String saveString = "REPLACE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
         if (!playerSaveExists(uuid)) {
-            if (!updatePlayerTableSqlite(uuid, username)) return false;
+            if (!updatePlayerTable(uuid, username)) return false;
         }
         try (Connection connection = getConnection()) {
             PreparedStatement saveStatement = connection.prepareStatement(saveString);
@@ -267,7 +268,7 @@ public class SqlHandler {
                 normalized, uuid, username);
         String setQuery = "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
         if (!playerSaveExists(uuid)) {
-            if (!updatePlayerTableSqlite(uuid, username)) return false;
+            if (!updatePlayerTable(uuid, username)) return false;
         }
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(setQuery);
@@ -293,7 +294,7 @@ public class SqlHandler {
             statement.setString(1, String.valueOf(uuid));
             ResultSet resultSet = statement.executeQuery();
             boolean exists = resultSet.next();
-            debug("Check if player UUID={} exists: {}", uuid, exists);
+            debug("Check if player UUID=%s exists: %s", uuid, exists);
             return exists;
         } catch (SQLException e) {
             logger.warn("Failed to check if player with UUID {} exists", uuid, e);
@@ -303,7 +304,7 @@ public class SqlHandler {
     }
 
     public Long lastLoginOfUsername(String username, long expiryTime) {
-        debug("Fetching last login for username='{}', expiry={}", username, expiryTime);
+        debug("Fetching last login for username='%s', expiry=%g", username, expiryTime);
         String queryString = "SELECT last_login FROM players WHERE last_known_name = ? AND (? < 0 OR last_login >= ?)";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
@@ -321,7 +322,7 @@ public class SqlHandler {
     }
 
     public Long lastLongOfUuid(UUID uuid, long expiryTime) {
-        debug("Fetching last login for UUID='{}', expiry={}", uuid, expiryTime);
+        debug("Fetching last login for UUID='%s', expiry=%g", uuid, expiryTime);
         String queryString = "SELECT last_login FROM players WHERE uuid = ? AND (? < 0 OR last_login >= ?)";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryString);
@@ -338,19 +339,34 @@ public class SqlHandler {
         }
     }
 
-    public Boolean updatePlayerTableSqlite(UUID uuid, String username) {
-        debug("Saving player to players table: UUID={}, username={}", uuid, username);
-        String insertQuery = "INSERT INTO players (uuid, last_known_name, last_login) " +
-                             "VALUES (?, ?, CURRENT_TIMESTAMP)" +
-                             "ON CONFLICT(uuid) DO UPDATE SET " +
-                             "last_known_name = excluded.last_known_name," +
-                             "last_login = CURRENT_TIMESTAMP";
+    @SuppressWarnings("ExtractMethodRecommender")
+    public Boolean updatePlayerTable(UUID uuid, String username) {
+        debug("Saving player to players table: UUID=%s, username=%g", uuid, username);
+        boolean isMySql = ConfigHandler.getInstance().isMySql();
+        String insertQuery;
+        if (isMySql) {
+            insertQuery = """
+                INSERT INTO players (uuid, last_known_name, last_login)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON DUPLICATE KEY UPDATE
+                    last_known_name = VALUES(last_known_name),
+                    last_login = CURRENT_TIMESTAMP
+                """;
+        } else {
+            insertQuery = """
+                INSERT INTO players (uuid, last_known_name, last_login)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(uuid) DO UPDATE SET
+                    last_known_name = excluded.last_known_name,
+                    last_login = CURRENT_TIMESTAMP
+                """;
+        }
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(insertQuery);
             statement.setString(1, String.valueOf(uuid));
             statement.setString(2, username.toLowerCase());
             int rowsChanged = statement.executeUpdate();
-            debug("Rows affected in savePlayerToPlayers: {}", rowsChanged);
+            debug("Rows affected in savePlayerToPlayers: %d", rowsChanged);
             return rowsChanged > 0;
         } catch (SQLException e) {
             logger.warn("Failed to save player with UUID: {}, username: {}", uuid, username, e);
@@ -358,10 +374,75 @@ public class SqlHandler {
         }
     }
 
+    public boolean batchInsertNicknames(List<NicknameRecord> records) {
+        if (records.isEmpty()) return false;
+        boolean isMySQL = ConfigHandler.getInstance().isMySql();
+        String insertPlayerSQL = isMySQL
+                ? "INSERT IGNORE INTO players (uuid, last_known_name, last_login) VALUES (?, ?, ?)"
+                : "INSERT OR IGNORE INTO players (uuid, last_known_name, last_login) VALUES (?, ?, ?)";
+
+        String insertCurrentNickSQL = isMySQL
+                ? "REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)"
+                : "INSERT OR REPLACE INTO current_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
+
+        String insertSavedNickSQL = isMySQL
+                ? "INSERT IGNORE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)"
+                : "INSERT OR IGNORE INTO saved_nicknames (uuid, nickname, normalized) VALUES (?, ?, ?)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement addPlayerStatement = connection.prepareStatement(insertPlayerSQL);
+             PreparedStatement currentNicknameStatement = connection.prepareStatement(insertCurrentNickSQL);
+             PreparedStatement savedNicknameStatement = connection.prepareStatement(insertSavedNickSQL)) {
+
+            connection.setAutoCommit(false);
+            int batchCount = 0;
+            final int COMMIT_THRESHOLD = 500;
+
+            for (NicknameRecord record : records) {
+                addPlayerStatement.setString(1, record.uuid().toString());
+                addPlayerStatement.setString(2, record.username());
+                addPlayerStatement.setString(3, new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(record.lastLogin())));
+                addPlayerStatement.addBatch();
+
+                if (record.isActiveNickname()) {
+                    currentNicknameStatement.setString(1, record.uuid().toString());
+                    currentNicknameStatement.setString(2, record.nickname());
+                    currentNicknameStatement.setString(3, record.normalized());
+                    currentNicknameStatement.addBatch();
+                } else {
+                    savedNicknameStatement.setString(1, record.uuid().toString());
+                    savedNicknameStatement.setString(2, record.nickname());
+                    savedNicknameStatement.setString(3, record.normalized());
+                    savedNicknameStatement.addBatch();
+                }
+
+                batchCount++;
+
+                if (batchCount >= COMMIT_THRESHOLD) {
+                    addPlayerStatement.executeBatch();
+                    currentNicknameStatement.executeBatch();
+                    savedNicknameStatement.executeBatch();
+                    connection.commit();
+                    batchCount = 0;
+                }
+            }
+
+            addPlayerStatement.executeBatch();
+            currentNicknameStatement.executeBatch();
+            savedNicknameStatement.executeBatch();
+            connection.commit();
+        } catch (SQLException e) {
+            logger.error("Error migrating nickname records", e);
+            return false;
+        }
+        return true;
+    }
+
     public void setupConfig() {
         if (!ConfigHandler.getInstance().isMySql()) {
             hikariConfig.setJdbcUrl("jdbc:sqlite:" + SimpleNicks.getInstance().getDataFolder() + "/simplenicks.db?foreign_keys=on");
             hikariConfig.setMaximumPoolSize(10);
+            hikariConfig.setConnectionTestQuery("PRAGMA journal_mode = WAL;");
             dataSource = new HikariDataSource(hikariConfig);
             debug("Initialized SQLite connection.");
             return;

@@ -19,12 +19,12 @@ public class LoginListener implements Listener {
         UUID playerUuid = joinEvent.getPlayer().getUniqueId();
         String username = joinEvent.getPlayer().getName();
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
-            SqlHandler.getInstance().updatePlayerTableSqlite(playerUuid, username);
+            SqlHandler.getInstance().updatePlayerTable(playerUuid, username);
             Cache.getInstance().loadCurrentNickname(playerUuid);
             Cache.getInstance().loadSavedNicknames(playerUuid);
             Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                 SaveMigrator.migratePdcNickname(joinEvent.getPlayer());
-                NickUtils.getInstance().refreshDisplayName(playerUuid);
+                NickUtils.refreshDisplayName(playerUuid);
             });
         });
     }

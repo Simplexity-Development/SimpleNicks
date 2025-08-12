@@ -48,15 +48,15 @@ public class AdminSetSubCommand implements SubCommand {
         CommandSender sender = ctx.getSource().getSender();
         OfflinePlayer target = ctx.getArgument("player", OfflinePlayer.class);
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        String cleanedNick = NickUtils.getInstance().cleanNonPermittedTags(sender, nickname.getNickname());
+        String cleanedNick = NickUtils.cleanNonPermittedTags(sender, nickname.getNickname());
         nickname.setNickname(cleanedNick);
-        NickUtils.getInstance().nicknameChecks(sender, nickname);
+        NickUtils.nicknameChecks(sender, nickname);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             boolean success = NicknameProcessor.getInstance().setNickname(target, cleanedNick);
             if (success) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     if ((target instanceof Player onlineTarget)) {
-                        NickUtils.getInstance().refreshDisplayName(target.getUniqueId());
+                        NickUtils.refreshDisplayName(target.getUniqueId());
                         onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
                     }
                     sender.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));

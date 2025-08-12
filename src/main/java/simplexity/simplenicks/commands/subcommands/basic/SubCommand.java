@@ -111,6 +111,6 @@ public interface SubCommand {
 
     default void refreshName(OfflinePlayer player) {
         if (!player.isOnline()) return;
-        Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> NickUtils.getInstance().refreshDisplayName(player.getUniqueId()));
+        Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> NickUtils.refreshDisplayName(player.getUniqueId()));
     }
 }

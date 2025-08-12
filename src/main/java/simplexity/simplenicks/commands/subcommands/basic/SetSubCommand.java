@@ -43,7 +43,7 @@ public class SetSubCommand implements SubCommand {
             throw Exceptions.ERROR_NICK_IS_NULL.create();
         }
         Player player = (Player) ctx.getSource().getSender();
-        NickUtils.getInstance().nicknameChecks(player, nickname);
+        NickUtils.nicknameChecks(player, nickname);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             boolean succeeded = NicknameProcessor.getInstance().setNickname(player, nickname.getNickname());
             if (succeeded) {
