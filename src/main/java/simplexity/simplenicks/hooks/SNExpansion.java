@@ -12,7 +12,7 @@ import simplexity.simplenicks.saving.Nickname;
 public class SNExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
-        return "simplenicks";
+        return "simplenick";
     }
 
     @Override
@@ -22,7 +22,7 @@ public class SNExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.1.0";
+        return "3.0.0";
     }
 
     @Override
