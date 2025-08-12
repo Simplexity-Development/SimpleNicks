@@ -15,7 +15,7 @@ import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
 public class DeleteSubCommand implements SubCommand {
@@ -55,6 +55,6 @@ public class DeleteSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_SAVE);
+        return css.getSender() instanceof Player player && player.hasPermission(NickPermission.NICK_SAVE.getPermission());
     }
 }

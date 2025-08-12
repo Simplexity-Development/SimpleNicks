@@ -14,7 +14,7 @@ import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.saving.SqlHandler;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 import simplexity.simplenicks.util.TagPermission;
 
 import java.util.ArrayList;
@@ -33,22 +33,27 @@ public class NickUtils {
         if (normalizedNick.isEmpty()) {
             throw Exceptions.ERROR_EMPTY_NICK_AFTER_PARSE.create();
         }
-        if (!sender.hasPermission(Constants.NICK_BYPASS_USERNAME) && thisIsSomeonesUsername(normalizedNick)) {
+        if (!sender.hasPermission(NickPermission.NICK_BYPASS_USERNAME.getPermission())
+            && thisIsSomeonesUsername(normalizedNick)) {
             throw Exceptions.ERROR_NICKNAME_IS_SOMEONES_USERNAME.create(normalizedNick);
         }
-        if (!sender.hasPermission(Constants.NICK_BYPASS_LENGTH) && normalizedNick.length() > ConfigHandler.getInstance().getMaxLength()) {
+        if (!sender.hasPermission(NickPermission.NICK_BYPASS_LENGTH.getPermission())
+            && normalizedNick.length() > ConfigHandler.getInstance().getMaxLength()) {
             throw Exceptions.ERROR_LENGTH.create(normalizedNick);
         }
-        if (!sender.hasPermission(Constants.NICK_BYPASS_REGEX) && !passesRegexCheck(normalizedNick)) {
+        if (!sender.hasPermission(NickPermission.NICK_BYPASS_REGEX.getPermission())
+            && !passesRegexCheck(normalizedNick)) {
             throw Exceptions.ERROR_REGEX.create(normalizedNick);
         }
         if (ConfigHandler.getInstance().shouldOnlineNicksBeProtected()) {
-            if (!sender.hasPermission(Constants.NICK_BYPASS_NICK_PROTECTION) && someoneOnlineUsingThis(sender, normalizedNick)) {
+            if (!sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission())
+                && someoneOnlineUsingThis(sender, normalizedNick)) {
                 throw Exceptions.ERROR_SOMEONE_USING_THAT_NICKNAME.create(normalizedNick);
             }
         }
         if (ConfigHandler.getInstance().shouldOfflineNicksBeProtected()) {
-            if (!sender.hasPermission(Constants.NICK_BYPASS_NICK_PROTECTION) && someoneSavedUsingThis(sender, normalizedNick)) {
+            if (!sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission())
+                && someoneSavedUsingThis(sender, normalizedNick)) {
                 throw Exceptions.ERROR_SOMEONE_USING_THAT_NICKNAME.create(normalizedNick);
             }
         }
@@ -93,19 +98,6 @@ public class NickUtils {
 
     public static String normalizeNickname(String nickname){
         return miniMessage.stripTags(nickname).toLowerCase();
-    }
-
-
-    public static List<Player> getOnlinePlayersByNickname(String nickname) {
-        List<UUID> usersWithThisName = Cache.getInstance().getUuidOfNormalizedName(nickname);
-        if (usersWithThisName.isEmpty()) return new ArrayList<>();
-        List<Player> playersByNick = new ArrayList<>();
-        for (UUID uuid : usersWithThisName) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null) continue;
-            playersByNick.add(player);
-        }
-        return playersByNick;
     }
 
     public static List<OfflinePlayer> getOfflinePlayersByNickname(String normalizedNickname) {

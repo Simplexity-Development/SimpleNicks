@@ -10,7 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.saving.SqlHandler;
+import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
 public class ReloadSubCommand implements SubCommand {
@@ -24,6 +25,8 @@ public class ReloadSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         CommandSender sender = ctx.getSource().getSender();
         ConfigHandler.getInstance().reloadConfig();
+        SqlHandler.getInstance().closeDatabase();
+        SqlHandler.getInstance().init();
         sender.sendRichMessage(LocaleMessage.CONFIG_RELOADED.getMessage());
         return Command.SINGLE_SUCCESS;
     }
@@ -31,7 +34,7 @@ public class ReloadSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         CommandSender sender = css.getSender();
-        return sender.hasPermission(Constants.NICK_RELOAD);
+        return sender.hasPermission(NickPermission.NICK_RELOAD.getPermission());
     }
 
 }

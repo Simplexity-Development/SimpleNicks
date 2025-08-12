@@ -11,6 +11,8 @@ import simplexity.simplenicks.listener.LeaveListener;
 import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.saving.SaveMigrator;
 import simplexity.simplenicks.saving.SqlHandler;
+import simplexity.simplenicks.util.NickPermission;
+import simplexity.simplenicks.util.TagPermission;
 
 import java.util.logging.Logger;
 
@@ -47,6 +49,16 @@ public final class SimpleNicks extends JavaPlugin {
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(NicknameCommand.createCommand().build());
         });
+        registerPermissions();
+    }
+
+    private void registerPermissions(){
+        for (NickPermission perm : NickPermission.values()) {
+            getServer().getPluginManager().addPermission(perm.getPermission());
+        }
+        for (TagPermission perm : TagPermission.values()) {
+            getServer().getPluginManager().addPermission(perm.getPermission());
+        }
     }
 
     public static MiniMessage getMiniMessage() {
@@ -65,4 +77,11 @@ public final class SimpleNicks extends JavaPlugin {
     public static void configReload() {
         ConfigHandler.getInstance().reloadConfig();
     }
+
+    @Override
+    public void onDisable(){
+        SqlHandler.getInstance().closeDatabase();
+    }
+
+
 }

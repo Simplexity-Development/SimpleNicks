@@ -12,7 +12,7 @@ import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
-import simplexity.simplenicks.util.Constants;
+import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
 public class ResetSubCommand implements SubCommand {
@@ -43,6 +43,6 @@ public class ResetSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(Constants.NICK_SET);
+        return css.getSender() instanceof Player player && player.hasPermission(NickPermission.NICK_SET.getPermission());
     }
 }
