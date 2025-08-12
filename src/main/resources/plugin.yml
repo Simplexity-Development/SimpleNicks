@@ -2,7 +2,7 @@ name: SimpleNicks
 version: '${project.version}'
 main: simplexity.simplenicks.SimpleNicks
 authors: ['Rhythmic', 'Peashooter101']
-api-version: 1.19
+api-version: 1.21.5
 description: "A simple plugin to allow players to set and reset nicknames."
 softdepend:
   - PlaceholderAPI
