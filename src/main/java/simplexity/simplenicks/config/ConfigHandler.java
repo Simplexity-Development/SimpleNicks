@@ -22,7 +22,8 @@ public class ConfigHandler {
 
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
     private Pattern regex;
-    private boolean mySql, tablistNick, onlineNickProtection, offlineNickProtection, debugMode;
+    private boolean mySql, tablistNick, onlineNickProtection, offlineNickProtection, debugMode, nickRequiresPermission,
+            colorRequiresPermission, formatRequiresPermission, whoRequiresPermission;
     private int maxLength, maxSaves;
     private String regexString, nickPrefix, mySqlIp, mySqlName, mySqlUsername, mySqlPassword;
     private long usernameProtectionTime, offlineNickProtectionTime = 0;
@@ -50,6 +51,10 @@ public class ConfigHandler {
         }
         debugMode = config.getBoolean("debug-mode", false);
         mySql = config.getBoolean("mysql.enabled", false);
+        nickRequiresPermission = config.getBoolean("require-permission.nick", true);
+        colorRequiresPermission = config.getBoolean("require-permission.color", true);
+        formatRequiresPermission = config.getBoolean("require-permission.format", true);
+        whoRequiresPermission = config.getBoolean("require-permission.who", false);
         mySqlIp = config.getString("mysql.ip", "localhost:3306");
         mySqlName = config.getString("mysql.name", "simplenicks");
         mySqlUsername = config.getString("mysql.username", "username1");
@@ -119,5 +124,21 @@ public class ConfigHandler {
 
     public boolean isDebugMode() {
         return debugMode;
+    }
+
+    public boolean isNickRequiresPermission() {
+        return nickRequiresPermission;
+    }
+
+    public boolean isColorRequiresPermission() {
+        return colorRequiresPermission;
+    }
+
+    public boolean isFormatRequiresPermission() {
+        return formatRequiresPermission;
+    }
+
+    public boolean isWhoRequiresPermission() {
+        return whoRequiresPermission;
     }
 }

@@ -14,8 +14,9 @@ import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.saving.SqlHandler;
+import simplexity.simplenicks.util.FormatTag;
 import simplexity.simplenicks.util.NickPermission;
-import simplexity.simplenicks.util.TagPermission;
+import simplexity.simplenicks.util.ColorTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.regex.Pattern;
 public class NickUtils {
 
     private static final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
+
 
 
     public static void nicknameChecks(CommandSender sender, Nickname nickname) throws CommandSyntaxException {
@@ -76,24 +78,29 @@ public class NickUtils {
     }
 
 
-    public static String cleanNonPermittedTags(CommandSender user, String nick) {
-        int permissionCount = 0;
+    public static boolean isValidTags(CommandSender user, String nick) {
         TagResolver.Builder resolver = TagResolver.builder();
-        for (TagPermission tagPermission : TagPermission.values()) {
-            if (user.hasPermission(tagPermission.getPermission())) {
-                permissionCount++;
-                resolver.resolver(tagPermission.getTagResolver());
+        for (ColorTag colorTag : ColorTag.values()) {
+            if (user.hasPermission(colorTag.getPermission()) || !ConfigHandler.getInstance().isColorRequiresPermission()) {
+                resolver.resolver(colorTag.getTagResolver());
             }
         }
-        if (permissionCount == 0) {
-            return miniMessage.stripTags(nick);
+        for (FormatTag formatTag : FormatTag.values()) {
+            if (user.hasPermission(formatTag.getPermission()) || !ConfigHandler.getInstance().isFormatRequiresPermission()) {
+                resolver.resolver(formatTag.getTagResolver());
+            }
         }
         MiniMessage parser = MiniMessage.builder()
                 .strict(false)
                 .tags(resolver.build())
                 .build();
+
+        Component defaultParsed = SimpleNicks.getDefaultParser().deserialize(nick);
+        String defaultSerialized = miniMessage.serialize(defaultParsed);
         Component permissionParsed = parser.deserialize(nick);
-        return miniMessage.serialize(permissionParsed);
+        String permissionSerialized =  miniMessage.serialize(permissionParsed);
+
+        return defaultSerialized.equals(permissionSerialized);
     }
 
     public static String normalizeNickname(String nickname){

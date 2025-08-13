@@ -64,6 +64,9 @@ public class SaveSubCommand implements SubCommand {
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
         NickUtils.nicknameChecks(player, nickname);
         checkSaveSlots(player);
+        if (NicknameProcessor.getInstance().playerAlreadySavedThis(player, nickname.getNickname())) {
+            throw Exceptions.ERROR_ALREADY_SAVED.create();
+        }
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             boolean saved = NicknameProcessor.getInstance().saveNickname(player, nickname.getNickname());
             if (saved) {
@@ -78,7 +81,7 @@ public class SaveSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         if (!(css.getSender() instanceof Player player)) return false;
-        return player.hasPermission(NickPermission.NICK_SAVE.getPermission());
+        return permissionNotRequired() || player.hasPermission(NickPermission.NICK_SAVE.getPermission());
     }
 
     public void checkSaveSlots(Player player) throws CommandSyntaxException {

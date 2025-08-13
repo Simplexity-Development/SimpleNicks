@@ -21,7 +21,7 @@ public class MessageUtils {
         long days = (timeSeconds / (60 * 60 * 24)) % 365;
 
         if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
-            Component nowComponent = miniMessage.deserialize(LocaleMessage.INSERT_TIME_FORMAT_NOW.getMessage());
+            Component nowComponent = miniMessage.deserialize(LocaleMessage.TIME_FORMAT_NOW.getMessage());
             return TagResolver.resolver(Placeholder.component("time", nowComponent));
         }
 
@@ -30,33 +30,33 @@ public class MessageUtils {
         if (days > 0) {
             finalComponent = finalComponent.append(
                     parseNumber(days == 1
-                            ? LocaleMessage.INSERT_TIME_FORMAT_DAY.getMessage()
-                            : LocaleMessage.INSERT_TIME_FORMAT_DAYS.getMessage(), days)
+                            ? LocaleMessage.TIME_FORMAT_DAY.getMessage()
+                            : LocaleMessage.TIME_FORMAT_DAYS.getMessage(), days)
             );
         }
         if (hours > 0) {
             finalComponent = finalComponent.append(
                     parseNumber(hours == 1
-                            ? LocaleMessage.INSERT_TIME_FORMAT_HOUR.getMessage()
-                            : LocaleMessage.INSERT_TIME_FORMAT_HOURS.getMessage(), hours)
+                            ? LocaleMessage.TIME_FORMAT_HOUR.getMessage()
+                            : LocaleMessage.TIME_FORMAT_HOURS.getMessage(), hours)
             );
         }
         if (minutes > 0) {
             finalComponent = finalComponent.append(
                     parseNumber(minutes == 1
-                            ? LocaleMessage.INSERT_TIME_FORMAT_MINUTE.getMessage()
-                            : LocaleMessage.INSERT_TIME_FORMAT_MINUTES.getMessage(), minutes)
+                            ? LocaleMessage.TIME_FORMAT_MINUTE.getMessage()
+                            : LocaleMessage.TIME_FORMAT_MINUTES.getMessage(), minutes)
             );
         }
         if (seconds > 0 && days == 0 && hours == 0) {
             finalComponent = finalComponent.append(
                     parseNumber(seconds == 1
-                            ? LocaleMessage.INSERT_TIME_FORMAT_SECOND.getMessage()
-                            : LocaleMessage.INSERT_TIME_FORMAT_SECONDS.getMessage(), seconds)
+                            ? LocaleMessage.TIME_FORMAT_SECOND.getMessage()
+                            : LocaleMessage.TIME_FORMAT_SECONDS.getMessage(), seconds)
             );
         }
         finalComponent = finalComponent.append(
-                miniMessage.deserialize(LocaleMessage.INSERT_TIME_FORMAT_AGO.getMessage())
+                miniMessage.deserialize(LocaleMessage.TIME_FORMAT_AGO.getMessage())
         );
 
         return TagResolver.resolver(Placeholder.component("time", finalComponent));
@@ -65,14 +65,14 @@ public class MessageUtils {
     public static TagResolver savedNickListResolver(List<Nickname> nicknames) {
         if (nicknames == null || nicknames.isEmpty()) {
             return TagResolver.resolver(Placeholder.component("list",
-                    miniMessage.deserialize(LocaleMessage.INSERT_NO_SAVED_NICKS.getMessage())));
+                    miniMessage.deserialize(LocaleMessage.LOOKUP_NO_SAVED_NICKS.getMessage())));
         }
         Component finalComponent = Component.empty();
         for (Nickname nick : nicknames) {
             Component nickname = miniMessage.deserialize(nick.getNickname());
             finalComponent = finalComponent.append(
                     miniMessage.deserialize(
-                            LocaleMessage.INSERT_SAVED_NICK.getMessage(),
+                            LocaleMessage.LOOKUP_SAVED_NICK.getMessage(),
                             Placeholder.component("name", nickname)
                     ));
         }

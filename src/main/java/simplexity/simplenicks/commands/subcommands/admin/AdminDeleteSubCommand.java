@@ -49,9 +49,9 @@ public class AdminDeleteSubCommand implements SubCommand {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     if ((target instanceof Player onlineTarget)) {
                         NickUtils.refreshDisplayName(target.getUniqueId());
-                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.NICK_DELETED_BY_OTHER.getMessage(), nickname.getNickname(), sender, target));
+                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.DELETED_BY_INITIATOR.getMessage(), nickname.getNickname(), sender, target));
                     }
-                    sender.sendMessage(parseAdminMessage(LocaleMessage.NICK_DELETED_OTHER.getMessage(), nickname.getNickname(), sender, target));
+                    sender.sendMessage(parseAdminMessage(LocaleMessage.DELETED_TARGET.getMessage(), nickname.getNickname(), sender, target));
                 });
             } else {
                 sender.sendRichMessage(LocaleMessage.ERROR_DELETE_FAILURE.getMessage());

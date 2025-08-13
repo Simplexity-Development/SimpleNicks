@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
+import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.Nickname;
@@ -112,5 +113,9 @@ public interface SubCommand {
     default void refreshName(OfflinePlayer player) {
         if (!player.isOnline()) return;
         Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> NickUtils.refreshDisplayName(player.getUniqueId()));
+    }
+
+    default boolean permissionNotRequired() {
+        return !ConfigHandler.getInstance().isNickRequiresPermission();
     }
 }

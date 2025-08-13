@@ -2,6 +2,7 @@ package simplexity.simplenicks;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import simplexity.simplenicks.commands.NicknameCommand;
@@ -11,26 +12,19 @@ import simplexity.simplenicks.listener.LeaveListener;
 import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.saving.SaveMigrator;
 import simplexity.simplenicks.saving.SqlHandler;
+import simplexity.simplenicks.util.ColorTag;
+import simplexity.simplenicks.util.FormatTag;
 import simplexity.simplenicks.util.NickPermission;
-import simplexity.simplenicks.util.TagPermission;
 
 import java.util.logging.Logger;
 
-/*command based
-[/nick [nickname] or /nick <player> [nickname]]
-need to check if it's a valid name
-[Alphanumeric, tho a bypass permission would be nice]
-need to check if the minimessage formats are allowed- i,e, not allowing hover/click event tag
-[assuming I'd make a set of blacklisted tag types, check for those]
-need to check length after parsing
-PlaceholderAPI placeholder for before parsing, and after
-*/
 
 @SuppressWarnings("UnstableApiUsage")
 public final class SimpleNicks extends JavaPlugin {
 
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
     private static Plugin instance;
+    private static MiniMessage defaultResolver;
 
     @Override
     public void onEnable() {
@@ -49,16 +43,32 @@ public final class SimpleNicks extends JavaPlugin {
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(NicknameCommand.createCommand().build());
         });
+        setUpResolver();
         registerPermissions();
     }
 
-    private void registerPermissions(){
+    private void registerPermissions() {
         for (NickPermission perm : NickPermission.values()) {
             getServer().getPluginManager().addPermission(perm.getPermission());
         }
-        for (TagPermission perm : TagPermission.values()) {
+        for (ColorTag perm : ColorTag.values()) {
             getServer().getPluginManager().addPermission(perm.getPermission());
         }
+    }
+
+    private void setUpResolver() {
+        TagResolver.Builder tagResolver = TagResolver.builder();
+        for (ColorTag colorTag : ColorTag.values()) {
+            tagResolver.resolver(colorTag.getTagResolver());
+        }
+        for (FormatTag formatTag : FormatTag.values()) {
+            tagResolver.resolver(formatTag.getTagResolver());
+        }
+        TagResolver resolver = tagResolver.build();
+        defaultResolver = MiniMessage.builder()
+                .strict(false)
+                .tags(resolver)
+                .build();
     }
 
     public static MiniMessage getMiniMessage() {
@@ -73,13 +83,18 @@ public final class SimpleNicks extends JavaPlugin {
         return instance.getLogger();
     }
 
+    public static MiniMessage getDefaultParser() {
+        return defaultResolver;
+
+    }
+
 
     public static void configReload() {
         ConfigHandler.getInstance().reloadConfig();
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         SqlHandler.getInstance().closeDatabase();
     }
 
