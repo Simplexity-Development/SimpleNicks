@@ -44,9 +44,9 @@ public class AdminResetSubCommand implements SubCommand {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     if ((target instanceof Player onlineTarget)) {
                         NickUtils.refreshDisplayName(target.getUniqueId());
-                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.RESET_BY_OTHER.getMessage(), "", sender, target));
+                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.RESET_BY_INITIATOR.getMessage(), "", sender, target));
                     }
-                    sender.sendMessage(parseAdminMessage(LocaleMessage.RESET_OTHER.getMessage(), "", sender, target));
+                    sender.sendMessage(parseAdminMessage(LocaleMessage.RESET_TARGET.getMessage(), "", sender, target));
                 });
             } else {
                 sender.sendRichMessage(LocaleMessage.ERROR_RESET_FAILURE.getMessage());

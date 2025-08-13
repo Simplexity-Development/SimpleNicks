@@ -62,7 +62,7 @@ public class AdminLookupSubCommand implements SubCommand {
 
     public Component lookupInfoComponent(String username, Nickname currentNick, List<Nickname> savedNames) {
         if (currentNick == null && (savedNames == null || savedNames.isEmpty()))
-            return miniMessage.deserialize(LocaleMessage.ERROR_NO_PLAYERS_FOUND_BY_THIS_NAME.getMessage());
+            return miniMessage.deserialize(LocaleMessage.ERROR_NO_PLAYERS_WITH_THIS_NAME.getMessage());
         Component nickname;
         if (currentNick == null) {
             nickname = miniMessage.deserialize(LocaleMessage.INSERT_NONE.getMessage());
@@ -71,16 +71,16 @@ public class AdminLookupSubCommand implements SubCommand {
         }
 
         Component infoComponent = miniMessage.deserialize(
-                LocaleMessage.ADMIN_NICK_LOOKUP_HEADER.getMessage(),
+                LocaleMessage.LOOKUP_HEADER.getMessage(),
                 Placeholder.unparsed("username", username));
         infoComponent = infoComponent.append(
                 miniMessage.deserialize(
-                        LocaleMessage.ADMIN_NICK_LOOKUP_CURRENT_NICK.getMessage(),
+                        LocaleMessage.LOOKUP_CURRENT.getMessage(),
                         Placeholder.component("name", nickname))
         );
         infoComponent = infoComponent.append(
                 miniMessage.deserialize(
-                        LocaleMessage.ADMIN_NICK_LOOKUP_SAVED_NICKS_HEADER.getMessage(),
+                        LocaleMessage.LOOKUP_SAVED.getMessage(),
                         MessageUtils.savedNickListResolver(savedNames)
                 )
         );

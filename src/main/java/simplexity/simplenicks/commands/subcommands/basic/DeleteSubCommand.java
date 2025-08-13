@@ -43,7 +43,7 @@ public class DeleteSubCommand implements SubCommand {
             if (success) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     NickUtils.refreshDisplayName(player.getUniqueId());
-                    sendFeedback(player, LocaleMessage.DELETE_NICK, nickname);
+                    sendFeedback(player, LocaleMessage.DELETE_SELF, nickname);
                 });
             } else {
                 sendFeedback(player, LocaleMessage.ERROR_DELETE_FAILURE, nickname);
@@ -55,6 +55,7 @@ public class DeleteSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(NickPermission.NICK_SAVE.getPermission());
+        if (!(css.getSender() instanceof Player player)) return false;
+        return permissionNotRequired() || player.hasPermission(NickPermission.NICK_SAVE.getPermission());
     }
 }

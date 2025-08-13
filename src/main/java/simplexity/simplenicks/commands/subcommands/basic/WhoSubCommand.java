@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
+import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.config.MessageUtils;
 import simplexity.simplenicks.logic.NickUtils;
@@ -46,7 +47,7 @@ public class WhoSubCommand implements SubCommand {
             List<OfflinePlayer> playersWithNick = NickUtils.getOfflinePlayersByNickname(nickname.getNormalizedNickname());
 
             if (playersWithNick == null) {
-                sender.sendRichMessage(LocaleMessage.ERROR_NO_PLAYERS_FOUND_BY_THIS_NAME.getMessage());
+                sender.sendRichMessage(LocaleMessage.ERROR_NO_PLAYERS_WITH_THIS_NAME.getMessage());
                 return;
             }
 
@@ -58,7 +59,7 @@ public class WhoSubCommand implements SubCommand {
     }
 
     private Component buildWhoMessage(Nickname nickname, List<OfflinePlayer> players) {
-        Component header = miniMessage.deserialize(LocaleMessage.NICK_WHO_HEADER.getMessage(),
+        Component header = miniMessage.deserialize(LocaleMessage.WHO_HEADER.getMessage(),
                 Placeholder.parsed("value", nickname.getNormalizedNickname()));
 
         if (players.isEmpty()) {
@@ -74,7 +75,7 @@ public class WhoSubCommand implements SubCommand {
 
             long timeDiffSeconds = (now - player.getLastSeen()) / 1000;
             result = result.append(miniMessage.deserialize(
-                    LocaleMessage.NICK_WHO_USER.getMessage(),
+                    LocaleMessage.WHO_INFO.getMessage(),
                     Placeholder.parsed("name", username),
                     MessageUtils.getTimeFormat(timeDiffSeconds)
             ));
@@ -86,6 +87,6 @@ public class WhoSubCommand implements SubCommand {
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
         CommandSender sender = css.getSender();
-        return sender.hasPermission(NickPermission.NICK_WHO.getPermission());
+        return !ConfigHandler.getInstance().isWhoRequiresPermission() || sender.hasPermission(NickPermission.NICK_WHO.getPermission());
     }
 }

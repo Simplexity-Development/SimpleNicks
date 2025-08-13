@@ -15,6 +15,7 @@ import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.NicknameArgument;
 import simplexity.simplenicks.commands.arguments.OfflinePlayerArgument;
+import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.logic.NickUtils;
@@ -48,18 +49,17 @@ public class AdminSetSubCommand implements SubCommand {
         CommandSender sender = ctx.getSource().getSender();
         OfflinePlayer target = ctx.getArgument("player", OfflinePlayer.class);
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        String cleanedNick = NickUtils.cleanNonPermittedTags(sender, nickname.getNickname());
-        nickname.setNickname(cleanedNick);
+        if (!NickUtils.isValidTags(sender, nickname.getNickname())) throw Exceptions.ERROR_TAGS_NOT_PERMITTED.create();
         NickUtils.nicknameChecks(sender, nickname);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
-            boolean success = NicknameProcessor.getInstance().setNickname(target, cleanedNick);
+            boolean success = NicknameProcessor.getInstance().setNickname(target, nickname.getNickname());
             if (success) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     if ((target instanceof Player onlineTarget)) {
                         NickUtils.refreshDisplayName(target.getUniqueId());
-                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_BY_OTHER.getMessage(), cleanedNick, sender, target));
+                        onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.SET_BY_INITIATOR.getMessage(), nickname.getNickname(), sender, target));
                     }
-                    sender.sendMessage(parseAdminMessage(LocaleMessage.CHANGED_OTHER.getMessage(), cleanedNick, sender, target));
+                    sender.sendMessage(parseAdminMessage(LocaleMessage.SET_TARGET.getMessage(), nickname.getNickname(), sender, target));
                 });
             } else {
                 sender.sendRichMessage(LocaleMessage.ERROR_SET_FAILURE.getMessage());

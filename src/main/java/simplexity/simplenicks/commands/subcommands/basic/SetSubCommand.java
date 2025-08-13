@@ -43,13 +43,14 @@ public class SetSubCommand implements SubCommand {
             throw Exceptions.ERROR_NICK_IS_NULL.create();
         }
         Player player = (Player) ctx.getSource().getSender();
+        if (!NickUtils.isValidTags(player, nickname.getNickname())) throw Exceptions.ERROR_TAGS_NOT_PERMITTED.create();
         NickUtils.nicknameChecks(player, nickname);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             boolean succeeded = NicknameProcessor.getInstance().setNickname(player, nickname.getNickname());
             if (succeeded) {
                 Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
                     refreshName(player);
-                    sendFeedback(player, LocaleMessage.CHANGED_SELF, nickname);
+                    sendFeedback(player, LocaleMessage.SET_SELF, nickname);
                 });
             } else {
                 sendFeedback(player, LocaleMessage.ERROR_SET_FAILURE, nickname);
@@ -60,7 +61,8 @@ public class SetSubCommand implements SubCommand {
 
     @Override
     public boolean canExecute(@NotNull CommandSourceStack css) {
-        return css.getSender() instanceof Player player && player.hasPermission(NickPermission.NICK_SET.getPermission());
+        if (!(css.getSender() instanceof Player player)) return false;
+        return permissionNotRequired() || player.hasPermission(NickPermission.NICK_SET.getPermission());
     }
 
 }
