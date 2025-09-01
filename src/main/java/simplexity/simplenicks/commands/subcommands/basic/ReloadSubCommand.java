@@ -6,10 +6,13 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
+import simplexity.simplenicks.logic.NickUtils;
 import simplexity.simplenicks.saving.SqlHandler;
 import simplexity.simplenicks.util.NickPermission;
 
@@ -27,6 +30,7 @@ public class ReloadSubCommand implements SubCommand {
         ConfigHandler.getInstance().reloadConfig();
         SqlHandler.getInstance().closeDatabase();
         SqlHandler.getInstance().init();
+        refreshTablist();
         sender.sendRichMessage(LocaleMessage.CONFIG_RELOADED.getMessage());
         return Command.SINGLE_SUCCESS;
     }
@@ -35,6 +39,13 @@ public class ReloadSubCommand implements SubCommand {
     public boolean canExecute(@NotNull CommandSourceStack css) {
         CommandSender sender = css.getSender();
         return sender.hasPermission(NickPermission.NICK_RELOAD.getPermission());
+    }
+
+    private void refreshTablist(){
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            NickUtils.refreshDisplayName(player.getUniqueId());
+        }
+
     }
 
 }
