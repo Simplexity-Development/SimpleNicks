@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
@@ -23,19 +24,46 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Utility class for migrating nickname save data from older storage formats into the current system.
+ * <p>
+ * This class is intended to be used only once, during the upgrade of the SimpleNicks plugin.
+ * It reads legacy data files or player PersistentDataContainers (PDC) and converts them into the
+ * current {@link Cache} and {@link SqlHandler} format. After migration, it renames the old data file
+ * to prevent duplicate migrations, while saving the old data if the migration didn't go as planned.
+ * </p>
+ * <p>
+ * While designed for internal use, this class can be adapted by other plugins to import custom
+ * nickname data, or for other types of one-time migrations. It should be called during plugin startup,
+ * and only if there is not already saved data from these users, to prevent overwriting current data.
+ * </p>
+ */
 public class SaveMigrator {
 
-    /*
-    I know this is a mess of a class but it is only supposed to be used once, and hopefully never again a;lkdsjf
+    /**
+     * Namespaced key used for storing nicknames in a player's PersistentDataContainer (PDC).
+     * There was no implementation of 'saved' nicknames with PDC, so only the current nickname is migrated.
      */
+    public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
 
     private static final Logger logger = SimpleNicks.getInstance().getSLF4JLogger();
-    public static final NamespacedKey nickNameSave = new NamespacedKey(SimpleNicks.getInstance(), "nickname");
     private static final List<NicknameRecord> records = new ArrayList<>();
     private static final AtomicInteger processed = new AtomicInteger();
     private static final AtomicInteger failed = new AtomicInteger();
     private static int taskId;
 
+    /**
+     * Migrates all nickname data from the legacy YAML file ("nickname_data.yml") into the current database format.
+     * <p>
+     * This method performs the migration asynchronously to avoid blocking the server. It provides
+     * periodic console logs with progress updates. After migration, the legacy YAML file is renamed
+     * to "MIGRATED_nickname_data.yml" to prevent repeated attempts.
+     * </p>
+     * <p>
+     * If any UUID keys are invalid or cannot be processed, the migration continues with a warning.
+     * The method logs the number of successfully migrated and failed records.
+     * </p>
+     */
     public static void migrateFromYml() {
         File dataFile = new File(SimpleNicks.getInstance().getDataFolder(), "nickname_data.yml");
         if (!dataFile.exists()) return;
@@ -73,10 +101,23 @@ public class SaveMigrator {
         });
     }
 
-    public static void migratePdcNickname(Player player) {
+    /**
+     * Migrates the nickname stored in a player's PersistentDataContainer (PDC) into the current {@link Cache}.
+     * <p>
+     * After migration, the PDC entry is removed to prevent duplicate storage. This is safe to call
+     * on individual players, typically during player login events.
+     * </p>
+     *
+     * @param player The player whose PDC nickname should be migrated
+     */
+    public static void migratePdcNickname(@NotNull Player player) {
         PersistentDataContainer pdc = player.getPersistentDataContainer();
         if (!pdc.has(nickNameSave)) return;
         String currentNick = pdc.get(nickNameSave, PersistentDataType.STRING);
+        if (currentNick == null) {
+            pdc.remove(nickNameSave);
+            return;
+        }
         UUID uuid = player.getUniqueId();
         Cache.getInstance().setActiveNickname(uuid, player.getName(), currentNick);
         debug("Migrated PDC data from user: {}, uuid: {}, nickname: {}", player.getName(), player.getUniqueId(), currentNick);
@@ -84,7 +125,14 @@ public class SaveMigrator {
     }
 
 
-    private static void saveChecks(String uuidKey, FileConfiguration config) {
+    /**
+     * Performs sanity checks on a UUID key from the YAML configuration and adds it to the migration
+     * batch if valid. Processes both the player's current nickname and saved nicknames.
+     *
+     * @param uuidKey UUID string of the player
+     * @param config  YAML configuration containing the legacy nickname data
+     */
+    private static void saveChecks(@NotNull String uuidKey, @NotNull FileConfiguration config) {
         UUID uuid;
         try {
             uuid = UUID.fromString(uuidKey);
@@ -103,26 +151,33 @@ public class SaveMigrator {
             return;
         }
 
-        String nickname = section.getString("current", null);
+        String nicknameString = section.getString("current", null);
         List<String> savedNicks = section.getStringList("saved");
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         String username = player.getName();
         if (username == null) username = "unknown";
         debug("Migrating nicknames for user: %s - (UUID:%s)", username, uuidKey);
 
-        if (nickname != null && !nickname.isEmpty()) {
-            records.add(new NicknameRecord(uuid, username, nickname, NickUtils.normalizeNickname(nickname), true, player.getLastLogin()));
-        }
+        if (nicknameString == null || nicknameString.isEmpty()) return;
+        records.add(new NicknameRecord(uuid, username, nicknameString, NickUtils.normalizeNickname(nicknameString), true, player.getLastLogin()));
 
         if (!savedNicks.isEmpty()) {
             for (String savedNickname : savedNicks) {
-                records.add(new NicknameRecord(uuid, username, savedNickname, NickUtils.normalizeNickname(nickname), false, player.getLastLogin()));
+                records.add(new NicknameRecord(uuid, username, savedNickname, NickUtils.normalizeNickname(nicknameString), false, player.getLastLogin()));
             }
         }
 
         processed.incrementAndGet();
     }
 
+    /**
+     * Periodically logs the migration progress to the console.
+     * <p>
+     * Shows the percentage complete and reminds server admins not to restart the server during migration.
+     * </p>
+     *
+     * @param total Total number of UUIDs being migrated
+     */
     private static void consoleNotifier(int total) {
         int done = processed.get();
         double percent = (done / (double) total) * 100.0;
@@ -131,10 +186,18 @@ public class SaveMigrator {
     }
 
 
-
-    private static void debug(String message, Object... args) {
+    /**
+     * Debug logging method that only logs messages if {@link ConfigHandler#isDebugMode()} is enabled.
+     * <p>
+     * Accepts printf-style formatting with arguments.
+     * </p>
+     *
+     * @param message The message format string
+     * @param args    Arguments for the format string
+     */
+    private static void debug(@NotNull String message, @NotNull Object... args) {
         if (ConfigHandler.getInstance().isDebugMode()) {
-            message = message.formatted(args);
+            message = String.format(message, args);
             logger.info("[MIGRATION DEBUG] {}", message);
         }
     }

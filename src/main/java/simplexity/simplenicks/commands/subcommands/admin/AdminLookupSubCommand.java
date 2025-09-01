@@ -13,9 +13,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.arguments.OfflinePlayerArgument;
+import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.commands.subcommands.basic.SubCommand;
 import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.config.MessageUtils;
@@ -46,6 +48,7 @@ public class AdminLookupSubCommand implements SubCommand {
         CommandSender sender = ctx.getSource().getSender();
         OfflinePlayer lookupTarget = ctx.getArgument("player", OfflinePlayer.class);
         String username = lookupTarget.getName();
+        if (username == null) throw Exceptions.INVALID_PLAYER_SPECIFIED.create(lookupTarget);
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             Nickname currentNickname = NicknameProcessor.getInstance().getCurrentNickname(lookupTarget);
             List<Nickname> savedNicknames = NicknameProcessor.getInstance().getSavedNicknames(lookupTarget);
@@ -60,30 +63,22 @@ public class AdminLookupSubCommand implements SubCommand {
         return sender.hasPermission(NickPermission.NICK_ADMIN_LOOKUP.getPermission());
     }
 
-    public Component lookupInfoComponent(String username, Nickname currentNick, List<Nickname> savedNames) {
+    @NotNull
+    public Component lookupInfoComponent(@NotNull String username, @Nullable Nickname currentNick, @Nullable List<Nickname> savedNames) {
         if (currentNick == null && (savedNames == null || savedNames.isEmpty()))
             return miniMessage.deserialize(LocaleMessage.ERROR_NO_PLAYERS_WITH_THIS_NAME.getMessage());
-        Component nickname;
+        String nickname;
         if (currentNick == null) {
-            nickname = miniMessage.deserialize(LocaleMessage.INSERT_NONE.getMessage());
+            nickname = LocaleMessage.INSERT_NONE.getMessage();
         } else {
-            nickname = miniMessage.deserialize(currentNick.getNickname());
+            nickname = currentNick.getNickname();
         }
-
-        Component infoComponent = miniMessage.deserialize(
-                LocaleMessage.LOOKUP_HEADER.getMessage(),
-                Placeholder.unparsed("username", username));
-        infoComponent = infoComponent.append(
-                miniMessage.deserialize(
-                        LocaleMessage.LOOKUP_CURRENT.getMessage(),
-                        Placeholder.component("name", nickname))
-        );
-        infoComponent = infoComponent.append(
-                miniMessage.deserialize(
-                        LocaleMessage.LOOKUP_SAVED.getMessage(),
-                        MessageUtils.savedNickListResolver(savedNames)
-                )
-        );
-        return infoComponent;
+        String infoString = LocaleMessage.LOOKUP_HEADER.getMessage() +
+                                   LocaleMessage.LOOKUP_CURRENT.getMessage() +
+                                   LocaleMessage.LOOKUP_SAVED.getMessage();
+        return miniMessage.deserialize(infoString,
+                Placeholder.unparsed("username", username),
+                Placeholder.parsed("name", nickname),
+                MessageUtils.savedNickListResolver(savedNames));
     }
 }

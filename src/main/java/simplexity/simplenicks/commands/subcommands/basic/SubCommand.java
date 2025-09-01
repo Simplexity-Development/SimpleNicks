@@ -15,6 +15,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
@@ -58,8 +59,9 @@ public interface SubCommand {
      * @param localeMessage Message
      * @param nickname      Nickname
      */
-    default void sendFeedback(Player player, LocaleMessage localeMessage, Nickname nickname) {
+    default void sendFeedback(@NotNull Player player, @Nullable LocaleMessage localeMessage, @Nullable Nickname nickname) {
         if (nickname == null) nickname = new Nickname("", "");
+        if (localeMessage == null || localeMessage.getMessage().isEmpty()) return;
         player.sendRichMessage(
                 localeMessage.getMessage(),
                 Placeholder.parsed("value", nickname.getNickname())
@@ -75,7 +77,7 @@ public interface SubCommand {
      * @param target    OfflinePlayer who this command is being run on
      * @return Component parsed message
      */
-    default Component parseAdminMessage(String message, String value, CommandSender initiator, @NotNull OfflinePlayer target) {
+    default Component parseAdminMessage(@NotNull String message, @NotNull String value, @NotNull CommandSender initiator, @NotNull OfflinePlayer target) {
         MiniMessage miniMessage = SimpleNicks.getMiniMessage();
         Component initiatorName;
         String targetUserName = target.getName();
@@ -110,7 +112,7 @@ public interface SubCommand {
         throw new NotImplementedException("listSuggestions was used, but not implemented.");
     }
 
-    default void refreshName(OfflinePlayer player) {
+    default void refreshName(@NotNull OfflinePlayer player) {
         if (!player.isOnline()) return;
         Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> NickUtils.refreshDisplayName(player.getUniqueId()));
     }

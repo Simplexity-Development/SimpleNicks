@@ -66,7 +66,7 @@ public class Exceptions {
             )
     );
 
-    public static final DynamicCommandExceptionType ERROR_PLAYER_NOT_FOUND = new DynamicCommandExceptionType(
+    public static final DynamicCommandExceptionType INVALID_PLAYER_SPECIFIED = new DynamicCommandExceptionType(
             playerName -> MessageComponentSerializer.message().serialize(
                     miniMessage.deserialize(
                             LocaleMessage.ERROR_INVALID_PLAYER.getMessage(),

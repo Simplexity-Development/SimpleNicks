@@ -31,13 +31,12 @@ public class SNExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, @NotNull String params) {
+    public String onRequest(@NotNull OfflinePlayer player, @NotNull String params) {
         Nickname nick = Cache.getInstance().getActiveNickname(player.getUniqueId());
         String nickname;
         String prefix = ConfigHandler.getInstance().getNickPrefix();
-        if (nick == null && player.getName() == null) {
-            return null;
-        } else if (nick == null) {
+        if (nick == null) {
+            if (player.getName() == null) return null;
             nickname = player.getName();
         } else {
             nickname = nick.getNickname();

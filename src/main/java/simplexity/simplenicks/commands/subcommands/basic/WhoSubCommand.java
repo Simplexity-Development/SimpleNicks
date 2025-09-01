@@ -46,7 +46,7 @@ public class WhoSubCommand implements SubCommand {
         Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
             List<OfflinePlayer> playersWithNick = NickUtils.getOfflinePlayersByNickname(nickname.getNormalizedNickname());
 
-            if (playersWithNick == null) {
+            if (playersWithNick.isEmpty()) {
                 sender.sendRichMessage(LocaleMessage.ERROR_NO_PLAYERS_WITH_THIS_NAME.getMessage());
                 return;
             }
@@ -58,7 +58,8 @@ public class WhoSubCommand implements SubCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private Component buildWhoMessage(Nickname nickname, List<OfflinePlayer> players) {
+    @NotNull
+    private Component buildWhoMessage(@NotNull Nickname nickname, @NotNull List<OfflinePlayer> players) {
         Component header = miniMessage.deserialize(LocaleMessage.WHO_HEADER.getMessage(),
                 Placeholder.parsed("value", nickname.getNormalizedNickname()));
 

@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.jetbrains.annotations.NotNull;
 
 public enum ColorTag {
     //Nickname Perms
@@ -22,10 +23,12 @@ public enum ColorTag {
         this.resolver = resolver;
     }
 
+    @NotNull
     public Permission getPermission() {
         return permission;
     }
 
+    @NotNull
     public TagResolver getTagResolver() {
         return resolver;
     }

@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.saving.Nickname;
 
@@ -14,6 +16,7 @@ public class MessageUtils {
 
     private static final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
 
+    @NotNull
     public static TagResolver getTimeFormat(long timeSeconds) {
         long seconds = timeSeconds % 60;
         long minutes = (timeSeconds / 60) % 60;
@@ -62,7 +65,8 @@ public class MessageUtils {
         return TagResolver.resolver(Placeholder.component("time", finalComponent));
     }
 
-    public static TagResolver savedNickListResolver(List<Nickname> nicknames) {
+    @NotNull
+    public static TagResolver savedNickListResolver(@Nullable List<Nickname> nicknames) {
         if (nicknames == null || nicknames.isEmpty()) {
             return TagResolver.resolver(Placeholder.component("list",
                     miniMessage.deserialize(LocaleMessage.LOOKUP_NO_SAVED_NICKS.getMessage())));
@@ -79,7 +83,8 @@ public class MessageUtils {
         return TagResolver.resolver(Placeholder.component("list", finalComponent));
     }
 
-    private static Component parseNumber(String message, long number) {
+    @NotNull
+    private static Component parseNumber(@NotNull String message, long number) {
         return miniMessage.deserialize(message,
                 Placeholder.parsed("count", String.valueOf(number)));
     }

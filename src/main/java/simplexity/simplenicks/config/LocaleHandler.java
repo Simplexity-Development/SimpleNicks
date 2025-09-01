@@ -25,10 +25,10 @@ public class LocaleHandler {
         try {
             dataFile.getParentFile().mkdirs();
             dataFile.createNewFile();
+            reloadLocale();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        reloadLocale();
     }
 
     public static LocaleHandler getInstance() {
@@ -41,12 +41,12 @@ public class LocaleHandler {
     public void reloadLocale() {
         try {
             locale.load(dataFile);
+            populateLocale();
+            sortLocale();
+            saveLocale();
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        populateLocale();
-        sortLocale();
-        saveLocale();
     }
 
 

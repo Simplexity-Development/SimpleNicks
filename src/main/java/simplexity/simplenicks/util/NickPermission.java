@@ -2,6 +2,7 @@ package simplexity.simplenicks.util;
 
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.jetbrains.annotations.NotNull;
 
 public enum NickPermission {
     // name, description, default, children
@@ -26,6 +27,7 @@ public enum NickPermission {
         this.permission = permission;
     }
 
+    @NotNull
     public Permission getPermission() {
         return permission;
     }

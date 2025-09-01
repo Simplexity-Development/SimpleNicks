@@ -1,5 +1,8 @@
 package simplexity.simplenicks.config;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public enum LocaleMessage {
     HELP_MESSAGE("plugin.help-message",
             """
@@ -87,15 +90,19 @@ public enum LocaleMessage {
         this.message = message;
     }
 
+    @NotNull
     public String getPath() {
         return path;
     }
 
+    @NotNull
     public String getMessage() {
+        if (message == null) return "";
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(@Nullable String message) {
+        if (message == null) message = "";
         this.message = message;
     }
 }

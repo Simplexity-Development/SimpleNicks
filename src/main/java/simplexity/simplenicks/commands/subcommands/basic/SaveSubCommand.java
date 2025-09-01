@@ -84,7 +84,7 @@ public class SaveSubCommand implements SubCommand {
         return permissionNotRequired() || player.hasPermission(NickPermission.NICK_SAVE.getPermission());
     }
 
-    public void checkSaveSlots(Player player) throws CommandSyntaxException {
+    public void checkSaveSlots(@NotNull Player player) throws CommandSyntaxException {
         int currentUsed = NicknameProcessor.getInstance().getCurrentSavedNickCount(player);
         if (currentUsed >= ConfigHandler.getInstance().getMaxSaves())
             throw Exceptions.ERROR_TOO_MANY_SAVED_NAMES.create();

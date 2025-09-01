@@ -8,61 +8,85 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.saving.Cache;
 import simplexity.simplenicks.saving.Nickname;
 import simplexity.simplenicks.saving.SqlHandler;
+import simplexity.simplenicks.util.ColorTag;
 import simplexity.simplenicks.util.FormatTag;
 import simplexity.simplenicks.util.NickPermission;
-import simplexity.simplenicks.util.ColorTag;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class for handling nicknames in SimpleNicks.
+ * <p>
+ * This class contains methods for validating, normalizing, and retrieving nicknames,
+ * as well as refreshing player display names in-game. Most methods are intended for
+ * internal use, but could be useful for plugin developers interacting with nicknames.
+ * </p>
+ */
 @SuppressWarnings("UnusedReturnValue")
 public class NickUtils {
 
     private static final MiniMessage miniMessage = SimpleNicks.getMiniMessage();
 
 
-
-    public static void nicknameChecks(CommandSender sender, Nickname nickname) throws CommandSyntaxException {
+    /**
+     * Performs all configured checks on a nickname, including length, regex,
+     * username conflicts, and nickname protection. Throws a {@link CommandSyntaxException}
+     * if any of the checks fail.
+     *
+     * @param sender   The sender attempting to set the nickname
+     * @param nickname The nickname to validate
+     * @throws CommandSyntaxException if any of the nickname checks fail
+     */
+    public static void nicknameChecks(@NotNull CommandSender sender, @NotNull Nickname nickname) throws CommandSyntaxException {
         String normalizedNick = nickname.getNormalizedNickname();
         if (normalizedNick.isEmpty()) {
             throw Exceptions.ERROR_EMPTY_NICK_AFTER_PARSE.create();
         }
-        if (!sender.hasPermission(NickPermission.NICK_BYPASS_USERNAME.getPermission())
-            && thisIsSomeonesUsername(normalizedNick)) {
-            throw Exceptions.ERROR_NICKNAME_IS_SOMEONES_USERNAME.create(normalizedNick);
+
+        boolean bypassUsername = sender.hasPermission(NickPermission.NICK_BYPASS_USERNAME.getPermission());
+        boolean bypassLength = sender.hasPermission(NickPermission.NICK_BYPASS_LENGTH.getPermission());
+        boolean bypassRegex = sender.hasPermission(NickPermission.NICK_BYPASS_REGEX.getPermission());
+        boolean bypassNickProtection = sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission());
+
+        if (!bypassUsername) {
+            if (thisIsSomeonesUsername(normalizedNick))
+                throw Exceptions.ERROR_NICKNAME_IS_SOMEONES_USERNAME.create(normalizedNick);
         }
-        if (!sender.hasPermission(NickPermission.NICK_BYPASS_LENGTH.getPermission())
-            && normalizedNick.length() > ConfigHandler.getInstance().getMaxLength()) {
-            throw Exceptions.ERROR_LENGTH.create(normalizedNick);
+        if (!bypassLength) {
+            if (normalizedNick.length() > ConfigHandler.getInstance().getMaxLength())
+                throw Exceptions.ERROR_LENGTH.create(normalizedNick);
         }
-        if (!sender.hasPermission(NickPermission.NICK_BYPASS_REGEX.getPermission())
-            && !passesRegexCheck(normalizedNick)) {
-            throw Exceptions.ERROR_REGEX.create(normalizedNick);
+        if (!bypassRegex) {
+            if (!passesRegexCheck(normalizedNick)) throw Exceptions.ERROR_REGEX.create(normalizedNick);
         }
-        if (ConfigHandler.getInstance().shouldOnlineNicksBeProtected()) {
-            if (!sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission())
-                && someoneOnlineUsingThis(sender, normalizedNick)) {
+        if (ConfigHandler.getInstance().shouldOnlineNicksBeProtected() && !bypassNickProtection) {
+            if (someoneOnlineUsingThis(sender, normalizedNick))
                 throw Exceptions.ERROR_SOMEONE_USING_THAT_NICKNAME.create(normalizedNick);
-            }
         }
-        if (ConfigHandler.getInstance().shouldOfflineNicksBeProtected()) {
-            if (!sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission())
-                && someoneSavedUsingThis(sender, normalizedNick)) {
+        if (ConfigHandler.getInstance().shouldOfflineNicksBeProtected() && !bypassNickProtection) {
+            if (someoneSavedUsingThis(sender, normalizedNick))
                 throw Exceptions.ERROR_SOMEONE_USING_THAT_NICKNAME.create(normalizedNick);
-            }
         }
     }
 
-
-    public static boolean refreshDisplayName(UUID uuid) {
+    /**
+     * Updates a player's display name and optionally their tab list name to reflect their
+     * active nickname.
+     *
+     * @param uuid The UUID of the player whose display name should be refreshed
+     * @return true if the player's display name was successfully refreshed, false if the player is offline
+     */
+    public static boolean refreshDisplayName(@NotNull UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return false;
         Nickname nickname = Cache.getInstance().getActiveNickname(uuid);
@@ -78,7 +102,16 @@ public class NickUtils {
     }
 
 
-    public static boolean isValidTags(CommandSender user, String nick) {
+    /**
+     * Checks whether the given nickname only uses tags and formatting that the player
+     * has permission to use.
+     *
+     * @param user The command sender attempting to use the nickname
+     * @param nick The nickname to validate
+     * @return true if the nickname only uses allowed tags, false otherwise
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isValidTags(@NotNull CommandSender user, @NotNull String nick) {
         TagResolver.Builder resolver = TagResolver.builder();
         for (ColorTag colorTag : ColorTag.values()) {
             if (user.hasPermission(colorTag.getPermission()) || !ConfigHandler.getInstance().isColorRequiresPermission()) {
@@ -90,27 +123,38 @@ public class NickUtils {
                 resolver.resolver(formatTag.getTagResolver());
             }
         }
-        MiniMessage parser = MiniMessage.builder()
-                .strict(false)
-                .tags(resolver.build())
-                .build();
+        MiniMessage parser = MiniMessage.builder().strict(false).tags(resolver.build()).build();
 
         Component defaultParsed = SimpleNicks.getDefaultParser().deserialize(nick);
         String defaultSerialized = miniMessage.serialize(defaultParsed);
         Component permissionParsed = parser.deserialize(nick);
-        String permissionSerialized =  miniMessage.serialize(permissionParsed);
+        String permissionSerialized = miniMessage.serialize(permissionParsed);
 
         return defaultSerialized.equals(permissionSerialized);
     }
 
-    public static String normalizeNickname(String nickname){
+    /**
+     * Converts a nickname into a "normalized" version by stripping all MiniMessage tags
+     * and converting to lowercase. Used for comparisons and storage.
+     *
+     * @param nickname The nickname to normalize
+     * @return The normalized nickname string
+     */
+    public static String normalizeNickname(@NotNull String nickname) {
         return miniMessage.stripTags(nickname).toLowerCase();
     }
 
-    public static List<OfflinePlayer> getOfflinePlayersByNickname(String normalizedNickname) {
+    /**
+     * Retrieves offline players who have saved a specific normalized nickname.
+     *
+     * @param normalizedNickname The normalized nickname to search for
+     * @return A list of OfflinePlayer objects who have used the nickname,
+     * or null if no players were found
+     */
+    @NotNull
+    public static List<OfflinePlayer> getOfflinePlayersByNickname(@NotNull String normalizedNickname) {
         List<UUID> usersWithThisName = SqlHandler.getInstance().getUuidsOfNickname(normalizedNickname);
-        if (usersWithThisName == null) return null;
-        if (usersWithThisName.isEmpty()) return new ArrayList<>();
+        if (usersWithThisName == null || usersWithThisName.isEmpty()) return new ArrayList<>();
         List<OfflinePlayer> playersByNick = new ArrayList<>();
         for (UUID uuid : usersWithThisName) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
@@ -120,31 +164,61 @@ public class NickUtils {
         return playersByNick;
     }
 
-    public static boolean passesRegexCheck(String normalizedNick) {
+    /**
+     * Checks if a normalized nickname passes the regex pattern defined in the configuration.
+     *
+     * @param normalizedNick The normalized nickname to validate
+     * @return true if the nickname matches the regex, false otherwise
+     */
+    public static boolean passesRegexCheck(@NotNull String normalizedNick) {
         Pattern configRegex = ConfigHandler.getInstance().getRegex();
         return configRegex.matcher(normalizedNick).matches();
     }
 
-    public static boolean thisIsSomeonesUsername(String normalizedName) {
+    /**
+     * Determines whether a given normalized nickname matches a recently-used username.
+     * This prevents nicknames from being set to usernames of other players within the
+     * protection period.
+     *
+     * @param normalizedName The normalized nickname to check
+     * @return true if the nickname matches a protected username, false otherwise
+     */
+    public static boolean thisIsSomeonesUsername(@NotNull String normalizedName) {
         long protectionTime = ConfigHandler.getInstance().getUsernameProtectionTime();
         if (protectionTime < 0) return false;
         normalizedName = normalizedName.toLowerCase();
         return SqlHandler.getInstance().lastLoginOfUsername(normalizedName, ConfigHandler.getInstance().getUsernameProtectionTime()) != null;
     }
 
-    public static boolean someoneOnlineUsingThis(CommandSender sender, String normalizedNick) {
+    /**
+     * Checks if an online player (other than the sender) is currently using the given
+     * normalized nickname.
+     *
+     * @param sender         The command sender attempting to set the nickname
+     * @param normalizedNick The normalized nickname to check
+     * @return true if another online player is using this nickname, false otherwise
+     */
+    public static boolean someoneOnlineUsingThis(@NotNull CommandSender sender, @NotNull String normalizedNick) {
         UUID playerUuid = null;
         if (sender instanceof Player playerSender) playerUuid = playerSender.getUniqueId();
         return Cache.getInstance().nickInUseOnlinePlayers(playerUuid, normalizedNick);
     }
 
-    public static boolean someoneSavedUsingThis(CommandSender sender, String normalizedNick) {
+    /**
+     * Checks if the given normalized nickname is already saved by another player and is
+     * protected based on offline nickname protection settings.
+     *
+     * @param sender         The command sender attempting to set the nickname
+     * @param normalizedNick The normalized nickname to check
+     * @return true if the nickname is already saved and protected, false otherwise
+     */
+    public static boolean someoneSavedUsingThis(@NotNull CommandSender sender, @NotNull String normalizedNick) {
         UUID senderUuid = null;
         if (sender instanceof Player playerSender) senderUuid = playerSender.getUniqueId();
         List<UUID> uuidsWithThis = SqlHandler.getInstance().nickAlreadySavedTo(senderUuid, normalizedNick);
         if (uuidsWithThis == null || uuidsWithThis.isEmpty()) return false;
         for (UUID uuid : uuidsWithThis) {
-            if (SqlHandler.getInstance().lastLongOfUuid(uuid, ConfigHandler.getInstance().getOfflineNickProtectionTime()) != null)
+            if (SqlHandler.getInstance().lastLoginOfUuid(uuid, ConfigHandler.getInstance().getOfflineNickProtectionTime()) != null)
                 return true;
         }
         return false;
