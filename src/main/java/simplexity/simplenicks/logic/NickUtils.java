@@ -59,7 +59,7 @@ public class NickUtils {
         boolean bypassNickProtection = sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission());
 
         if (!bypassUsername) {
-            if (thisIsSomeonesUsername(normalizedNick))
+            if (ConfigHandler.getInstance().isUsernameProtection() && isProtectedUsername(normalizedNick))
                 throw Exceptions.ERROR_NICKNAME_IS_SOMEONES_USERNAME.create(normalizedNick);
         }
         if (!bypassLength) {
@@ -183,11 +183,10 @@ public class NickUtils {
      * @param normalizedName The normalized nickname to check
      * @return true if the nickname matches a protected username, false otherwise
      */
-    public static boolean thisIsSomeonesUsername(@NotNull String normalizedName) {
-        long protectionTime = ConfigHandler.getInstance().getUsernameProtectionTime();
-        if (protectionTime < 0) return false;
+    public static boolean isProtectedUsername(@NotNull String normalizedName) {
         normalizedName = normalizedName.toLowerCase();
-        return SqlHandler.getInstance().lastLoginOfUsername(normalizedName, ConfigHandler.getInstance().getUsernameProtectionTime()) != null;
+        long expireTime = ConfigHandler.getInstance().getUsernameProtectionTime() == -1 ? System.currentTimeMillis() - ConfigHandler.getInstance().getUsernameProtectionTime() : -1;
+        return SqlHandler.getInstance().lastLoginOfUsername(normalizedName, expireTime) != null;
     }
 
     /**

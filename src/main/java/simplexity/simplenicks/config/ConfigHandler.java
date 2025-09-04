@@ -22,7 +22,7 @@ public class ConfigHandler {
 
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
     private Pattern regex;
-    private boolean mySql, tablistNick, onlineNickProtection, offlineNickProtection, debugMode, nickRequiresPermission,
+    private boolean mySql, tablistNick, usernameProtection, onlineNickProtection, offlineNickProtection, debugMode, nickRequiresPermission,
             colorRequiresPermission, formatRequiresPermission, whoRequiresPermission;
     private int maxLength, maxSaves;
     private final int MILLI_PER_DAY =  86_400_000;
@@ -63,7 +63,8 @@ public class ConfigHandler {
         maxLength = config.getInt("max-nickname-length", 25);
         maxSaves = config.getInt("max-saves", 5);
         tablistNick = config.getBoolean("tablist-nick", false);
-        usernameProtectionTime = config.getLong("username-protection", 30) * MILLI_PER_DAY;
+        usernameProtection = config.getBoolean("nickname-protection.username.enabled", true);
+        usernameProtectionTime = config.getLong("nickname-protection.username.expires", 30) * MILLI_PER_DAY;
         nickPrefix = config.getString("nickname-prefix", "");
         onlineNickProtection = config.getBoolean("nickname-protection.online.enabled", false);
         offlineNickProtection = config.getBoolean("nickname-protection.offline.enabled", false);
@@ -141,5 +142,9 @@ public class ConfigHandler {
 
     public boolean isWhoRequiresPermission() {
         return whoRequiresPermission;
+    }
+
+    public boolean isUsernameProtection() {
+        return usernameProtection;
     }
 }
