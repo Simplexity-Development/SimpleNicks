@@ -1,24 +1,31 @@
 package simplexity.simplenicks.listener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import simplexity.simplenicks.SimpleNicks;
-import simplexity.simplenicks.util.Cache;
-import simplexity.simplenicks.util.NickHandler;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.logic.NickUtils;
+import simplexity.simplenicks.saving.SaveMigrator;
+import simplexity.simplenicks.saving.SqlHandler;
+
+import java.util.UUID;
 
 public class LoginListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerLogin(PlayerJoinEvent joinEvent) {
-        Bukkit.getScheduler().runTaskLater(SimpleNicks.getInstance(), () -> {
-            Player player = joinEvent.getPlayer();
-            String nickname = NickHandler.getInstance().loadNickname(player);
-            if (nickname == null || nickname.isEmpty()) return;
-            Cache.nicknameCache.put(player.getUniqueId(), nickname);
-            NickHandler.getInstance().refreshNickname(joinEvent.getPlayer());
-        }, 20L);
+    public void onPlayerJoin(PlayerJoinEvent joinEvent) {
+        UUID playerUuid = joinEvent.getPlayer().getUniqueId();
+        String username = joinEvent.getPlayer().getName();
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleNicks.getInstance(), () -> {
+            SqlHandler.getInstance().updatePlayerTable(playerUuid, username);
+            Cache.getInstance().loadCurrentNickname(playerUuid);
+            Cache.getInstance().loadSavedNicknames(playerUuid);
+            Bukkit.getScheduler().runTask(SimpleNicks.getInstance(), () -> {
+                SaveMigrator.migratePdcNickname(joinEvent.getPlayer());
+                NickUtils.refreshDisplayName(playerUuid);
+            });
+        });
     }
 }

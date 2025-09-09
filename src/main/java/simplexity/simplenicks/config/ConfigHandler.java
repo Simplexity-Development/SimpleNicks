@@ -17,19 +17,17 @@ public class ConfigHandler {
         return nickPrefix;
     }
 
-    public enum SAVING_TYPE {PDC, FILE}
 
     private static ConfigHandler instance;
 
     private final Logger logger = SimpleNicks.getSimpleNicksLogger();
-    private Pattern regex = Pattern.compile("[A-Za-z0-9_]+");
-    private SAVING_TYPE savingType = SAVING_TYPE.FILE;
-    private int maxLength = 25;
-    private int maxSaves = 5;
-    private boolean tablistNick = false;
-    private String regexString = "[A-Za-z0-9_]+";
-    private String nickPrefix;
-    private long usernameProtectionTime = 0;
+    private Pattern regex;
+    private boolean mySql, tablistNick, usernameProtection, onlineNickProtection, offlineNickProtection, debugMode, nickRequiresPermission,
+            colorRequiresPermission, formatRequiresPermission, whoRequiresPermission;
+    private int maxLength, maxSaves;
+    private final int MILLI_PER_DAY =  86_400_000;
+    private String regexString, nickPrefix, mySqlIp, mySqlName, mySqlUsername, mySqlPassword;
+    private long usernameProtectionTime, offlineNickProtectionTime = 0;
 
     private ConfigHandler() {
     }
@@ -42,38 +40,40 @@ public class ConfigHandler {
 
     public void reloadConfig() {
         SimpleNicks.getInstance().reloadConfig();
-        LocaleHandler.getInstance().loadLocale();
+        LocaleHandler.getInstance().reloadLocale();
         FileConfiguration config = SimpleNicks.getInstance().getConfig();
         // Check the validity of the regex.
         try {
             String regexSetting = config.getString("nickname-regex", "[A-Za-z0-9_]+");
             regexString = regexSetting;
-            assert !regexSetting.isBlank();
             regex = Pattern.compile(regexSetting);
         } catch (PatternSyntaxException e) {
-            logger.severe(LocaleHandler.getInstance().getInvalidConfigRegex());
+            logger.severe(LocaleMessage.ERROR_INVALID_CONFIG_REGEX.getMessage());
         }
-        // Check validity of saving-type.
-        try {
-            String savingTypeSetting = config.getString("saving-type", "file");
-            savingType = SAVING_TYPE.valueOf(savingTypeSetting.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            logger.severe("INVALID SAVING TYPE");
-        }
+        debugMode = config.getBoolean("debug-mode", false);
+        mySql = config.getBoolean("mysql.enabled", false);
+        nickRequiresPermission = config.getBoolean("require-permission.nick", true);
+        colorRequiresPermission = config.getBoolean("require-permission.color", true);
+        formatRequiresPermission = config.getBoolean("require-permission.format", true);
+        whoRequiresPermission = config.getBoolean("require-permission.who", false);
+        mySqlIp = config.getString("mysql.ip", "localhost:3306");
+        mySqlName = config.getString("mysql.name", "simplenicks");
+        mySqlUsername = config.getString("mysql.username", "username1");
+        mySqlPassword = config.getString("mysql.password", "badpassword!");
         maxLength = config.getInt("max-nickname-length", 25);
         maxSaves = config.getInt("max-saves", 5);
         tablistNick = config.getBoolean("tablist-nick", false);
-        usernameProtectionTime = config.getLong("username-protection", 30) * 86400000;
+        usernameProtection = config.getBoolean("nickname-protection.username.enabled", true);
+        usernameProtectionTime = config.getLong("nickname-protection.username.expires", 30) * MILLI_PER_DAY;
         nickPrefix = config.getString("nickname-prefix", "");
+        onlineNickProtection = config.getBoolean("nickname-protection.online.enabled", false);
+        offlineNickProtection = config.getBoolean("nickname-protection.offline.enabled", false);
+        offlineNickProtectionTime = config.getLong("nickname-protection.offline.expires", 30) * MILLI_PER_DAY;
     }
 
 
     public Pattern getRegex() {
         return regex;
-    }
-
-    public SAVING_TYPE getSavingType() {
-        return savingType;
     }
 
     public int getMaxLength() {
@@ -90,5 +90,61 @@ public class ConfigHandler {
 
     public long getUsernameProtectionTime() {
         return usernameProtectionTime;
+    }
+
+    public boolean isMySql() {
+        return mySql;
+    }
+
+    public String getMySqlIp() {
+        return mySqlIp;
+    }
+
+    public String getMySqlName() {
+        return mySqlName;
+    }
+
+    public String getMySqlUsername() {
+        return mySqlUsername;
+    }
+
+    public String getMySqlPassword() {
+        return mySqlPassword;
+    }
+
+    public long getOfflineNickProtectionTime() {
+        return offlineNickProtectionTime;
+    }
+
+    public boolean shouldOnlineNicksBeProtected() {
+        return onlineNickProtection;
+    }
+
+    public boolean shouldOfflineNicksBeProtected() {
+        return offlineNickProtection;
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public boolean isNickRequiresPermission() {
+        return nickRequiresPermission;
+    }
+
+    public boolean isColorRequiresPermission() {
+        return colorRequiresPermission;
+    }
+
+    public boolean isFormatRequiresPermission() {
+        return formatRequiresPermission;
+    }
+
+    public boolean isWhoRequiresPermission() {
+        return whoRequiresPermission;
+    }
+
+    public boolean isUsernameProtection() {
+        return usernameProtection;
     }
 }
