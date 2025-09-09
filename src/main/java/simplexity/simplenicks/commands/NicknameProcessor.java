@@ -23,7 +23,7 @@ import java.util.UUID;
 public class NicknameProcessor {
     private static NicknameProcessor instance;
 
-    public NicknameProcessor() {
+    private NicknameProcessor() {
     }
 
     public static NicknameProcessor getInstance() {

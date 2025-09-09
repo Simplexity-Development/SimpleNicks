@@ -65,10 +65,9 @@ public class AdminLookupSubCommand implements SubCommand {
 
     @NotNull
     public Component lookupInfoComponent(@NotNull String username, @Nullable Nickname currentNick, @Nullable List<Nickname> savedNames) {
-        if (currentNick == null && (savedNames == null || savedNames.isEmpty()))
-            return miniMessage.deserialize(LocaleMessage.ERROR_NO_PLAYERS_WITH_THIS_NAME.getMessage());
         String nickname;
         if (currentNick == null) {
+            if (savedNames == null || savedNames.isEmpty()) return miniMessage.deserialize(LocaleMessage.ERROR_NO_PLAYERS_WITH_THIS_NAME.getMessage());
             nickname = LocaleMessage.INSERT_NONE.getMessage();
         } else {
             nickname = currentNick.getNickname();

@@ -37,7 +37,7 @@ import java.util.UUID;
 public class SqlHandler {
     private static SqlHandler instance;
 
-    public SqlHandler() {
+    private SqlHandler() {
     }
 
     /**
