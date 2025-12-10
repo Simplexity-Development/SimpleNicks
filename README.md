@@ -5,7 +5,7 @@
         <img
           width="120"
           height="120"
-          alt="image"
+          alt=""
           src="https://github.com/user-attachments/assets/52f8139b-754f-4e9a-821a-fd09bb6b57cc"
         />
       </td>
@@ -28,7 +28,7 @@
       Use MiniMessage formatting in nicknames.
     </td>
     <td>
-      <img width="430" height="117" alt="image" src="https://github.com/user-attachments/assets/cbb35336-8cc6-4297-9c45-d160a342a1db" />
+      <img width="430" height="117" alt="" src="https://github.com/user-attachments/assets/cbb35336-8cc6-4297-9c45-d160a342a1db" />
     </td>
   </tr>
   <tr>
@@ -37,7 +37,7 @@
       Display player nicknames in the tab list.
     </td>
     <td>
-      <img width="210" height="45" alt="image" src="https://github.com/user-attachments/assets/91a8af30-6224-47b7-a70a-f5fd9bc9f594" />
+      <img width="210" height="45" alt="" src="https://github.com/user-attachments/assets/91a8af30-6224-47b7-a70a-f5fd9bc9f594" />
     </td>
   </tr>
   <tr>
@@ -46,7 +46,7 @@
       Nicknames can be saved for future use, like in roleplaying.
     </td>
     <td>
-      <img width="599" height="137" alt="image" src="https://github.com/user-attachments/assets/594d2bd2-777c-436c-a41b-6c1647b0f7b6" />
+      <img width="599" height="137" alt="" src="https://github.com/user-attachments/assets/594d2bd2-777c-436c-a41b-6c1647b0f7b6" />
     </td>
   </tr>
   <tr>
@@ -55,7 +55,7 @@
       Prevent confusion with username / nickname copying.
     </td>
     <td>
-      <img width="665" height="119" alt="image" src="https://github.com/user-attachments/assets/e78e8615-f173-4adf-8160-b726e48fb5e7" />
+      <img width="665" height="119" alt="" src="https://github.com/user-attachments/assets/e78e8615-f173-4adf-8160-b726e48fb5e7" />
     </td>
   </tr>
   <tr>
@@ -64,7 +64,7 @@
       Find out a player's secret identity.
     </td>
     <td>
-      <img width="367" height="155" alt="image" src="https://github.com/user-attachments/assets/f93ad1a5-ffcc-4bbf-9562-aa223385fd57" />
+      <img width="367" height="155" alt="" src="https://github.com/user-attachments/assets/f93ad1a5-ffcc-4bbf-9562-aa223385fd57" />
     </td>
   </tr>
 </table>
@@ -158,10 +158,10 @@ All placeholders now start with **`simplenick`** for consistency.
 
 | Placeholder                      | Description                              | Example |
 |----------------------------------|------------------------------------------|---------|
-| `%simplenick_nickname%`          | Player’s parsed nickname.                |<img width="167" height="20" alt="image" src="https://github.com/user-attachments/assets/08cee7cf-8cbd-4ee9-9453-e7db16ec1b17" />|
-| `%simplenick_mininick%`          | Player’s raw MiniMessage nickname.       |<img width="264" height="21" alt="image" src="https://github.com/user-attachments/assets/350ed8a8-da73-4c10-8332-cff65d1c3f05" />|
-| `%simplenick_prefixed-nickname%` | Nickname with configured prefix applied. |<img width="167" height="20" alt="image" src="https://github.com/user-attachments/assets/bb591810-9c60-42fd-9005-0d68b1408f3e" />|
-| `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.    |<img width="264" height="21" alt="image" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />|
+| `%simplenick_nickname%`          | Player’s parsed nickname.                |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/08cee7cf-8cbd-4ee9-9453-e7db16ec1b17" />|
+| `%simplenick_mininick%`          | Player’s raw MiniMessage nickname.       |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/350ed8a8-da73-4c10-8332-cff65d1c3f05" />|
+| `%simplenick_prefixed-nickname%` | Nickname with configured prefix applied. |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/bb591810-9c60-42fd-9005-0d68b1408f3e" />|
+| `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.    |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />|
 
 ## Configuration
 
