@@ -1,0 +1,55 @@
+#####
+# Minecraft Maven Version Bump Check
+#####
+# Ensures that maven version is bumped or changed before merging.
+#####
+name: "Version Bump Check"
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  ensure-version-bump:
+    if: ${{ (github.base_ref == 'main' || github.base_ref == 'master') && !(
+      startsWith(github.head_ref, 'ci/') ||
+      startsWith(github.head_ref, 'doc/')
+      )}}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from PR branch
+        id: pr_ver
+        run: |
+          PR_VERSION=$(grep -m1 '<version>' pom.xml | sed -E 's/.*<version>(.*)<\/version>.*/\1/')
+          echo "value=$PR_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract version from base branch
+        id: base_ver
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          git checkout origin/${{ github.base_ref }} -- pom.xml
+          BASE_VERSION=$(grep -m1 '<version>' pom.xml | sed -E 's/.*<version>(.*)<\/version>.*/\1/')
+          echo "value=$BASE_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compare versions
+        run: |
+          echo "PR version:   ${{ steps.pr_ver.outputs.value }}"
+          echo "Base version: ${{ steps.base_ver.outputs.value }}"
+
+          if [ "${{ steps.pr_ver.outputs.value }}" = "${{ steps.base_ver.outputs.value }}" ]; then
+            echo "❌ Version has NOT been bumped!"
+            exit 1
+          fi
+
+          echo "✅ Version has been changed."
+
+      - name: Warn if version contains -SNAPSHOT
+        run: |
+          VERSION="${{ steps.pr_ver.outputs.value }}"
+          if [[ "$VERSION" == *"-SNAPSHOT"* ]]; then
+            echo "::warning title=Snapshot Version Detected::The version contains '-SNAPSHOT'. Consider removing it before release."
+          fi
