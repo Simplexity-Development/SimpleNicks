@@ -47,6 +47,12 @@ public class SNExpansion extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("prefixed-mininick")) {
             return prefix + nickname;
         }
+        if (params.equalsIgnoreCase("stripped")) {
+            return SimpleNicks.getMiniMessage().stripTags(nickname);
+        }
+        if (params.equalsIgnoreCase("prefixed-stripped")) {
+            return prefix + SimpleNicks.getMiniMessage().stripTags(nickname);
+        }
         String parsedNickname = LegacyComponentSerializer.legacySection()
                 .serialize(SimpleNicks.getMiniMessage().deserialize(nickname));
         if (params.equalsIgnoreCase("nickname")) {
