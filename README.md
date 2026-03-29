@@ -156,12 +156,15 @@
 
 All placeholders now start with **`simplenick`** for consistency.
 
-| Placeholder                      | Description                              | Example |
-|----------------------------------|------------------------------------------|---------|
-| `%simplenick_nickname%`          | Player’s parsed nickname.                |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/08cee7cf-8cbd-4ee9-9453-e7db16ec1b17" />|
-| `%simplenick_mininick%`          | Player’s raw MiniMessage nickname.       |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/350ed8a8-da73-4c10-8332-cff65d1c3f05" />|
-| `%simplenick_prefixed-nickname%` | Nickname with configured prefix applied. |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/bb591810-9c60-42fd-9005-0d68b1408f3e" />|
-| `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.    |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />|
+| Placeholder                      | Description                                                     | Example |
+|----------------------------------|-----------------------------------------------------------------|---------|
+| `%simplenick_nickname%`          | Player’s parsed nickname.                                       |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/08cee7cf-8cbd-4ee9-9453-e7db16ec1b17" />|
+| `%simplenick_mininick%`          | Player’s raw MiniMessage nickname.                              |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/350ed8a8-da73-4c10-8332-cff65d1c3f05" />|
+| `%simplenick_stripped%`          | Player's tagless and formatless nickname.                       |<img width="156" height="16" alt="image" src="https://github.com/user-attachments/assets/f5844049-ca20-4194-93c5-268e7b1dda16" />|
+| `%simplenick_prefixed-nickname%` | Nickname with configured prefix applied.                        |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/bb591810-9c60-42fd-9005-0d68b1408f3e" />|
+| `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.                           |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />|
+| `%simplenick_prefixed-stripped%` | Player's tagless and formatless nickname with prefix.           |<img width="163" height="20" alt="image" src="https://github.com/user-attachments/assets/467f4b8d-3488-464e-a42e-b5bbeb2426ba" />|
+| `%simplenick_normalized%`        | Player's normalized nickname, used for "name taken" comparisons.|<img width="152" height="16" alt="image" src="https://github.com/user-attachments/assets/5ca78e29-e971-41e8-bbe2-8fc67fc06f23" />|
 
 ## Configuration
 
