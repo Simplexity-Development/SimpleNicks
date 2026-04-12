@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import simplexity.simplenicks.commands.NicknameCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
+import simplexity.simplenicks.hooks.SNMiniExpansion;
 import simplexity.simplenicks.listener.LeaveListener;
 import simplexity.simplenicks.listener.LoginListener;
 import simplexity.simplenicks.saving.SaveMigrator;
@@ -34,6 +35,9 @@ public final class SimpleNicks extends JavaPlugin {
         saveConfig();
         if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new SNExpansion().register();
+        }
+        if (this.getServer().getPluginManager().isPluginEnabled("MiniPlaceholders")) {
+            SNMiniExpansion.register();
         }
         getServer().getPluginManager().registerEvents(new LoginListener(), this);
         getServer().getPluginManager().registerEvents(new LeaveListener(), this);
