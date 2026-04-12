@@ -4,16 +4,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum LocaleMessage {
-    HELP_MESSAGE("plugin.help-message",
-            """
-                    Nickname Help
-                    ========================
-                    <aqua>· <yellow>Setting a nickname:
-                    <gray>/nick set <nickname>
-                    <aqua>· <yellow>removing a nickname:
-                    <gray>/nick reset
-                    <aqua>· <yellow>Formatting:
-                    <gray>This plugin uses minimessage formatting. You can find a format viewer <aqua><u><click:open_url:'https://webui.adventure.kyori.net/'>here</click></u></aqua>"""),
+    HELP_HEADER("plugin.help.header", "<yellow>========== SimpleNicks Help =========="),
+    HELP_SET("plugin.help.set", "<aqua>/nick set (nickname) <dark_gray>-</dark_gray> <gray>Set your nickname"),
+    HELP_RESET("plugin.help.reset", "<aqua>/nick reset <dark_gray>-</dark_gray> <gray>Reset your nickname"),
+    HELP_SAVE("plugin.help.save", "<aqua>/nick save [nickname] <dark_gray>-</dark_gray> <gray>Save a nickname for later"),
+    HELP_DELETE("plugin.help.delete", "<aqua>/nick delete (nickname) <dark_gray>-</dark_gray> <gray>Delete a saved nickname"),
+    HELP_WHO("plugin.help.who", "<aqua>/nick who (nickname) <dark_gray>-</dark_gray> <gray>Find who is using a nickname"),
+    HELP_ADMIN_SET("plugin.help.admin.set", "<gold>/nick admin set (username) (nickname) <dark_gray>-</dark_gray> <gray>Set another player's nickname"),
+    HELP_ADMIN_RESET("plugin.help.admin.reset", "<gold>/nick admin reset (username) <dark_gray>-</dark_gray> <gray>Reset another player's nickname"),
+    HELP_ADMIN_DELETE("plugin.help.admin.delete", "<gold>/nick admin delete (username) (nickname) <dark_gray>-</dark_gray> <gray>Delete a saved nickname from a player"),
+    HELP_ADMIN_LOOKUP("plugin.help.admin.lookup", "<gold>/nick admin lookup (username) <dark_gray>-</dark_gray> <gray>Look up a player's nickname info"),
+    HELP_RELOAD("plugin.help.reload", "<gold>/nick reload <dark_gray>-</dark_gray> <gray>Reload the plugin configuration"),
     SHOWN_HELP("plugin.user-shown-help", "<target><reset><yellow> has been shown the help screen"),
     CONFIG_RELOADED("plugin.config-reloaded", "<gold>SimpleNicks config and locale reloaded"),
     SERVER_DISPLAY_NAME("plugin.server-display-name", "<gray>[Server]</gray>"),

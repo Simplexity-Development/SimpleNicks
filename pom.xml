@@ -6,7 +6,7 @@
 
     <groupId>simplexity</groupId>
     <artifactId>SimpleNicks</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <packaging>jar</packaging>
 
     <name>SimpleNicks</name>
@@ -92,6 +92,12 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>6.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.miniplaceholders</groupId>
+            <artifactId>miniplaceholders-api</artifactId>
+            <version>3.2.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
