@@ -69,12 +69,11 @@
   </tr>
 </table>
 
-
 #### And More
 
 - Permissions support, use something like LuckPerms.
 - SQL-based storage, choose between MySQL (Server) or SQLite (Local, default).
-  - _No, you do not need any SQL setup to run this plugin._
+    - _No, you do not need any SQL setup to run this plugin._
 - Control whether specific nickname functionality requires permissions.
 - Control how long a username or nickname is protected for.
 - Nickname prefixing, so you know who is hiding their identity.
@@ -85,24 +84,24 @@
 
 ### Player Commands
 
-| Command | Description |
-|-|-|
-| `/nick help` | Displays help text. |
-| `/nick set <nickname>`| Sets your nickname.<br>Supports [MiniMessage](https://docs.advntr.dev/minimessage/) formatting. |
-| `/nick save [nickname]` | Saves your current nickname for later use.<br>You can also provide a nickname to save directly. |
-| `/nick delete <nickname>` | Deletes one of your saved nicknames. |
-| `/nick reset` | Resets your nickname to your original username. |
-| `/nick who <nickname>` | Displays the username of the player with the supplied nickname. |
+| Command                   | Description                                                                                     |
+|---------------------------|-------------------------------------------------------------------------------------------------|
+| `/nick help`              | Displays help text.                                                                             |
+| `/nick set <nickname>`    | Sets your nickname.<br>Supports [MiniMessage](https://docs.advntr.dev/minimessage/) formatting. |
+| `/nick save [nickname]`   | Saves your current nickname for later use.<br>You can also provide a nickname to save directly. |
+| `/nick delete <nickname>` | Deletes one of your saved nicknames.                                                            |
+| `/nick reset`             | Resets your nickname to your original username.                                                 |
+| `/nick who <nickname>`    | Displays the username of the player with the supplied nickname.                                 |
 
 ### Admin Commands
 
-| Command | Description |
-|-|-|
-| `/nick admin set <username> <nickname>` | Sets another player’s nickname.<br>Uses the **admin’s permissions** for formatting. |
-| `/nick admin reset <username>` | Resets another player’s nickname. |
-| `/nick admin delete <username> <nickname>` | Deletes a saved nickname from a player’s list. |
-| `/nick admin lookup <username>` | Displays a player’s current nickname and all saved nicknames.|
-| `/nick reload` | Reloads the configuration and locale. |
+| Command                                    | Description                                                                         |
+|--------------------------------------------|-------------------------------------------------------------------------------------|
+| `/nick admin set <username> <nickname>`    | Sets another player’s nickname.<br>Uses the **admin’s permissions** for formatting. |
+| `/nick admin reset <username>`             | Resets another player’s nickname.                                                   |
+| `/nick admin delete <username> <nickname>` | Deletes a saved nickname from a player’s list.                                      |
+| `/nick admin lookup <username>`            | Displays a player’s current nickname and all saved nicknames.                       |
+| `/nick reload`                             | Reloads the configuration and locale.                                               |
 
 ## Permissions
 
@@ -114,6 +113,7 @@
 | `simplenick.nick.reset`  | Reset your own nickname.                         | `op`    |
 | `simplenick.nick.delete` | Delete one of your saved nicknames.              | `op`    |
 | `simplenick.nick.who`    | Use `/nick who <nickname>` to look up usernames. | `true`  |
+| `simplenick.nick.help`   | Use `/nick help` to view the help description    | `true`  |
 
 **Color Permissions**
 
@@ -157,19 +157,21 @@
 
 All placeholders now start with **`simplenick`** for consistency.
 
-| Placeholder                      | Description                                                     | Example |
-|----------------------------------|-----------------------------------------------------------------|---------|
-| `%simplenick_nickname%`          | Player’s parsed nickname.                                       |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/08cee7cf-8cbd-4ee9-9453-e7db16ec1b17" />|
-| `%simplenick_mininick%`          | Player’s raw MiniMessage nickname.                              |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/350ed8a8-da73-4c10-8332-cff65d1c3f05" />|
-| `%simplenick_stripped%`          | Player's tagless and formatless nickname.                       |<img width="156" height="16" alt="image" src="https://github.com/user-attachments/assets/f5844049-ca20-4194-93c5-268e7b1dda16" />|
-| `%simplenick_prefixed-nickname%` | Nickname with configured prefix applied.                        |<img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/bb591810-9c60-42fd-9005-0d68b1408f3e" />|
-| `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.                           |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />|
-| `%simplenick_prefixed-stripped%` | Player's tagless and formatless nickname with prefix.           |<img width="163" height="20" alt="image" src="https://github.com/user-attachments/assets/467f4b8d-3488-464e-a42e-b5bbeb2426ba" />|
-| `%simplenick_normalized%`        | Player's normalized nickname, used for "name taken" comparisons.|<img width="152" height="16" alt="image" src="https://github.com/user-attachments/assets/5ca78e29-e971-41e8-bbe2-8fc67fc06f23" />|
+| Placeholder                      | Description                                                      | Example                                                                                                                           |
+|----------------------------------|------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `%simplenick_nickname%`          | Player’s parsed nickname.                                        | <img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/08cee7cf-8cbd-4ee9-9453-e7db16ec1b17" />      |
+| `%simplenick_mininick%`          | Player’s raw MiniMessage nickname.                               | <img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/350ed8a8-da73-4c10-8332-cff65d1c3f05" />      |
+| `%simplenick_stripped%`          | Player's tagless and formatless nickname.                        | <img width="156" height="16" alt="image" src="https://github.com/user-attachments/assets/f5844049-ca20-4194-93c5-268e7b1dda16" /> |
+| `%simplenick_prefixed-nickname%` | Nickname with configured prefix applied.                         | <img width="167" height="20" alt="" src="https://github.com/user-attachments/assets/bb591810-9c60-42fd-9005-0d68b1408f3e" />      |
+| `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.                            | <img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />      |
+| `%simplenick_prefixed-stripped%` | Player's tagless and formatless nickname with prefix.            | <img width="163" height="20" alt="image" src="https://github.com/user-attachments/assets/467f4b8d-3488-464e-a42e-b5bbeb2426ba" /> |
+| `%simplenick_normalized%`        | Player's normalized nickname, used for "name taken" comparisons. | <img width="152" height="16" alt="image" src="https://github.com/user-attachments/assets/5ca78e29-e971-41e8-bbe2-8fc67fc06f23" /> |
 
 ## MiniPlaceholders
 
-[MiniPlaceholders](https://github.com/MiniPlaceholders/MiniPlaceholders) is an Adventure-native placeholder library. Unlike PlaceholderAPI, these tags return fully rendered Adventure components, so colors and formatting are preserved without any legacy serialization step.
+[MiniPlaceholders](https://github.com/MiniPlaceholders/MiniPlaceholders) is an Adventure-native placeholder library.
+Unlike PlaceholderAPI, these tags return fully rendered Adventure components, so colors and formatting are preserved
+without any legacy serialization step.
 
 All tags are audience-scoped and only resolve for **online players**.
 
@@ -181,13 +183,15 @@ All tags are audience-scoped and only resolve for **online players**.
 | `<simplenick_prefixed_stripped>` | Configured prefix + stripped nickname.                                |
 | `<simplenick_normalized>`        | Normalized nickname (lowercase, tags stripped). Empty if no nick set. |
 
-When no nickname is set, `nick`, `prefixed_nick`, `stripped`, and `prefixed_stripped` fall back to the player's username.
+When no nickname is set, `nick`, `prefixed_nick`, `stripped`, and `prefixed_stripped` fall back to the player's
+username.
 
 ## Configuration
 
 ### MySQL
 
-Plugin uses a local .db SQLite by default. This requires no additional setup but cannot be shared between a network of servers.
+Plugin uses a local .db SQLite by default. This requires no additional setup but cannot be shared between a network of
+servers.
 
 If you would like to use MySQL, you can do so by enabling it and filling out the information in the configuration.
 
@@ -222,7 +226,9 @@ max-nickname-length: 30
 
 ### Nickname Regex
 
-This is the allowed characters in a nickname. The default allows only alphanumeric characters and underscores `[A-Za-z0-9_]+` - you can add additional characters into this, use a resource like https://regexr.com/ to make sure your regex properly parses.
+This is the allowed characters in a nickname. The default allows only alphanumeric characters and underscores
+`[A-Za-z0-9_]+` - you can add additional characters into this, use a resource like https://regexr.com/ to make sure your
+regex properly parses.
 
 > [!Warning]
 > Using non-alphanumeric characters is generally unsupported and can have unintended side effects.
@@ -235,11 +241,14 @@ nickname-regex: "[A-Za-z0-9_]+"
 
 ### Require Permission
 
-These set whether or not specific functionalities require a permission. If you don't know what a permissions plugin is, and you just want the plugin to work, you can set the functions you want to 'false'. If you do know what permissions are and how to use them, you probably don't need this section.
+These set whether or not specific functionalities require a permission. If you don't know what a permissions plugin is,
+and you just want the plugin to work, you can set the functions you want to 'false'. If you do know what permissions are
+and how to use them, you probably don't need this section.
 
 #### Nick
 
 Gives functionality for:
+
 - `/nick set`
 - `/nick reset`
 - `/nick save`
@@ -252,7 +261,8 @@ Allows a player to change the name they appear as, and the color of their name.
 
 #### Format
 
-Gives functionality for formatting tags, like `<u>` (underline), `<i>` (*italic*), `<b>` (**bold**), `<st>` (~~strikethrough~~), and `<obf>` (ō̵̬b̵̧̛f̷̩̋u̵̳͂ş̸̓c̷̥̈́a̵͇͂t̸̯͋e̸͎̚d̷̟͝)
+Gives functionality for formatting tags, like `<u>` (underline), `<i>` (*italic*), `<b>` (**bold**), `<st>` (~~
+strikethrough~~), and `<obf>` (ō̵̬b̵̧̛f̷̩̋u̵̳͂ş̸̓c̷̥̈́a̵͇͂t̸̯͋e̸͎̚d̷̟͝)
 
 #### Who
 
@@ -269,27 +279,33 @@ require-permission:
 
 ### Nickname Protection
 
-Allows protecting nicknames that are already in use. This does not protect saved nicknames or protect nicknames from being saved.
+Allows protecting nicknames that are already in use. This does not protect saved nicknames or protect nicknames from
+being saved.
 
 #### Online Protection
 
-Only prevents a player from taking the nickname of someone who is currently online. Allows people to use nicknames of people who are offline.
+Only prevents a player from taking the nickname of someone who is currently online. Allows people to use nicknames of
+people who are offline.
 
 #### Offline Protection
 
-Prevents players from using nicknames that someone else is actively using, regardless of if they're online or offline, provided the nickname expiry has not been reached.
+Prevents players from using nicknames that someone else is actively using, regardless of if they're online or offline,
+provided the nickname expiry has not been reached.
 
 #### Offline Protection Expires
 
-Time in days someone needs to be away before their nickname protection expires, set to `-1` if you do not want nickname protection to ever expire, but I wouldn't recommend that.
+Time in days someone needs to be away before their nickname protection expires, set to `-1` if you do not want nickname
+protection to ever expire, but I wouldn't recommend that.
 
 #### Username Protection
 
-Prevents players from nicknaming themselves someone's username. Only checks against players who have actually logged into the server.
+Prevents players from nicknaming themselves someone's username. Only checks against players who have actually logged
+into the server.
 
 #### Username Protection Expires
 
-This value controls the number of days someone needs to be offline before their username is considered allowed to be used as a nickname. Use `-1` if you do not want the protection ever to expire
+This value controls the number of days someone needs to be offline before their username is considered allowed to be
+used as a nickname. Use `-1` if you do not want the protection ever to expire
 
 ```yaml
 # Blocks certain names from being used as nicknames
@@ -307,7 +323,8 @@ nickname-protection:
 
 ### Max Saves
 
-Controls how many nicknames players can save, there is not currently an override permission for this, it is applied for all players with save permissions
+Controls how many nicknames players can save, there is not currently an override permission for this, it is applied for
+all players with save permissions
 
 ```yaml
 # How many nicknames can be saved?
@@ -316,7 +333,12 @@ max-saves: 5
 
 ### Tablist Nick
 
-Alters the tab list to use the current nicknames of players. If you have any plugin that already can handle this, I would suggest you use that, or use my other plugin [Simple Custom Tab List](https://modrinth.com/plugin/simple-custom-tablist) because this option is very limited and prone to issues with other plugins. If you have a very simple server setup and you just want nicknames to show on tab list this will work, but if you have geyser, or other plugins that might alter scoreboard and other random stuff, you're gonna want a separate plugin to handle the tablist
+Alters the tab list to use the current nicknames of players. If you have any plugin that already can handle this, I
+would suggest you use that, or use my other
+plugin [Simple Custom Tab List](https://modrinth.com/plugin/simple-custom-tablist) because this option is very limited
+and prone to issues with other plugins. If you have a very simple server setup and you just want nicknames to show on
+tab list this will work, but if you have geyser, or other plugins that might alter scoreboard and other random stuff,
+you're gonna want a separate plugin to handle the tablist
 
 ```yaml
 # Should names be changed in tablist?
@@ -328,7 +350,8 @@ tablist-nick: false
 
 Sets what the prefix of nicknames should be.
 
-Used in the display name of the player and placeholders `%simplenick_prefixed-nickname%`, `%simplenick_prefixed-mininick%`, `<simplenick_prefixed_nick>`, and `<simplenick_prefixed_stripped>`.
+Used in the display name of the player and placeholders `%simplenick_prefixed-nickname%`,
+`%simplenick_prefixed-mininick%`, `<simplenick_prefixed_nick>`, and `<simplenick_prefixed_stripped>`.
 
 ```yaml
 # What prefix should be given for players who have a nickname? put "" if you want no prefix
@@ -356,20 +379,22 @@ debug-mode: false
 If you are upgrading from a version of SimpleNicks **before SQL support**:
 
 - **Data Storage:**
-  - Old versions stored nicknames in YML or using the PersistentDataContainer (PDC).
-  - New versions use **MySQL or SQLite**. Existing data will be migrated automatically.
+    - Old versions stored nicknames in YML or using the PersistentDataContainer (PDC).
+    - New versions use **MySQL or SQLite**. Existing data will be migrated automatically.
 - **Commands:**
-  - Admin commands now live under `/nick admin` instead of sharing player command structure.
-  - `/nick save` can now accept arguments (`/nick save <nickname>`).
+    - Admin commands now live under `/nick admin` instead of sharing player command structure.
+    - `/nick save` can now accept arguments (`/nick save <nickname>`).
 - **Permissions:**
-  - Color and format permissions were moved into their own nodes (`simplenick.color.*` and `simplenick.format.*`).
-    - Color and format can now be allowed without permissions, check new config options
-  - `simplenick.admin.restrictive`, `simplenick.admin.basic` and `simplenick.admin.full` were **removed.** The permission is now `simplenick.admin.set`
-    - Admin nickname setting always uses **admin’s own permissions** now. (Previously 'admin basic' functionality)
-  - `simplenick.admin.save` was **removed** - since this is now using brigadier, you can use
+    - Color and format permissions were moved into their own nodes (`simplenick.color.*` and `simplenick.format.*`).
+        - Color and format can now be allowed without permissions, check new config options
+    - `simplenick.admin.restrictive`, `simplenick.admin.basic` and `simplenick.admin.full` were **removed.** The
+      permission is now `simplenick.admin.set`
+        - Admin nickname setting always uses **admin’s own permissions** now. (Previously 'admin basic' functionality)
+    - `simplenick.admin.save` was **removed** - since this is now using brigadier, you can use
 - **PlaceholderAPI:**
-  - Placeholders were renamed for consistency.
-    - `%simplenicks_mininick%` → `%simplenick_mininick%`
-    - `%simplenicks_nickname%` → `%simplenick_nickname%`
-    - New prefixed variants: `%simplenick_prefixed-nickname%`, `%simplenick_prefixed-mininick%`.
-    - Previously the placeholder always included the prefix if you had one set, now only the prefixed variants will. This is useful if you don't want the prefix in some areas but want it in others.
+    - Placeholders were renamed for consistency.
+        - `%simplenicks_mininick%` → `%simplenick_mininick%`
+        - `%simplenicks_nickname%` → `%simplenick_nickname%`
+        - New prefixed variants: `%simplenick_prefixed-nickname%`, `%simplenick_prefixed-mininick%`.
+        - Previously the placeholder always included the prefix if you had one set, now only the prefixed variants will.
+          This is useful if you don't want the prefix in some areas but want it in others.
