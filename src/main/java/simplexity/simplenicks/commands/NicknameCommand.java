@@ -5,6 +5,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import simplexity.simplenicks.commands.subcommands.admin.AdminSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.DeleteSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.HelpSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.WhoSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.ReloadSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.ResetSubCommand;
@@ -19,6 +20,7 @@ public class NicknameCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> createCommand() {
         LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("nick")
                 .requires(src -> !ConfigHandler.getInstance().isNickRequiresPermission() || src.getSender().hasPermission(NickPermission.NICK_COMMAND.getPermission()));
+        new HelpSubCommand().subcommandTo(builder);
         new SetSubCommand().subcommandTo(builder);
         new SaveSubCommand().subcommandTo(builder);
         new ResetSubCommand().subcommandTo(builder);

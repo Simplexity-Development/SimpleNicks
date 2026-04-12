@@ -79,6 +79,7 @@
 - Control how long a username or nickname is protected for.
 - Nickname prefixing, so you know who is hiding their identity.
 - PlaceholderAPI expansion, so you can put the nicknames wherever you need to.
+- MiniPlaceholders expansion, for Adventure-native placeholder support.
 
 ## Commands
 
@@ -165,6 +166,22 @@ All placeholders now start with **`simplenick`** for consistency.
 | `%simplenick_prefixed-mininick%` | Raw MiniMessage nickname with prefix.                           |<img width="264" height="21" alt="" src="https://github.com/user-attachments/assets/70785e7c-94e7-4bcc-9128-a7db9293554b" />|
 | `%simplenick_prefixed-stripped%` | Player's tagless and formatless nickname with prefix.           |<img width="163" height="20" alt="image" src="https://github.com/user-attachments/assets/467f4b8d-3488-464e-a42e-b5bbeb2426ba" />|
 | `%simplenick_normalized%`        | Player's normalized nickname, used for "name taken" comparisons.|<img width="152" height="16" alt="image" src="https://github.com/user-attachments/assets/5ca78e29-e971-41e8-bbe2-8fc67fc06f23" />|
+
+## MiniPlaceholders
+
+[MiniPlaceholders](https://github.com/MiniPlaceholders/MiniPlaceholders) is an Adventure-native placeholder library. Unlike PlaceholderAPI, these tags return fully rendered Adventure components, so colors and formatting are preserved without any legacy serialization step.
+
+All tags are audience-scoped and only resolve for **online players**.
+
+| Tag                              | Description                                                           |
+|----------------------------------|-----------------------------------------------------------------------|
+| `<simplenick_nick>`              | Player's nickname rendered as a full Adventure component.             |
+| `<simplenick_prefixed_nick>`     | Configured prefix + rendered nickname component.                      |
+| `<simplenick_stripped>`          | Player's nickname with all MiniMessage tags stripped.                 |
+| `<simplenick_prefixed_stripped>` | Configured prefix + stripped nickname.                                |
+| `<simplenick_normalized>`        | Normalized nickname (lowercase, tags stripped). Empty if no nick set. |
+
+When no nickname is set, `nick`, `prefixed_nick`, `stripped`, and `prefixed_stripped` fall back to the player's username.
 
 ## Configuration
 
@@ -311,7 +328,7 @@ tablist-nick: false
 
 Sets what the prefix of nicknames should be.
 
-Used in the display name of the player and placeholders `%simplenick_prefixed-nickname%` and `%simplenick_prefixed-mininick%`.
+Used in the display name of the player and placeholders `%simplenick_prefixed-nickname%`, `%simplenick_prefixed-mininick%`, `<simplenick_prefixed_nick>`, and `<simplenick_prefixed_stripped>`.
 
 ```yaml
 # What prefix should be given for players who have a nickname? put "" if you want no prefix
