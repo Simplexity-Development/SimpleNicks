@@ -23,9 +23,8 @@ import java.util.logging.Logger;
 @SuppressWarnings("UnstableApiUsage")
 public final class SimpleNicks extends JavaPlugin {
 
-    private static final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private static MiniMessage miniMessage;
     private static Plugin instance;
-    private static MiniMessage defaultResolver;
 
     @Override
     public void onEnable() {
@@ -47,7 +46,7 @@ public final class SimpleNicks extends JavaPlugin {
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(NicknameCommand.createCommand().build());
         });
-        setUpResolver();
+        setUpMiniMessage();
         registerPermissions();
     }
 
@@ -60,7 +59,7 @@ public final class SimpleNicks extends JavaPlugin {
         }
     }
 
-    private void setUpResolver() {
+    private static void setUpMiniMessage() {
         TagResolver.Builder tagResolver = TagResolver.builder();
         for (ColorTag colorTag : ColorTag.values()) {
             tagResolver.resolver(colorTag.getTagResolver());
@@ -69,7 +68,7 @@ public final class SimpleNicks extends JavaPlugin {
             tagResolver.resolver(formatTag.getTagResolver());
         }
         TagResolver resolver = tagResolver.build();
-        defaultResolver = MiniMessage.builder()
+        miniMessage = MiniMessage.builder()
                 .strict(false)
                 .tags(resolver)
                 .build();
@@ -85,11 +84,6 @@ public final class SimpleNicks extends JavaPlugin {
 
     public static Logger getSimpleNicksLogger() {
         return instance.getLogger();
-    }
-
-    public static MiniMessage getDefaultParser() {
-        return defaultResolver;
-
     }
 
 

@@ -9,7 +9,6 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.MessageComponentSerializer;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicks;
 import simplexity.simplenicks.commands.NicknameProcessor;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
+import simplexity.simplenicks.saving.Nickname;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -75,14 +75,15 @@ public class OfflinePlayerArgument implements CustomArgumentType<OfflinePlayer, 
      * @return A CompletableFuture containing the suggestions
      */
     public <S> @NotNull CompletableFuture<Suggestions> suggestOnlinePlayers(@NotNull CommandContext<S> ignoredContext, @NotNull SuggestionsBuilder builder) {
-        MiniMessage miniMessage = SimpleNicks.getMiniMessage();
         for (Player player : Bukkit.getOnlinePlayers()) {
             String suggestion = player.getName();
             if (suggestion.toLowerCase().contains(builder.getRemainingLowerCase())) {
+                Nickname currentNick = NicknameProcessor.getInstance().getCurrentNickname(player);
+                String nickDisplay = currentNick != null ? currentNick.getNickname() : player.getName();
                 builder.suggest(
                         suggestion,
                         MessageComponentSerializer.message().serialize(
-                                miniMessage.deserialize("Current Nickname: " + NicknameProcessor.getInstance().getCurrentNickname(player))
+                                SimpleNicks.getMiniMessage().deserialize("Current Nickname: " + nickDisplay)
                         )
                 );
             }

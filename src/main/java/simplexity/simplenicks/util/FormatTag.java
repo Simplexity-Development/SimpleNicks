@@ -13,7 +13,9 @@ public enum FormatTag {
     ITALIC(new Permission("simplenick.format.italic", PermissionDefault.OP), StandardTags.decorations(TextDecoration.ITALIC)),
     STRIKETHROUGH(new Permission("simplenick.format.strikethrough", PermissionDefault.OP), StandardTags.decorations(TextDecoration.STRIKETHROUGH)),
     BOLD(new Permission("simplenick.format.bold", PermissionDefault.OP), StandardTags.decorations(TextDecoration.BOLD)),
-    OBFUSCATED(new Permission("simplenick.format.obfuscated", PermissionDefault.OP), StandardTags.decorations(TextDecoration.OBFUSCATED));
+    OBFUSCATED(new Permission("simplenick.format.obfuscated", PermissionDefault.OP), StandardTags.decorations(TextDecoration.OBFUSCATED)),
+    HOVER(new Permission("simplenick.format.hover", PermissionDefault.FALSE), StandardTags.hoverEvent()),
+    FONT(new Permission("simplenick.format.font", PermissionDefault.FALSE), StandardTags.font()),;
 
 
     private final Permission permission;

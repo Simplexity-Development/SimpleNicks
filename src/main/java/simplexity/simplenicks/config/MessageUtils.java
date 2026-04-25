@@ -73,7 +73,7 @@ public class MessageUtils {
         }
         Component finalComponent = Component.empty();
         for (Nickname nick : nicknames) {
-            Component nickname = miniMessage.deserialize(nick.getNickname());
+            Component nickname = SimpleNicks.getMiniMessage().deserialize(nick.getNickname());
             finalComponent = finalComponent.append(
                     miniMessage.deserialize(
                             LocaleMessage.LOOKUP_SAVED_NICK.getMessage(),

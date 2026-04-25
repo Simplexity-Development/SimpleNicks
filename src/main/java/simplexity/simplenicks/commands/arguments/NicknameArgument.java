@@ -10,7 +10,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.MessageComponentSerializer;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -128,7 +127,6 @@ public class NicknameArgument implements CustomArgumentType<Nickname, String> {
     }
 
     private void addSuggestionsForPlayer(@NotNull SuggestionsBuilder builder, @NotNull OfflinePlayer player) {
-        MiniMessage miniMessage = SimpleNicks.getMiniMessage();
         for (Nickname nickname : NicknameProcessor.getInstance().getSavedNicknames(player)) {
             String suggestion = nickname.getNickname();
             String suggestionStripped = nickname.getNormalizedNickname();
@@ -136,7 +134,7 @@ public class NicknameArgument implements CustomArgumentType<Nickname, String> {
                 builder.suggest(
                         suggestion,
                         MessageComponentSerializer.message().serialize(
-                                miniMessage.deserialize("Preview: " + nickname.getNickname())
+                                SimpleNicks.getMiniMessage().deserialize("Preview: " + nickname.getNickname())
                         )
                 );
             }

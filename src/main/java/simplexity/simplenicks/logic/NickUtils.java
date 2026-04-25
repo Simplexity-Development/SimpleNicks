@@ -94,9 +94,11 @@ public class NickUtils {
             player.displayName(null);
             return true;
         }
-        player.displayName(miniMessage.deserialize(ConfigHandler.getInstance().getNickPrefix() + nickname.getNickname()));
+        Component displayName = miniMessage.deserialize(ConfigHandler.getInstance().getNickPrefix())
+                .append(SimpleNicks.getMiniMessage().deserialize(nickname.getNickname()));
+        player.displayName(displayName);
         if (ConfigHandler.getInstance().shouldNickTablist()) {
-            player.playerListName(miniMessage.deserialize(nickname.getNickname()));
+            player.playerListName(SimpleNicks.getMiniMessage().deserialize(nickname.getNickname()));
         }
         return true;
     }
@@ -113,6 +115,7 @@ public class NickUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isValidTags(@NotNull CommandSender user, @NotNull String nick) {
         TagResolver.Builder resolver = TagResolver.builder();
+
         for (ColorTag colorTag : ColorTag.values()) {
             if (user.hasPermission(colorTag.getPermission()) || !ConfigHandler.getInstance().isColorRequiresPermission()) {
                 resolver.resolver(colorTag.getTagResolver());
@@ -123,9 +126,11 @@ public class NickUtils {
                 resolver.resolver(formatTag.getTagResolver());
             }
         }
+
+
         MiniMessage parser = MiniMessage.builder().strict(false).tags(resolver.build()).build();
 
-        Component defaultParsed = SimpleNicks.getDefaultParser().deserialize(nick);
+        Component defaultParsed = miniMessage.deserialize(nick);
         String defaultSerialized = miniMessage.serialize(defaultParsed);
         Component permissionParsed = parser.deserialize(nick);
         String permissionSerialized = miniMessage.serialize(permissionParsed);
