@@ -20,7 +20,7 @@ public enum LocaleMessage {
     SERVER_DISPLAY_NAME("plugin.server-display-name", "<gray>[Server]</gray>"),
 
     // Basic Functionality
-    SET_SELF("nick.set.self", "<green>Changed your nickname to <value><green>!"),
+    SET_SELF("nick.set.self", "<green>Changed your nickname to <reset><value><green>!"),
     SET_TARGET("nick.set.target", "<green>Changed <target>'s nickname to <value>"),
     SET_BY_INITIATOR("nick.set.by-initiator", "<green><initiator> changed your nickname to <reset><value><green>!"),
     RESET_SELF("nick.reset.self", "<green>Reset your nickname!"),
