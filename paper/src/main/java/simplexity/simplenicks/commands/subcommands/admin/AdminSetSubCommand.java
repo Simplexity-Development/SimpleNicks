@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,12 +52,12 @@ public class AdminSetSubCommand implements SubCommand {
         PaperSenderContext senderCtx = new PaperSenderContext(sender);
         if (!NickUtils.isValidTags(senderCtx, nickname.getNickname())) throw Exceptions.tagsNotPermitted();
         NickUtils.nicknameChecks(senderCtx, nickname);
-        boolean targetIsOnline = target.isOnline();
         SimpleNicksCore.get().platform().runAsync(() -> {
             boolean success = NicknameProcessor.getInstance().setNickname(target.getUniqueId(), targetUsername, nickname.getNickname());
             if (success) {
                 SimpleNicksCore.get().platform().runSync(() -> {
-                    if (targetIsOnline && target instanceof Player onlineTarget) {
+                    Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
+                    if (onlineTarget != null) {
                         NickUtils.refreshDisplayName(target.getUniqueId());
                         onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.SET_BY_INITIATOR.getMessage(), nickname.getNickname(), sender, target));
                     }

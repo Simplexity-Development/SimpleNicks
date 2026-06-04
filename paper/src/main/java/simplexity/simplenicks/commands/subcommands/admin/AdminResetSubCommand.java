@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,12 +35,12 @@ public class AdminResetSubCommand implements SubCommand {
     public int execute(@NotNull CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         CommandSender sender = ctx.getSource().getSender();
         OfflinePlayer target = ctx.getArgument("player", OfflinePlayer.class);
-        boolean targetIsOnline = target.isOnline();
         SimpleNicksCore.get().platform().runAsync(() -> {
             boolean success = NicknameProcessor.getInstance().resetNickname(target.getUniqueId());
             if (success) {
                 SimpleNicksCore.get().platform().runSync(() -> {
-                    if (targetIsOnline && target instanceof Player onlineTarget) {
+                    Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
+                    if (onlineTarget != null) {
                         NickUtils.refreshDisplayName(target.getUniqueId());
                         onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.RESET_BY_INITIATOR.getMessage(), "", sender, target));
                     }

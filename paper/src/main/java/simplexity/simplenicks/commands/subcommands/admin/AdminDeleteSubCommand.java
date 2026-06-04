@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,12 +42,12 @@ public class AdminDeleteSubCommand implements SubCommand {
         CommandSender sender = ctx.getSource().getSender();
         OfflinePlayer target = ctx.getArgument("player", OfflinePlayer.class);
         Nickname nickname = ctx.getArgument("nickname", Nickname.class);
-        boolean targetIsOnline = target.isOnline();
         SimpleNicksCore.get().platform().runAsync(() -> {
             boolean success = NicknameProcessor.getInstance().deleteNickname(target.getUniqueId(), nickname.getNickname());
             if (success) {
                 SimpleNicksCore.get().platform().runSync(() -> {
-                    if (targetIsOnline && target instanceof Player onlineTarget) {
+                    Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
+                    if (onlineTarget != null) {
                         NickUtils.refreshDisplayName(target.getUniqueId());
                         onlineTarget.sendMessage(parseAdminMessage(LocaleMessage.DELETED_BY_INITIATOR.getMessage(), nickname.getNickname(), sender, target));
                     }
