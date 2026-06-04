@@ -58,6 +58,10 @@ public class SqlHandler {
     private static HikariDataSource dataSource;
     private static final int SCHEMA_VERSION = 1;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static {
+        // SQLite CURRENT_TIMESTAMP stores UTC; parse accordingly regardless of JVM timezone
+        DATE_FORMAT.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+    }
 
     private static Logger logger() {
         return SimpleNicksCore.get().platform().getLogger();

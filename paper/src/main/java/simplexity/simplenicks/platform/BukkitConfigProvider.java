@@ -56,6 +56,7 @@ public class BukkitConfigProvider implements ConfigProvider {
     @Override
     public void reload() {
         if (isMainConfig()) {
+            plugin.saveDefaultConfig();
             plugin.reloadConfig();
         } else {
             try {
