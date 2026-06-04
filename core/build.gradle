@@ -2,11 +2,19 @@ plugins {
     id 'java-library'
 }
 
+java {
+    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
 dependencies {
     compileOnly "net.kyori:adventure-api:${adventureVersion}"
     compileOnly "net.kyori:adventure-text-minimessage:${miniMessageVersion}"
     compileOnly "org.slf4j:slf4j-api:${slf4jVersion}"
-    compileOnly "org.yaml.snakeyaml:snakeyaml:2.3"
     api "com.zaxxer:HikariCP:${hikariVersion}"
     compileOnly "org.jetbrains:annotations:24.0.0"
     compileOnly "com.mojang:brigadier:1.3.10"

@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9.+'
+    id 'fabric-loom' version '1.10.+'
 }
 
 dependencies {
@@ -13,6 +13,6 @@ dependencies {
     include(modImplementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}"))
     include(modImplementation("net.kyori:adventure-text-minimessage:${miniMessageVersion}"))
     include(modImplementation("com.zaxxer:HikariCP:${hikariVersion}"))
-    include(modImplementation("org.yaml.snakeyaml:snakeyaml:2.3"))
     include(modImplementation("org.xerial:sqlite-jdbc:3.47.+"))
+    // SnakeYAML is bundled with Minecraft — Loom exposes it on the compile classpath automatically
 }
