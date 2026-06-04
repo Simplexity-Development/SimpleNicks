@@ -15,7 +15,6 @@ public enum LocaleMessage {
     HELP_ADMIN_DELETE("plugin.help.admin.delete", "<gold>/nick admin delete (username) (nickname) <dark_gray>-</dark_gray> <gray>Delete a saved nickname from a player"),
     HELP_ADMIN_LOOKUP("plugin.help.admin.lookup", "<gold>/nick admin lookup (username) <dark_gray>-</dark_gray> <gray>Look up a player's nickname info"),
     HELP_RELOAD("plugin.help.reload", "<gold>/nick reload <dark_gray>-</dark_gray> <gray>Reload the plugin configuration"),
-    SHOWN_HELP("plugin.user-shown-help", "<target><reset><yellow> has been shown the help screen"),
     CONFIG_RELOADED("plugin.config-reloaded", "<gold>SimpleNicks config and locale reloaded"),
     SERVER_DISPLAY_NAME("plugin.server-display-name", "<gray>[Server]</gray>"),
 
@@ -84,10 +83,12 @@ public enum LocaleMessage {
 
 
     private final String path;
+    private final String defaultMessage;
     private String message;
 
     LocaleMessage(String path, String message) {
         this.path = path;
+        this.defaultMessage = message;
         this.message = message;
     }
 
@@ -100,6 +101,17 @@ public enum LocaleMessage {
     public String getMessage() {
         if (message == null) return "";
         return message;
+    }
+
+    /**
+     * Returns the hardcoded default message as declared in the enum.
+     * Used when writing missing keys back to a freshly created locale file.
+     *
+     * @return the default message string
+     */
+    @NotNull
+    public String getDefaultMessage() {
+        return defaultMessage;
     }
 
     public void setMessage(@Nullable String message) {

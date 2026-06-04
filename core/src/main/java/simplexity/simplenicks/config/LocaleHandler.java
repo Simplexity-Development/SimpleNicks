@@ -33,12 +33,13 @@ public class LocaleHandler {
         Set<LocaleMessage> missing = new HashSet<>(Arrays.asList(LocaleMessage.values()));
         for (LocaleMessage localeMessage : LocaleMessage.values()) {
             if (locale.contains(localeMessage.getPath())) {
-                localeMessage.setMessage(locale.getString(localeMessage.getPath(), localeMessage.getMessage()));
+                localeMessage.setMessage(locale.getString(localeMessage.getPath(), localeMessage.getDefaultMessage()));
                 missing.remove(localeMessage);
             }
         }
         for (LocaleMessage localeMessage : missing) {
-            locale.set(localeMessage.getPath(), localeMessage.getMessage());
+            locale.set(localeMessage.getPath(), localeMessage.getDefaultMessage());
+            localeMessage.setMessage(localeMessage.getDefaultMessage());
         }
     }
 }
