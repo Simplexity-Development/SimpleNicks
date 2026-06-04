@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    compileOnly "net.kyori:adventure-api:${adventureVersion}"
+    compileOnly "net.kyori:adventure-text-minimessage:${miniMessageVersion}"
+    compileOnly "org.slf4j:slf4j-api:${slf4jVersion}"
+    compileOnly "org.yaml.snakeyaml:snakeyaml:2.3"
+    api "com.zaxxer:HikariCP:${hikariVersion}"
+    compileOnly "org.jetbrains:annotations:24.0.0"
+}

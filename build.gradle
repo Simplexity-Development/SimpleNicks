@@ -1,0 +1,23 @@
+allprojects {
+    group = 'simplexity'
+    version = '3.2.2'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.papermc.io/repository/maven-public/' }
+        maven { url 'https://maven.fabricmc.net/' }
+        maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+        maven { url 'https://oss.sonatype.org/content/groups/public/' }
+        maven { url 'https://maven.nucleoid.xyz/' }
+    }
+}

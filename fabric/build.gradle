@@ -1,0 +1,18 @@
+plugins {
+    id 'fabric-loom' version '1.9.+'
+}
+
+dependencies {
+    minecraft 'com.mojang:minecraft:1.21.5'
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabricLoaderVersion}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
+
+    implementation project(':core')
+
+    include(modImplementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}"))
+    include(modImplementation("net.kyori:adventure-text-minimessage:${miniMessageVersion}"))
+    include(modImplementation("com.zaxxer:HikariCP:${hikariVersion}"))
+    include(modImplementation("org.yaml.snakeyaml:snakeyaml:2.3"))
+    include(modImplementation("org.xerial:sqlite-jdbc:3.47.+"))
+}
