@@ -17,7 +17,7 @@ import simplexity.simplenicks.util.ColorTag;
 import simplexity.simplenicks.util.FormatTag;
 import simplexity.simplenicks.util.NickPermission;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

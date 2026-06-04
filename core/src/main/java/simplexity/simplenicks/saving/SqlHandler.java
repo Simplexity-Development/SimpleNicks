@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import simplexity.simplenicks.SimpleNicksCore;
 import simplexity.simplenicks.config.ConfigHandler;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

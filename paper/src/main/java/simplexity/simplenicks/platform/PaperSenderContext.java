@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicksCore;
 
 import java.util.Optional;
 import java.util.UUID;
