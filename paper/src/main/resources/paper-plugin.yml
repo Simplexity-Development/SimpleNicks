@@ -1,0 +1,16 @@
+name: SimpleNicks
+version: '${project.version}'
+main: simplexity.simplenicks.SimpleNicks
+authors: ['Rhythmic', 'Peashooter101']
+api-version: 1.21.5
+description: "A simple plugin to allow players to set and reset nicknames."
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    MiniPlaceholders:
+      load: BEFORE
+      required: false
+      join-classpath: true
