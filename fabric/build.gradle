@@ -2,6 +2,15 @@ plugins {
     id 'fabric-loom' version '1.10.+'
 }
 
+java {
+    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
 dependencies {
     minecraft 'com.mojang:minecraft:1.21.5'
     mappings loom.officialMojangMappings()
@@ -14,5 +23,8 @@ dependencies {
     include(modImplementation("net.kyori:adventure-text-minimessage:${miniMessageVersion}"))
     include(modImplementation("com.zaxxer:HikariCP:${hikariVersion}"))
     include(modImplementation("org.xerial:sqlite-jdbc:3.47.+"))
-    // SnakeYAML is bundled with Minecraft — Loom exposes it on the compile classpath automatically
+    include(implementation("org.yaml:snakeyaml:2.2"))
+
+    // fabric-permissions-api: softdepend permissions with op-level fallback
+    include(modImplementation("me.lucko:fabric-permissions-api:${fabricPermissionsVersion}"))
 }
