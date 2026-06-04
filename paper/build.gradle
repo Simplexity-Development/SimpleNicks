@@ -30,4 +30,8 @@ configurations.named('compileClasspath') {
     }
 }
 
+tasks.named('reobfJar') {
+    outputJar = layout.buildDirectory.file("libs/SimpleNicks-paper-${project.version}.jar")
+}
+
 assemble.dependsOn reobfJar
