@@ -86,6 +86,13 @@ public class PaperPlatformAdapter implements PlatformAdapter {
     }
 
     @Override
+    public void clearTablistName(@NotNull UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+        player.playerListName(null);
+    }
+
+    @Override
     public boolean hasPermission(@NotNull UUID uuid, @NotNull String permission) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return false;

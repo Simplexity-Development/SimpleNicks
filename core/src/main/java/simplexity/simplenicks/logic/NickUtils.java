@@ -90,6 +90,9 @@ public class NickUtils {
         Nickname nickname = Cache.getInstance().getActiveNickname(uuid);
         if (nickname == null) {
             SimpleNicksCore.get().platform().clearDisplayName(uuid);
+            if (ConfigHandler.getInstance().shouldNickTablist()) {
+                SimpleNicksCore.get().platform().clearTablistName(uuid);
+            }
             return true;
         }
         Component displayName = mm().deserialize(ConfigHandler.getInstance().getNickPrefix())

@@ -82,6 +82,13 @@ public interface PlatformAdapter {
     void clearDisplayName(@NotNull UUID uuid);
 
     /**
+     * Clears the player's tab list name, reverting to their username.
+     *
+     * @param uuid the player's UUID
+     */
+    void clearTablistName(@NotNull UUID uuid);
+
+    /**
      * Checks whether the given player has a permission node.
      *
      * @param uuid       the player's UUID
