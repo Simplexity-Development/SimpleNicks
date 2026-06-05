@@ -1,10 +1,12 @@
 package simplexity.simplenicks.fabric;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import simplexity.simplenicks.SimpleNicksCore;
 import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.fabric.commands.FabricNicknameCommand;
 import simplexity.simplenicks.fabric.events.FabricLeaveHandler;
 import simplexity.simplenicks.fabric.events.FabricLoginHandler;
 import simplexity.simplenicks.fabric.platform.FabricPlatformAdapter;
@@ -35,5 +37,8 @@ public class SimpleNicksFabric implements ModInitializer {
 
         FabricLoginHandler.register();
         FabricLeaveHandler.register();
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                dispatcher.register(FabricNicknameCommand.createCommand()));
     }
 }

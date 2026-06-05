@@ -2,6 +2,8 @@ package simplexity.simplenicks.fabric.platform;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import simplexity.simplenicks.platform.ConfigProvider;
@@ -9,8 +11,10 @@ import simplexity.simplenicks.platform.ConfigProvider;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,6 +24,8 @@ import java.util.Map;
  */
 @SuppressWarnings("unchecked")
 public class FabricConfigProvider implements ConfigProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FabricConfigProvider.class);
 
     private final Path file;
     private Map<String, Object> data = new LinkedHashMap<>();
@@ -37,13 +43,30 @@ public class FabricConfigProvider implements ConfigProvider {
     public void reload() {
         try {
             Files.createDirectories(file.getParent());
-            if (!Files.exists(file)) Files.createFile(file);
+            if (!Files.exists(file) || Files.size(file) == 0) {
+                copyDefaultResource();
+            }
             try (FileReader reader = new FileReader(file.toFile())) {
                 Map<String, Object> loaded = yaml.load(reader);
                 data = loaded != null ? loaded : new LinkedHashMap<>();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("Failed to load config file '{}': {}", file, e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Copies the bundled default resource matching this file's name into the config directory.
+     * Only called when the destination file is absent or empty.
+     */
+    private void copyDefaultResource() throws IOException {
+        String resourceName = file.getFileName().toString();
+        try (InputStream in = FabricConfigProvider.class.getResourceAsStream("/" + resourceName)) {
+            if (in != null) {
+                Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                Files.createFile(file);
+            }
         }
     }
 
@@ -94,7 +117,7 @@ public class FabricConfigProvider implements ConfigProvider {
         try (FileWriter writer = new FileWriter(file.toFile())) {
             yaml.dump(data, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("Failed to save config file '{}': {}", file, e.getMessage(), e);
         }
     }
 

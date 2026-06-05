@@ -1,30 +1,33 @@
 plugins {
-    id 'fabric-loom' version '1.10.+'
+    id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
 }
 
 java {
-    targetCompatibility = JavaVersion.VERSION_21
-    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_25
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 21
+    options.release = 25
+}
+
+tasks.named('jar') {
+    archiveFileName = "SimpleNicks-fabric-${project.version}.jar"
 }
 
 dependencies {
-    minecraft 'com.mojang:minecraft:1.21.5'
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${fabricLoaderVersion}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
+    minecraft "com.mojang:minecraft:${fabricMinecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${fabricLoaderVersion}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
 
-    implementation project(':core')
+    include(implementation(project(':core')))
 
-    include(modImplementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}"))
-    include(modImplementation("net.kyori:adventure-text-minimessage:${miniMessageVersion}"))
-    include(modImplementation("com.zaxxer:HikariCP:${hikariVersion}"))
-    include(modImplementation("org.xerial:sqlite-jdbc:3.47.+"))
+    include(implementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}"))
+    include(implementation("net.kyori:adventure-text-minimessage:${fabricMiniMessageVersion}"))
+    include(implementation("com.zaxxer:HikariCP:${hikariVersion}"))
+    include(implementation("org.xerial:sqlite-jdbc:3.47.+"))
     include(implementation("org.yaml:snakeyaml:2.2"))
 
     // fabric-permissions-api: softdepend permissions with op-level fallback
-    include(modImplementation("me.lucko:fabric-permissions-api:${fabricPermissionsVersion}"))
+    include(implementation("me.lucko:fabric-permissions-api:${fabricPermissionsVersion}"))
 }

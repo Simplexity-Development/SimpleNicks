@@ -1,10 +1,12 @@
 package simplexity.simplenicks.fabric.platform;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.SimpleNicksCore;
+import simplexity.simplenicks.fabric.platform.FabricPlatformAdapter;
+import simplexity.simplenicks.fabric.util.FabricPermissions;
 import simplexity.simplenicks.platform.SenderContext;
 
 import java.util.Optional;
@@ -28,7 +30,7 @@ public class FabricSenderContext implements SenderContext {
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return me.lucko.fabric.api.permissions.v0.Permissions.check(source, permission, 2);
+        return FabricPermissions.check(source, permission);
     }
 
     @Override
@@ -40,8 +42,9 @@ public class FabricSenderContext implements SenderContext {
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        String plain = PlainTextComponentSerializer.plainText().serialize(message);
-        source.sendSuccess(() -> net.minecraft.network.chat.Component.literal(plain), false);
+        FabricPlatformAdapter adapter = (FabricPlatformAdapter) SimpleNicksCore.get().platform();
+        net.minecraft.network.chat.Component nms = adapter.getAudiences().asNative(message);
+        source.sendSuccess(() -> nms, false);
     }
 
     @Override
@@ -53,6 +56,6 @@ public class FabricSenderContext implements SenderContext {
     public @NotNull String getDisplayName() {
         ServerPlayer player = source.getPlayer();
         if (player == null) return "[Console]";
-        return player.getGameProfile().getName();
+        return player.getGameProfile().name();
     }
 }
