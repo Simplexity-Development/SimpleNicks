@@ -55,7 +55,7 @@ public class FabricPlatformAdapter implements PlatformAdapter {
     @Override
     public void runAsync(@NotNull Runnable task) {
         Thread.ofVirtual()
-                .uncaughtExceptionHandler((t, e) -> LOGGER.warn("Uncaught exception in async task", e))
+                .uncaughtExceptionHandler((_, e) -> LOGGER.warn("Uncaught exception in async task", e))
                 .start(task);
     }
 
@@ -128,6 +128,13 @@ public class FabricPlatformAdapter implements PlatformAdapter {
                 List.of(player)
         );
         server.getPlayerList().broadcastAll(packet);
+    }
+
+    @Override
+    public void sendMessageToPlayer(@NotNull UUID uuid, @NotNull Component message) {
+        ServerPlayer player = server.getPlayerList().getPlayer(uuid);
+        if (player == null) return;
+        player.sendSystemMessage(audiences.asNative(message));
     }
 
     @Override

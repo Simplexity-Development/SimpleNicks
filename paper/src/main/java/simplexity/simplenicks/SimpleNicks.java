@@ -4,7 +4,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
-import simplexity.simplenicks.commands.NicknameCommand;
+import simplexity.simplenicks.commands.PaperNicknameCommand;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.hooks.SNExpansion;
 import simplexity.simplenicks.hooks.SNMiniExpansion;
@@ -44,7 +44,7 @@ public final class SimpleNicks extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LeaveListener(), this);
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(NicknameCommand.createCommand().build());
+            commands.registrar().register(PaperNicknameCommand.createCommand().build());
         });
 
         registerPermissions();
@@ -74,7 +74,6 @@ public final class SimpleNicks extends JavaPlugin {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private static PermissionDefault toDefault(String value) {
         return switch (value.toLowerCase()) {
             case "true" -> PermissionDefault.TRUE;

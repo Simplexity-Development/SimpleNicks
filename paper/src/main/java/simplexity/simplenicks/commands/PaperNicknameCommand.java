@@ -13,24 +13,26 @@ import simplexity.simplenicks.commands.subcommands.basic.SaveSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.SetSubCommand;
 import simplexity.simplenicks.commands.subcommands.basic.WhoSubCommand;
 import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.platform.PaperBrigadierAdapter;
 import simplexity.simplenicks.util.NickPermission;
 
 @SuppressWarnings("UnstableApiUsage")
-public class NicknameCommand {
+public class PaperNicknameCommand {
 
     @NotNull
     public static LiteralArgumentBuilder<CommandSourceStack> createCommand() {
+        PaperBrigadierAdapter adapter = new PaperBrigadierAdapter();
         LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("nick")
                 .requires(src -> !ConfigHandler.getInstance().isNickRequiresPermission()
                         || src.getSender().hasPermission(NickPermission.NICK_COMMAND.getPermissionKey()));
-        new HelpSubCommand().subcommandTo(builder);
-        new SetSubCommand().subcommandTo(builder);
-        new SaveSubCommand().subcommandTo(builder);
-        new ResetSubCommand().subcommandTo(builder);
-        new DeleteSubCommand().subcommandTo(builder);
-        new AdminSubCommand().subcommandTo(builder);
-        new ReloadSubCommand().subcommandTo(builder);
-        new WhoSubCommand().subcommandTo(builder);
+        new HelpSubCommand<>(adapter).subcommandTo(builder);
+        new SetSubCommand<>(adapter).subcommandTo(builder);
+        new SaveSubCommand<>(adapter).subcommandTo(builder);
+        new ResetSubCommand<>(adapter).subcommandTo(builder);
+        new DeleteSubCommand<>(adapter).subcommandTo(builder);
+        new AdminSubCommand<>(adapter).subcommandTo(builder);
+        new ReloadSubCommand<>(adapter).subcommandTo(builder);
+        new WhoSubCommand<>(adapter).subcommandTo(builder);
         return builder;
     }
 }

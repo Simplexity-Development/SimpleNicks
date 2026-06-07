@@ -1,19 +1,19 @@
 package simplexity.simplenicks.fabric.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import simplexity.simplenicks.fabric.util.FabricPermissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.NotNull;
+import simplexity.simplenicks.commands.subcommands.admin.AdminSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.DeleteSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.HelpSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.ReloadSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.ResetSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.SaveSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.SetSubCommand;
+import simplexity.simplenicks.commands.subcommands.basic.WhoSubCommand;
 import simplexity.simplenicks.config.ConfigHandler;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricDeleteSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricHelpSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricReloadSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricResetSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricSaveSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricSetSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.FabricWhoSubCommand;
-import simplexity.simplenicks.fabric.commands.subcommands.admin.FabricAdminSubCommand;
+import simplexity.simplenicks.fabric.util.FabricPermissions;
 import simplexity.simplenicks.util.NickPermission;
 
 /**
@@ -25,17 +25,18 @@ public class FabricNicknameCommand {
 
     @NotNull
     public static LiteralArgumentBuilder<CommandSourceStack> createCommand() {
+        FabricBrigadierAdapter adapter = new FabricBrigadierAdapter();
         LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("nick")
                 .requires(src -> !ConfigHandler.getInstance().isNickRequiresPermission()
                         || FabricPermissions.check(src, NickPermission.NICK_COMMAND));
-        new FabricHelpSubCommand().subcommandTo(builder);
-        new FabricSetSubCommand().subcommandTo(builder);
-        new FabricSaveSubCommand().subcommandTo(builder);
-        new FabricResetSubCommand().subcommandTo(builder);
-        new FabricDeleteSubCommand().subcommandTo(builder);
-        new FabricAdminSubCommand().subcommandTo(builder);
-        new FabricReloadSubCommand().subcommandTo(builder);
-        new FabricWhoSubCommand().subcommandTo(builder);
+        new HelpSubCommand<>(adapter).subcommandTo(builder);
+        new SetSubCommand<>(adapter).subcommandTo(builder);
+        new SaveSubCommand<>(adapter).subcommandTo(builder);
+        new ResetSubCommand<>(adapter).subcommandTo(builder);
+        new DeleteSubCommand<>(adapter).subcommandTo(builder);
+        new AdminSubCommand<>(adapter).subcommandTo(builder);
+        new ReloadSubCommand<>(adapter).subcommandTo(builder);
+        new WhoSubCommand<>(adapter).subcommandTo(builder);
         return builder;
     }
 }

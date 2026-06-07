@@ -89,6 +89,15 @@ public interface PlatformAdapter {
     void clearTablistName(@NotNull UUID uuid);
 
     /**
+     * Sends an Adventure component message to an online player.
+     * Does nothing if the player is not online.
+     *
+     * @param uuid    the player's UUID
+     * @param message the component to send
+     */
+    void sendMessageToPlayer(@NotNull UUID uuid, @NotNull Component message);
+
+    /**
      * Checks whether the given player has a permission node.
      *
      * @param uuid       the player's UUID

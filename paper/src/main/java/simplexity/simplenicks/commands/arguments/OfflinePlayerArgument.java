@@ -7,15 +7,17 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.papermc.paper.command.brigadier.MessageComponentSerializer;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicksCore;
 import simplexity.simplenicks.commands.NicknameProcessor;
-import simplexity.simplenicks.commands.subcommands.Exceptions;
+import simplexity.simplenicks.config.LocaleMessage;
 import simplexity.simplenicks.saving.Nickname;
 
 import java.util.concurrent.CompletableFuture;
@@ -41,7 +43,11 @@ public class OfflinePlayerArgument implements CustomArgumentType<OfflinePlayer, 
             if (player.getName() == null || player.getName().isEmpty()) continue;
             if (player.getName().equalsIgnoreCase(playerName)) return player;
         }
-        throw Exceptions.invalidPlayerSpecified(playerName);
+        throw new SimpleCommandExceptionType(MessageComponentSerializer.message().serialize(
+                SimpleNicksCore.get().miniMessage().deserialize(
+                        LocaleMessage.ERROR_INVALID_PLAYER.getMessage(),
+                        Placeholder.unparsed("player_name", playerName))
+        )).create();
     }
 
     @Override

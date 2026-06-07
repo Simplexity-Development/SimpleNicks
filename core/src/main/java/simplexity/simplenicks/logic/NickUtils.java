@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicksCore;
 import simplexity.simplenicks.commands.subcommands.Exceptions;
 import simplexity.simplenicks.config.ConfigHandler;
+import simplexity.simplenicks.platform.BrigadierAdapter;
 import simplexity.simplenicks.platform.PlayerInfo;
 import simplexity.simplenicks.platform.SenderContext;
 import simplexity.simplenicks.saving.Cache;
@@ -16,8 +17,6 @@ import simplexity.simplenicks.saving.SqlHandler;
 import simplexity.simplenicks.util.ColorTag;
 import simplexity.simplenicks.util.FormatTag;
 import simplexity.simplenicks.util.NickPermission;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,23 +34,26 @@ import java.util.regex.Pattern;
 @SuppressWarnings("UnusedReturnValue")
 public class NickUtils {
 
-    private static MiniMessage mm() {
+    private static MiniMessage miniMessage() {
         return SimpleNicksCore.get().miniMessage();
     }
 
     /**
-     * Performs all configured checks on a nickname, including length, regex,
-     * username conflicts, and nickname protection. Throws a {@link CommandSyntaxException}
-     * if any of the checks fail.
+     * Performs all configured checks on a nickname using a platform adapter to render exception
+     * messages as styled text. Prefer this overload in generic subcommand code.
      *
+     * @param adapter  the platform brigadier adapter (for styled error messages)
      * @param sender   the sender attempting to set the nickname
      * @param nickname the nickname to validate
      * @throws CommandSyntaxException if any of the nickname checks fail
      */
-    public static void nicknameChecks(@NotNull SenderContext sender, @NotNull Nickname nickname) throws CommandSyntaxException {
+    public static <S> void nicknameChecks(
+            @NotNull BrigadierAdapter<S> adapter,
+            @NotNull SenderContext sender,
+            @NotNull Nickname nickname) throws CommandSyntaxException {
         String normalizedNick = nickname.getNormalizedNickname();
         if (normalizedNick.isEmpty()) {
-            throw Exceptions.emptyNickAfterParse();
+            throw Exceptions.emptyNickAfterParse(adapter);
         }
 
         boolean bypassUsername = sender.hasPermission(NickPermission.NICK_BYPASS_USERNAME.getPermissionKey());
@@ -60,20 +62,20 @@ public class NickUtils {
         boolean bypassNickProtection = sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermissionKey());
 
         if (!bypassUsername && ConfigHandler.getInstance().isUsernameProtection() && isProtectedUsername(normalizedNick)) {
-            throw Exceptions.nicknameSomeonesUsername(normalizedNick);
+            throw Exceptions.nicknameSomeonesUsername(adapter, normalizedNick);
         }
         if (!bypassLength && normalizedNick.length() > ConfigHandler.getInstance().getMaxLength()) {
-            throw Exceptions.lengthError(normalizedNick);
+            throw Exceptions.lengthError(adapter, normalizedNick);
         }
         if (!bypassRegex && !passesRegexCheck(normalizedNick)) {
-            throw Exceptions.regexError(normalizedNick);
+            throw Exceptions.regexError(adapter, normalizedNick);
         }
         if (!bypassNickProtection) {
             if (ConfigHandler.getInstance().shouldOnlineNicksBeProtected() && someoneOnlineUsingThis(sender, normalizedNick)) {
-                throw Exceptions.someoneUsingThatNickname(normalizedNick);
+                throw Exceptions.someoneUsingThatNickname(adapter, normalizedNick);
             }
             if (ConfigHandler.getInstance().shouldOfflineNicksBeProtected() && someoneSavedUsingThis(sender, normalizedNick)) {
-                throw Exceptions.someoneUsingThatNickname(normalizedNick);
+                throw Exceptions.someoneUsingThatNickname(adapter, normalizedNick);
             }
         }
     }
@@ -95,11 +97,11 @@ public class NickUtils {
             }
             return true;
         }
-        Component displayName = mm().deserialize(ConfigHandler.getInstance().getNickPrefix())
-                .append(mm().deserialize(nickname.getNickname()));
+        Component displayName = miniMessage().deserialize(ConfigHandler.getInstance().getNickPrefix())
+                .append(miniMessage().deserialize(nickname.getNickname()));
         SimpleNicksCore.get().platform().setDisplayName(uuid, displayName);
         if (ConfigHandler.getInstance().shouldNickTablist()) {
-            SimpleNicksCore.get().platform().setTablistName(uuid, mm().deserialize(nickname.getNickname()));
+            SimpleNicksCore.get().platform().setTablistName(uuid, miniMessage().deserialize(nickname.getNickname()));
         }
         return true;
     }
@@ -129,10 +131,10 @@ public class NickUtils {
 
         MiniMessage parser = MiniMessage.builder().strict(false).tags(resolver.build()).build();
 
-        Component defaultParsed = mm().deserialize(nick);
-        String defaultSerialized = mm().serialize(defaultParsed);
+        Component defaultParsed = miniMessage().deserialize(nick);
+        String defaultSerialized = miniMessage().serialize(defaultParsed);
         Component permissionParsed = parser.deserialize(nick);
-        String permissionSerialized = mm().serialize(permissionParsed);
+        String permissionSerialized = miniMessage().serialize(permissionParsed);
 
         return defaultSerialized.equals(permissionSerialized);
     }
@@ -145,7 +147,7 @@ public class NickUtils {
      * @return the normalized nickname string
      */
     public static String normalizeNickname(@NotNull String nickname) {
-        return mm().stripTags(nickname).toLowerCase();
+        return miniMessage().stripTags(nickname).toLowerCase();
     }
 
     /**
@@ -166,7 +168,7 @@ public class NickUtils {
         for (UUID uuid : usersWithThisName) {
             if (!SqlHandler.getInstance().playerSaveExists(uuid)) continue;
             String username = SimpleNicksCore.get().platform().getPlayerUsername(uuid)
-                    .orElseGet(() -> uuid.toString());
+                    .orElseGet(uuid::toString);
             long lastLogin = SqlHandler.getInstance().getLastLoginMillis(uuid);
             result.add(new PlayerInfo(uuid, username, lastLogin));
         }

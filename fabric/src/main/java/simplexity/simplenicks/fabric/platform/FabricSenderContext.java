@@ -5,9 +5,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicksCore;
-import simplexity.simplenicks.fabric.platform.FabricPlatformAdapter;
 import simplexity.simplenicks.fabric.util.FabricPermissions;
 import simplexity.simplenicks.platform.SenderContext;
+import simplexity.simplenicks.saving.Cache;
+import simplexity.simplenicks.saving.Nickname;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -56,6 +57,7 @@ public class FabricSenderContext implements SenderContext {
     public @NotNull String getDisplayName() {
         ServerPlayer player = source.getPlayer();
         if (player == null) return "[Console]";
-        return player.getGameProfile().name();
+        Nickname nick = Cache.getInstance().getActiveNickname(player.getUUID());
+        return nick != null ? nick.getNickname() : player.getGameProfile().name();
     }
 }

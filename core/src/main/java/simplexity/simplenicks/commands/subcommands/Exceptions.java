@@ -1,106 +1,101 @@
 package simplexity.simplenicks.commands.subcommands;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.jetbrains.annotations.NotNull;
 import simplexity.simplenicks.SimpleNicksCore;
 import simplexity.simplenicks.config.ConfigHandler;
 import simplexity.simplenicks.config.LocaleMessage;
-import simplexity.simplenicks.config.MessageUtils;
+import simplexity.simplenicks.platform.BrigadierAdapter;
 
 /**
  * Factory methods for Brigadier {@link CommandSyntaxException} instances.
  * <p>
- * Exception messages are rendered as plain text by stripping MiniMessage tags,
- * which works correctly on both Paper and Fabric. Methods are used instead of
- * static fields to avoid class-load timing issues with {@link SimpleNicksCore}.
+ * All methods accept a {@link BrigadierAdapter} so exception messages are rendered as styled
+ * Adventure components rather than plain text. Methods are used instead of static fields to
+ * avoid class-load timing issues with {@link SimpleNicksCore}.
  * </p>
  */
 public class Exceptions {
 
-    private static String strip(String miniMessage) {
-        return SimpleNicksCore.get().miniMessage().stripTags(miniMessage);
+    private static Component deserializeComponent(@NotNull String miniMessage) {
+        return SimpleNicksCore.get().miniMessage().deserialize(miniMessage);
     }
 
-    public static CommandSyntaxException nickIsNull() {
+    public static <S> CommandSyntaxException nickIsNull(@NotNull BrigadierAdapter<S> adapter) {
         return new SimpleCommandExceptionType(
-                () -> strip(LocaleMessage.ERROR_NICK_IS_NULL.getMessage())
+                adapter.brigadierMessage(deserializeComponent(LocaleMessage.ERROR_NICK_IS_NULL.getMessage()))
         ).create();
     }
 
-    public static CommandSyntaxException emptyNickAfterParse() {
+    public static <S> CommandSyntaxException emptyNickAfterParse(@NotNull BrigadierAdapter<S> adapter) {
         return new SimpleCommandExceptionType(
-                () -> strip(LocaleMessage.ERROR_INVALID_NICK_EMPTY.getMessage())
+                adapter.brigadierMessage(deserializeComponent(LocaleMessage.ERROR_INVALID_NICK_EMPTY.getMessage()))
         ).create();
     }
 
-    public static CommandSyntaxException cannotSave() {
+    public static <S> CommandSyntaxException cannotSave(@NotNull BrigadierAdapter<S> adapter) {
         return new SimpleCommandExceptionType(
-                () -> strip(LocaleMessage.ERROR_SAVE_FAILURE.getMessage())
+                adapter.brigadierMessage(deserializeComponent(LocaleMessage.ERROR_SAVE_FAILURE.getMessage()))
         ).create();
     }
 
-    public static CommandSyntaxException tooManySavedNames() {
+    public static <S> CommandSyntaxException tooManySavedNames(@NotNull BrigadierAdapter<S> adapter) {
         return new SimpleCommandExceptionType(
-                () -> strip(LocaleMessage.ERROR_TOO_MANY_TO_SAVE.getMessage())
+                adapter.brigadierMessage(deserializeComponent(LocaleMessage.ERROR_TOO_MANY_TO_SAVE.getMessage()))
         ).create();
     }
 
-    public static CommandSyntaxException tagsNotPermitted() {
+    public static <S> CommandSyntaxException tagsNotPermitted(@NotNull BrigadierAdapter<S> adapter) {
         return new SimpleCommandExceptionType(
-                () -> strip(LocaleMessage.ERROR_INVALID_TAGS.getMessage())
+                adapter.brigadierMessage(deserializeComponent(LocaleMessage.ERROR_INVALID_TAGS.getMessage()))
         ).create();
     }
 
-    public static CommandSyntaxException alreadySaved() {
+    public static <S> CommandSyntaxException alreadySaved(@NotNull BrigadierAdapter<S> adapter) {
         return new SimpleCommandExceptionType(
-                () -> strip(LocaleMessage.ERROR_ALREADY_SAVED.getMessage())
+                adapter.brigadierMessage(deserializeComponent(LocaleMessage.ERROR_ALREADY_SAVED.getMessage()))
         ).create();
     }
 
-    public static CommandSyntaxException lengthError(Object nickname) {
-        return new DynamicCommandExceptionType(
-                nick -> () -> strip(SimpleNicksCore.get().miniMessage().stripTags(
-                        LocaleMessage.ERROR_INVALID_NICK_LENGTH.getMessage()
-                                .replace("<value>", String.valueOf(ConfigHandler.getInstance().getMaxLength()))
-                                .replace("<name>", nick.toString())
-                ))
-        ).create(nickname);
+    public static <S> CommandSyntaxException lengthError(@NotNull BrigadierAdapter<S> adapter, Object nickname) {
+        Component message = SimpleNicksCore.get().miniMessage().deserialize(
+                LocaleMessage.ERROR_INVALID_NICK_LENGTH.getMessage(),
+                Placeholder.unparsed("value", String.valueOf(ConfigHandler.getInstance().getMaxLength())),
+                Placeholder.unparsed("name", String.valueOf(nickname)));
+        return new SimpleCommandExceptionType(adapter.brigadierMessage(message)).create();
     }
 
-    public static CommandSyntaxException regexError(Object nickname) {
-        return new DynamicCommandExceptionType(
-                nick -> () -> strip(
-                        LocaleMessage.ERROR_INVALID_NICK.getMessage()
-                                .replace("<regex>", ConfigHandler.getInstance().getRegexString())
-                )
-        ).create(nickname);
+    public static <S> CommandSyntaxException regexError(@NotNull BrigadierAdapter<S> adapter, Object nickname) {
+        Component message = SimpleNicksCore.get().miniMessage().deserialize(
+                LocaleMessage.ERROR_INVALID_NICK.getMessage(),
+                Placeholder.unparsed("regex", ConfigHandler.getInstance().getRegexString()));
+        return new SimpleCommandExceptionType(adapter.brigadierMessage(message)).create();
     }
 
-    public static CommandSyntaxException invalidPlayerSpecified(Object playerName) {
-        return new DynamicCommandExceptionType(
-                name -> () -> strip(
-                        LocaleMessage.ERROR_INVALID_PLAYER.getMessage()
-                                .replace("<player_name>", name.toString())
-                )
-        ).create(playerName);
+    public static <S> CommandSyntaxException invalidPlayerSpecified(
+            @NotNull BrigadierAdapter<S> adapter, Object playerName) {
+        Component message = SimpleNicksCore.get().miniMessage().deserialize(
+                LocaleMessage.ERROR_INVALID_PLAYER.getMessage(),
+                Placeholder.unparsed("player_name", String.valueOf(playerName)));
+        return new SimpleCommandExceptionType(adapter.brigadierMessage(message)).create();
     }
 
-    public static CommandSyntaxException nicknameSomeonesUsername(Object nickname) {
-        return new DynamicCommandExceptionType(
-                nick -> () -> strip(
-                        LocaleMessage.ERROR_INVALID_OTHER_PLAYERS_USERNAME.getMessage()
-                                .replace("<value>", nick.toString())
-                )
-        ).create(nickname);
+    public static <S> CommandSyntaxException nicknameSomeonesUsername(
+            @NotNull BrigadierAdapter<S> adapter, Object nickname) {
+        Component message = SimpleNicksCore.get().miniMessage().deserialize(
+                LocaleMessage.ERROR_INVALID_OTHER_PLAYERS_USERNAME.getMessage(),
+                Placeholder.unparsed("value", String.valueOf(nickname)));
+        return new SimpleCommandExceptionType(adapter.brigadierMessage(message)).create();
     }
 
-    public static CommandSyntaxException someoneUsingThatNickname(Object nickname) {
-        return new DynamicCommandExceptionType(
-                nick -> () -> strip(
-                        LocaleMessage.ERROR_INVALID_OTHER_PLAYERS_NICKNAME.getMessage()
-                                .replace("<value>", nick.toString())
-                )
-        ).create(nickname);
+    public static <S> CommandSyntaxException someoneUsingThatNickname(
+            @NotNull BrigadierAdapter<S> adapter, Object nickname) {
+        Component message = SimpleNicksCore.get().miniMessage().deserialize(
+                LocaleMessage.ERROR_INVALID_OTHER_PLAYERS_NICKNAME.getMessage(),
+                Placeholder.unparsed("value", String.valueOf(nickname)));
+        return new SimpleCommandExceptionType(adapter.brigadierMessage(message)).create();
     }
 }

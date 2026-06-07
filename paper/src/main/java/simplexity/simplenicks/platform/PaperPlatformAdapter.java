@@ -93,6 +93,13 @@ public class PaperPlatformAdapter implements PlatformAdapter {
     }
 
     @Override
+    public void sendMessageToPlayer(@NotNull UUID uuid, @NotNull Component message) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+        player.sendMessage(message);
+    }
+
+    @Override
     public boolean hasPermission(@NotNull UUID uuid, @NotNull String permission) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return false;
