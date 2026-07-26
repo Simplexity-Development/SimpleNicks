@@ -1,0 +1,33 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_25
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+}
+
+tasks.named('jar') {
+    archiveFileName = "SimpleNicks-fabric-${project.version}.jar"
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${fabricMinecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${fabricLoaderVersion}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
+
+    include(implementation(project(':core')))
+
+    include(implementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}"))
+    include(implementation("net.kyori:adventure-text-minimessage:${fabricMiniMessageVersion}"))
+    include(implementation("com.zaxxer:HikariCP:${hikariVersion}"))
+    include(implementation("org.xerial:sqlite-jdbc:3.47.+"))
+    include(implementation("org.yaml:snakeyaml:2.2"))
+
+    // fabric-permissions-api: softdepend permissions with op-level fallback
+    include(implementation("me.lucko:fabric-permissions-api:${fabricPermissionsVersion}"))
+}

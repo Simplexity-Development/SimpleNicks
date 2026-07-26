@@ -1,0 +1,37 @@
+plugins {
+    id 'io.papermc.paperweight.userdev' version '2.0.0-beta.17'
+    id 'com.gradleup.shadow' version '9.0.0-beta4'
+}
+
+dependencies {
+    paperweight.paperDevBundle("${paperVersion}")
+    implementation project(':core')
+    compileOnly "me.clip:placeholderapi:2.11.5"
+    compileOnly "io.github.miniplaceholders:miniplaceholders-api:3.2.0"
+}
+
+shadowJar {
+    relocate 'com.zaxxer.hikari', 'simplexity.simplenicks.shaded.hikari'
+    manifest {
+        attributes 'paperweight-mappings-namespace': 'mojang'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+// options.release = 21 causes Gradle to request JVM 21-compatible deps,
+// which conflicts with miniplaceholders-api:3.2.0 (requires JVM 25).
+// Override the attribute to request JVM 25 deps while still producing Java 21 bytecode.
+configurations.named('compileClasspath') {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+    }
+}
+
+tasks.named('reobfJar') {
+    outputJar = layout.buildDirectory.file("libs/SimpleNicks-paper-${project.version}.jar")
+}
+
+assemble.dependsOn reobfJar

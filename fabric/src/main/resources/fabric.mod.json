@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "simplenicks",
+  "version": "3.2.2",
+  "name": "SimpleNicks",
+  "description": "A simple mod to allow players to set and reset nicknames.",
+  "authors": ["Rhythmic", "Peashooter101"],
+  "license": "AGPL-3.0",
+  "environment": "server",
+  "entrypoints": {
+    "main": ["simplexity.simplenicks.fabric.SimpleNicksFabric"]
+  },
+  "mixins": [
+    "simplenicks.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~26.1"
+  }
+}

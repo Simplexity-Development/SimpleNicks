@@ -1,0 +1,47 @@
+mysql:
+  enabled: false
+  ip: "localhost:3306"
+  name: simplenicks
+  username: username1
+  password: badpassword!
+
+# The max amount of characters a nickname should be, not including formatting
+# (so a name like <red>Billy<yellow>Bob would only count 'BillyBob' - and would be 8 characters)
+# Setting this number to any number below "3" could cause unintended side effects
+max-nickname-length: 30
+
+# The regex of valid final nickname characters.
+# Be warned that putting non-alphanumeric characters may result in issues with other plugins and other unintended side effects
+nickname-regex: "[A-Za-z0-9_]+"
+
+# What should require permission set by a permission plugin?
+require-permission:
+  nick: true
+  color: true
+  format: true
+  who: false
+
+# Blocks certain names from being used as nicknames
+# Expiration times are in days, setting to -1 will make it so it never expires
+nickname-protection:
+  username:
+    enabled: true
+    expires: 30
+  online:
+    enabled: false
+  offline:
+    enabled: false
+    expires: 30
+
+# How many nicknames can be saved?
+max-saves: 5
+
+# Should names be changed in tablist?
+# (Keep this false if you use any other tablist plugin, there are placeholder API placeholders to use on those)
+tablist-nick: false
+
+# What prefix should be given for players who have a nickname? put "" if you want no prefix
+nickname-prefix: ""
+
+# Development option, this will flood your logs, discouraged from enabling unless asked
+debug-mode: false
