@@ -59,7 +59,9 @@ public class NickUtils {
         boolean bypassNickProtection = sender.hasPermission(NickPermission.NICK_BYPASS_NICK_PROTECTION.getPermission());
 
         if (!bypassUsername) {
-            if (ConfigHandler.getInstance().isUsernameProtection() && isProtectedUsername(normalizedNick))
+            boolean isOwnUsername = sender instanceof Player p
+                    && p.getName().equalsIgnoreCase(normalizedNick);
+            if (!isOwnUsername && ConfigHandler.getInstance().isUsernameProtection() && isProtectedUsername(normalizedNick))
                 throw Exceptions.ERROR_NICKNAME_IS_SOMEONES_USERNAME.create(normalizedNick);
         }
         if (!bypassLength) {
@@ -94,8 +96,7 @@ public class NickUtils {
             player.displayName(null);
             return true;
         }
-        Component displayName = miniMessage.deserialize(ConfigHandler.getInstance().getNickPrefix())
-                .append(SimpleNicks.getMiniMessage().deserialize(nickname.getNickname()));
+        Component displayName = miniMessage.deserialize(ConfigHandler.getInstance().getNickPrefix()).append(SimpleNicks.getMiniMessage().deserialize(nickname.getNickname()));
         player.displayName(displayName);
         if (ConfigHandler.getInstance().shouldNickTablist()) {
             player.playerListName(SimpleNicks.getMiniMessage().deserialize(nickname.getNickname()));
@@ -190,7 +191,7 @@ public class NickUtils {
      */
     public static boolean isProtectedUsername(@NotNull String normalizedName) {
         normalizedName = normalizedName.toLowerCase();
-        long expireTime = ConfigHandler.getInstance().getUsernameProtectionTime() == -1 ? System.currentTimeMillis() - ConfigHandler.getInstance().getUsernameProtectionTime() : -1;
+        long expireTime = ConfigHandler.getInstance().getUsernameProtectionTime();
         return SqlHandler.getInstance().lastLoginOfUsername(normalizedName, expireTime) != null;
     }
 

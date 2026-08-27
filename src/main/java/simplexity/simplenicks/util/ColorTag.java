@@ -11,6 +11,7 @@ public enum ColorTag {
     HEX_COLOR(new Permission("simplenick.color.basic", PermissionDefault.OP), StandardTags.color()),
     GRADIENT(new Permission("simplenick.color.gradient", PermissionDefault.OP), StandardTags.gradient()),
     RAINBOW(new Permission("simplenick.color.rainbow", PermissionDefault.OP), StandardTags.rainbow()),
+    SHADOW(new Permission("simplenick.color.shadow", PermissionDefault.OP), StandardTags.shadowColor()),
     RESET(new Permission("simplenick.color.reset", PermissionDefault.OP), StandardTags.reset());
 
 
